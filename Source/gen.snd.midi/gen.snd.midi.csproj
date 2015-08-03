@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{96A731DE-D50C-47D8-93FC-DC030D8E3C2E}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>gen.snd.midi</RootNamespace>
+    <AssemblyName>gen.snd.midi</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworkProfile />
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <WarningLevel>4</WarningLevel>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\gen.snd.common\gen.snd.common.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <BaseAddress>4194304</BaseAddress>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Source\Common\ChMessage8.cs" />
+    <Compile Include="Source\Common\ChMessageU16.cs" />
+    <Compile Include="Source\Common\KeySignatureType.cs" />
+    <Compile Include="Source\Common\MetaHelpers.cs" />
+    <Compile Include="Source\Common\MetaMsg32.cs" />
+    <Compile Include="Source\Common\MetaMsg8.cs" />
+    <Compile Include="Source\Common\MetaMsgU16FF.cs" />
+    <Compile Include="Source\Common\MidiKeySignature.cs" />
+    <Compile Include="Source\Common\MidiTimeSignature.cs" />
+    <Compile Include="Source\Common\Smf.Meta.ChannelType.cs" />
+    <Compile Include="Source\Common\Smf.MidiMessageInfo.cs" />
+    <Compile Include="Source\Common\Smf.NoteRange.cs" />
+    <Compile Include="Source\Common\XgNrpn.cs" />
+    <Compile Include="Source\IClock.cs" />
+    <Compile Include="Source\IMidiParser.cs" />
+    <Compile Include="Source\IMidiParser_Notes.cs">
+      <DependentUpon>IMidiParser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IMidiParser_Parser.cs">
+      <DependentUpon>IMidiParser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IMidiParser_Resources.cs">
+      <DependentUpon>IMidiParser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\IO.EndianUtility.cs" />
+    <Compile Include="Source\IO\smf_head.cs" />
+    <Compile Include="Source\IO\smf_mthd.cs" />
+    <Compile Include="Source\IO\smf_mtrk.cs" />
+    <Compile Include="Source\ITimeConfiguration.cs" />
+    <Compile Include="Source\Loop.cs" />
+    <Compile Include="Source\MBT.cs" />
+    <Compile Include="Source\MidiByteData.cs" />
+    <Compile Include="Source\MidiChannelMessage.cs">
+      <DependentUpon>MidiMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MidiData.cs" />
+    <Compile Include="Source\MidiMessage.cs" />
+    <Compile Include="Source\MidiMessageEvent.cs" />
+    <Compile Include="Source\MidiMetaMessage.cs">
+      <DependentUpon>MidiMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MidiMsgType.cs" />
+    <Compile Include="Source\MidiNote.cs">
+      <DependentUpon>MidiData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MidiReader.cs" />
+    <Compile Include="Source\MidiReader.Helper.cs">
+      <DependentUpon>MidiReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MidiReader.Notes.cs">
+      <DependentUpon>MidiReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MidiReader.Parse.cs">
+      <DependentUpon>MidiReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MidiReader.Resources.cs">
+      <DependentUpon>MidiReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\MidiSysexMessage.cs">
+      <DependentUpon>MidiMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\SampleClock.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ext" />
+    <Folder Include="Source" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharedResources\SharedResources.csproj">
+      <Project>{AE81E8C4-19F9-4E6B-90A8-1F73BEDC8124}</Project>
+      <Name>SharedResources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.Cor3.Lite\System.Cor3.Lite.csproj">
+      <Project>{E88AC1AE-B545-4A2C-B136-3E42DC75EF7F}</Project>
+      <Name>System.Cor3.Lite</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ext\cc.map">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ext\dk.map">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ext\inst.map">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

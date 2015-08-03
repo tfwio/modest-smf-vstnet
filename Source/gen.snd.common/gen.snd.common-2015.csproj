@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{669C9CD9-8B80-4D6D-B5D7-A39B1224A50E}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>gen.snd</RootNamespace>
+    <AssemblyName>gen.snd.common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworkProfile />
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>gen.snd.common.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
+    <SourceAnalysisOverrideSettingsFile>C:\Users\oio\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'Jacobi_x86' ">
+    <Reference Include="Jacobi.Vst.Interop">
+      <HintPath>F:\DEV\WIN\CS_ROOT\CS_SVN.External\Codeplex\vstnet\Source\Code\Jacobi.Vst.Interop\bin\Win32\Release\Jacobi.Vst.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Jacobi.Vst.Core">
+      <HintPath>F:\DEV\WIN\CS_ROOT\CS_SVN.External\codeplex\vstnet\Source\Code\Jacobi.Vst.Core\bin\x86\Debug\Jacobi.Vst.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="NAudio">
+      <HintPath>..\..\AssemblyReferences\NAudio\r559-v1.7.1.17\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Condition=" '$(Platform)' != 'XP_x86' " Include="System.Core">
+      <HintPath>C:\Program Files %28x86%29\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Condition=" '$(Platform)' == 'XP_x86' " Include="System.Core">
+      <HintPath>C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <!--D:\DEV\WIN\CS_ROOT\Projects\gen.snd.common\source\cor3.core\System.Drawing\CORNERS.cs-->
+    <Compile Include="Source\Core\PulseValue.cs" />
+    <Compile Include="Source\Core\DeltaType.cs" />
+    <Compile Include="Source\Core\IBufferInfo.cs" />
+    <Compile Include="Source\Core\IntVersion.cs" />
+    <Compile Include="Source\Core\crsouza.Convert.cs" />
+    <Compile Include="Source\Core\MidiChannelSet.cs" />
+    <Compile Include="Source\Core\PianoCalculator.cs" />
+    <Compile Include="Source\Core\SampleValue.cs" />
+    <Compile Include="Source\Effects\Class1.cs" />
+    <Compile Include="Source\Effects\PitchShifter.cs" />
+    <Compile Include="Source\Formats\IffForm\CHUNK.cs" />
+    <Compile Include="Source\Formats\IffForm\ChunkCollection.cs" />
+    <Compile Include="Source\Formats\IffForm\ChunkFact.cs" />
+    <Compile Include="Source\Formats\IffForm\INFO.cs" />
+    <Compile Include="Source\Formats\IffForm\INFOsub.cs" />
+    <Compile Include="Source\Formats\IffForm\iver.cs" />
+    <Compile Include="Source\Formats\IffForm\RiffForm.cs" />
+    <Compile Include="Source\Formats\IffForm\SMPLOOP.cs" />
+    <Compile Include="Source\Formats\IffForm\SUBCHUNK.cs" />
+    <Compile Include="Source\Formats\IffForm\WaveFormat.cs" />
+    <Compile Include="Source\Formats\IffForm\WaveFormatEncoding.cs" />
+    <Compile Include="Source\Formats\IffForm\wnfo.cs" />
+    <Compile Include="Source\Formats\IffForm\ZSTR.cs" />
+    <Compile Include="Source\Formats\IffForm\_cue.cs" />
+    <Compile Include="Source\Formats\IffForm\_inst.cs" />
+    <Compile Include="Source\Formats\SoundFont2.GeneratorConstantType.cs">
+      <DependentUpon>SoundFont2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Formats\ImpulseTrackerInstrument.cs" />
+    <Compile Include="Source\Formats\SoundFont2.cs" />
+    <Compile Include="Source\Forms\BpmCalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\BpmCalculatorForm.Designer.cs">
+      <DependentUpon>BpmCalculatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Forms\DirectSoundDevice.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\FrequencyTestControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\FrequencyTestControl.Designer.cs">
+      <DependentUpon>FrequencyTestControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Forms\FrequencyTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\FrequencyTestForm.Designer.cs">
+      <DependentUpon>FrequencyTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Forms\IKnobSetting.cs" />
+    <Compile Include="Source\Forms\ImpulseTrackerInstrumentDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\ItiRenderer.cs" />
+    <Compile Include="Source\Forms\Knob.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\KnobImageTool.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\KnobTwo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\KnobType.cs" />
+    <Compile Include="Source\Forms\ListHelper.cs" />
+    <Compile Include="Source\Forms\Midi.DeviceSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\MidiFormListViewExtensions.cs" />
+    <Compile Include="Source\Forms\MidiKeyFreqTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\MidiKeyFreqTestForm.Designer.cs">
+      <DependentUpon>MidiKeyFreqTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Forms\VolumeSlider.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\WaveOutTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\WaveOutTestForm.Designer.cs">
+      <DependentUpon>WaveOutTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Forms\WavePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\WavePanel.Designer.cs">
+      <DependentUpon>WavePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Generators\IGenerator.cs" />
+    <Compile Include="Source\Interop\ds2cs_dll_import.cs" />
+    <Compile Include="Source\Core\TimeConfiguration.cs" />
+    <Compile Include="Source\Modules\BasicAudioModule.cs" />
+    <Compile Include="Source\Modules\basic_audio_module.cs" />
+    <Compile Include="Source\Pcm\Float32BitMono.cs" />
+    <Compile Include="Source\Pcm\Float32BitStereo.cs" />
+    <Compile Include="Source\Pcm\IBinaryIO.cs" />
+    <Compile Include="Source\Pcm\Int32BitStereo.cs" />
+    <Compile Include="Source\Pcm\Int32BitMono.cs" />
+    <Compile Include="Source\Pcm\Short16BitStereo.cs" />
+    <Compile Include="Source\Formats\AKAI.cs" />
+    <Compile Include="Source\Formats\ImpulseTracker.cs" />
+    <Compile Include="Source\Formats\MMSys_Interop.cs" />
+    <Compile Include="Source\Formats\sf_spec.cs">
+      <DependentUpon>SoundFont2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Windowing\AbstractWave.cs" />
+    <Compile Include="Source\Windowing\BasicWindow.cs" />
+    <Compile Include="Source\Windowing\DataRead.cs" />
+    <Compile Include="Source\Windowing\FastFourierTransform.cs" />
+    <Compile Include="Source\Windowing\IRead.cs" />
+    <Compile Include="Source\Windowing\IWaveData.cs" />
+    <Compile Include="Source\Windowing\MinMaxEvent.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <DependentUpon>Strings.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Source\System.Sound\Frequency.cs" />
+    <Compile Include="Source\System.Sound\Interpolation.cs" />
+    <Compile Include="Source\Wave\BufferStatus.cs" />
+    <Compile Include="Source\Wave\Int32WaveChannel.cs" />
+    <Compile Include="Source\Wave\Int32WaveStream.cs" />
+    <Compile Include="Source\Wave\IWaveChannel.cs" />
+    <Compile Include="Source\Wave\RiffUtil.cs" />
+    <Compile Include="Source\Wave\SineWaveProvider32.cs" />
+    <Compile Include="Source\Wave\SoundDevice.cs" />
+    <Compile Include="Source\System.Sound\BpmCalculator.cs" />
+    <Compile Include="Source\System.Sound\IOHelper.cs" />
+    <Compile Include="Source\System.Sound\MidiHelper.cs" />
+    <Compile Include="Source\Wave\Int32WaveChannelBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Source\Formats\IffForm" />
+    <Folder Include="Source\Effects" />
+    <Folder Include="Source\Windowing" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Win32-DLL\DrumSynth2Wave\ds2wav.dll">
+      <Link>ds2wav.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Documents\Amiga MOD File Format.txt" />
+    <None Include="Documents\ms_riff.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Source\Forms\BpmCalculatorForm.resx">
+      <DependentUpon>BpmCalculatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\DirectSoundDevice.resx">
+      <DependentUpon>DirectSoundDevice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\FrequencyTestControl.resx">
+      <DependentUpon>FrequencyTestControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\FrequencyTestForm.resx">
+      <DependentUpon>FrequencyTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\ImpulseTrackerInstrumentDemoForm.resx">
+      <DependentUpon>ImpulseTrackerInstrumentDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\KnobImageTool.resx">
+      <DependentUpon>KnobImageTool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\Midi.DeviceSelector.resx">
+      <DependentUpon>Midi.DeviceSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\MidiKeyFreqTestForm.resx">
+      <DependentUpon>MidiKeyFreqTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\WaveOutTestForm.resx">
+      <DependentUpon>WaveOutTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.resx">
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>System</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\gen.snd.midi\gen.snd.midi.csproj">
+      <Project>{96A731DE-D50C-47D8-93FC-DC030D8E3C2E}</Project>
+      <Name>gen.snd.Midi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.Cor3.Lite\System.Cor3.Lite.csproj">
+      <Project>{E88AC1AE-B545-4A2C-B136-3E42DC75EF7F}</Project>
+      <Name>System.Cor3.Lite</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+</Project>

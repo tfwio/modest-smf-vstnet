@@ -1,0 +1,299 @@
+﻿#region User/License
+// oio * 7/19/2012 * 11:33 AM
+
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+// DEALINGS IN THE SOFTWARE.
+#endregion
+
+using System;
+using System.Diagnostics;
+using Jacobi.Vst.Core;
+using Jacobi.Vst.Core.Host;
+using Jacobi.Vst.Interop.Host;
+using NAudio.Wave;
+
+namespace DspAudio.Wave
+{
+	
+
+	// Copied from the microDRUM project
+	// https://github.com/microDRUM
+	// I think it is created by massimo.bernava@gmail.com
+	// Modified by perivar@nerseth.com to support processing audio files
+	// Then modified again by tfwroble@gmail.com
+	public class VSTStream32 : WaveStream
+	{
+		public NAudioVST Container {
+			get { return container; }
+			set { container = value; }
+		} NAudioVST container;
+		
+		public IVstPluginContext PluginContext {
+			get { return pluginContext; }
+			set { pluginContext = value; }
+		} IVstPluginContext pluginContext = null;
+		
+		// event handlers
+		public event EventHandler<VSTStreamEventArgs> ProcessCalled;
+		public event EventHandler PlayingStopped;
+		public event EventHandler PlayingStarted;
+		
+		private int BlockSize = 0;
+		
+		VstAudioBuffer[] inputBuffers;
+		VstAudioBuffer[] outputBuffers;
+		
+		float[] input;
+		float[] output;
+		
+		private WaveChannel32 wavStream;
+		private WaveFileReader wavFileReader;
+		
+		private int foundSilenceCounter = 0;
+		
+		public bool DoProcess = true;
+		
+		public void SetInputWave(string waveInputFilePath, float volume) {
+			// 4 bytes per sample (32 bit)
+			this.wavFileReader = new WaveFileReader(waveInputFilePath);
+			this.wavStream = new WaveChannel32(this.wavFileReader);
+			
+			// Leave headroom for plugin processing (0.20 seems OK, any higher causes digital clipping)
+			this.wavStream.Volume = volume;
+		}
+		
+		public void DisposeInputWave() {
+			if (wavStream != null) {
+				this.wavStream.Dispose();
+				this.wavStream = null;
+			}
+			if (wavFileReader!=null)
+			{
+				this.wavFileReader.Dispose();
+				this.wavFileReader = null;
+			}
+		}
+		
+		public new void Dispose() {
+			DisposeInputWave();
+			base.Dispose();
+		}
+		
+		private void RaiseProcessCalled(float maxL, float maxR)
+		{
+			EventHandler<VSTStreamEventArgs> handler = ProcessCalled;
+			Debug.Print("RaiseProcessCalled MaxL,MaxR");
+			if (handler != null)
+			{
+				handler(this, new VSTStreamEventArgs(maxL, maxR));
+			}
+		}
+		
+		private void RaisePlayingStarted()
+		{
+			if (PlayingStarted != null)
+			{
+				PlayingStarted(this, EventArgs.Empty);
+			}
+		}
+		bool IsStopped = false;
+		private void RaisePlayingStopped()
+		{
+			Debug.Print("RaisePlayingStopped");
+			if (PlayingStopped != null)
+			{
+				IsStopped = true;
+				PlayingStopped(this, EventArgs.Empty);
+			}
+		}
+		
+		private void UpdateBlockSize(int blockSize)
+		{
+			BlockSize = blockSize;
+			
+			int inputCount = pluginContext.PluginInfo.AudioInputCount;
+			int outputCount = pluginContext.PluginInfo.AudioOutputCount;
+			Debug.Print("Entered UpdateBlockSize IO {0}, Outs: {1}",BlockSize,outputCount);
+			
+			VstAudioBufferManager inputMgr = new VstAudioBufferManager(inputCount, blockSize);
+			VstAudioBufferManager outputMgr = new VstAudioBufferManager(outputCount, blockSize);
+			
+			pluginContext.PluginCommandStub.SetBlockSize(blockSize);
+			pluginContext.PluginCommandStub.SetSampleRate(WaveFormat.SampleRate);
+			pluginContext.PluginCommandStub.SetProcessPrecision(VstProcessPrecision.Process32);
+			
+			inputBuffers = inputMgr.ToArray();
+			outputBuffers = outputMgr.ToArray();
+			
+			input = new float[WaveFormat.Channels * blockSize];
+			output = new float[WaveFormat.Channels * blockSize];
+		}
+		
+		private float[] ProcessReplace(int blockSize)
+		{
+			lock (this) {
+				
+				if (blockSize != BlockSize) UpdateBlockSize(blockSize);
+				
+				// check if we are processing a wavestream (VST) or if this is audio outputting only (VSTi)
+//				if (wavStream != null) {
+//					if (wavStream.Position == 0) {
+//						RaisePlayingStarted();
+//					}
+//					
+//					int sampleCount = blockSize*2;
+//					int sampleCountx4 = sampleCount * 4;
+//					int loopSize = sampleCount / WaveFormat.Channels;
+//					
+//					// Convert byte array into float array and store in Vst Buffers
+//					// naudio reads an buffer of interlaced float's
+//					// must take every 4th byte and convert to float
+//					// Vst.Net audio buffer format (-1 to 1 floats).
+//					byte[] naudioBuf = new byte[blockSize * WaveFormat.Channels * 4];
+//					int bytesRead = wavStream.Read(naudioBuf, 0, sampleCountx4);
+//					
+//					// populate the inputbuffers with the incoming wave stream
+//					// TODO: do not use unsafe - but like this http://vstnet.codeplex.com/discussions/246206 ?
+//					// this whole section is modelled after http://vstnet.codeplex.com/discussions/228692
+//					unsafe
+//					{
+//						fixed (byte* byteBuf = &naudioBuf[0])
+//						{
+//							float* floatBuf = (float*)byteBuf;
+//							int j = 0;
+//							for (int i = 0; i < loopSize; i++)
+//							{
+//								inputBuffers[0][i] = *(floatBuf + j);
+//								j++;
+//								inputBuffers[1][i] = *(floatBuf + j);
+//								j++;
+//							}
+//						}
+//					}
+//				}
+				
+				Debug.Print("Entered IO Write");
+				try
+				{
+					//pluginContext.PluginCommandStub.MainsChanged(true);
+					pluginContext.PluginCommandStub.StartProcess();
+					Debug.Print("StartProcess");
+					pluginContext.PluginCommandStub.ProcessReplacing(inputBuffers, outputBuffers);
+					Debug.Print("ProcessReplacing");
+					pluginContext.PluginCommandStub.StopProcess();
+					Debug.Print("StopProcess");
+					//pluginContext.PluginCommandStub.MainsChanged(false);
+				}
+				catch (Exception ex)
+				{
+					Debug.Print("IO Write Error");
+					Console.Out.WriteLine(ex.Message);
+				}
+				
+				int indexOutput = 0;
+				int oc = pluginContext.PluginInfo.AudioOutputCount;
+				Debug.Print("Output Count:  {0}",oc);
+				
+				float maxL = float.MinValue;
+				float maxR = float.MinValue;
+				
+				for (int j = 0; j < BlockSize; j++)
+				{
+					output[indexOutput] = outputBuffers[0][j];
+					output[indexOutput + 1] = outputBuffers[(oc > 1)?1:0][j];
+					
+//					maxL = Math.Max(maxL, output[indexOutput]);
+//					if () maxR = Math.Max(maxR, output[indexOutput + 1]);
+					indexOutput += 2;
+				}
+//				// try to find when processing input file has reached
+//				// zero volume level
+//				float almostZero = 0.0000001f;
+//				if (maxL < almostZero && maxR < almostZero) {
+//					//Console.Out.Write("-");
+//
+//					// don't stop until we have x consequetive silence calls after each other
+//					if (foundSilenceCounter >= 5) {
+//						if (wavStream != null && wavStream.CurrentTime >= wavStream.TotalTime) {
+//							RaisePlayingStopped();
+//						}
+//					} else {
+//						foundSilenceCounter++;
+//					}
+//				} else {
+//					foundSilenceCounter = 0;
+//					//Console.Out.Write(".");
+//				}
+				RaiseProcessCalled(maxL, maxR);
+			}
+			return output;
+		}
+		
+		public int Read(float[] buffer, int offset, int sampleCount)
+		{
+			if (!DoProcess) { return 0; }
+			if (IsStopped) Debug.Print("STOPPED!!!!!!");
+			// CALL VST PROCESS HERE WITH BLOCK SIZE OF sampleCount
+			float[] tempBuffer = ProcessReplace(sampleCount / 2);
+			// Copying Vst buffer inside Audio buffer, no conversion needed for WaveProvider32
+			try { for (int i = 0; i < sampleCount; i++) buffer[i + offset] = tempBuffer[i]; }
+			catch { Debug.Print("ProcessReplace Error~!"); }
+			Debug.Print("Position: {0}, Next: {1}, ProcessReplace: {2}", offset, offset+sampleCount, tempBuffer.Length);
+			Container.OnBufferCycle();
+//			pluginContext.HostCommandStub.ProcessIdle();
+			return sampleCount;
+		}
+		
+		private WaveFormat waveFormat;
+		
+		public void SetWaveFormat(int sampleRate, int channels)
+		{
+			this.waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels);
+		}
+		
+		public override int Read(byte[] buffer, int offset, int count)
+		{
+			WaveBuffer waveBuffer = new WaveBuffer(buffer);
+			int samplesRequired = count / 4;
+			int samplesRead = Read(waveBuffer.FloatBuffer, offset / 4, samplesRequired);
+			return samplesRead * 4;
+		}
+		
+		public override WaveFormat WaveFormat
+		{
+			get { return waveFormat; }
+		}
+		
+		public override long Length
+		{
+			get { return long.MaxValue; }
+		}
+		
+		public override long Position
+		{
+			get
+			{
+				return 0;
+			}
+			set
+			{
+				long x = value;
+			}
+		}
+	}
+}

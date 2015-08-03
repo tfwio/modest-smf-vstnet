@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{3AE94169-B621-4352-9661-E5B293083C14}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>gen.snd</RootNamespace>
+    <AssemblyName>gen.snd.vst</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworkProfile />
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
+    <AssemblyOriginatorKeyFile>..\gen.snd.common\gen.snd.common.snk</AssemblyOriginatorKeyFile>
+    <DocumentationFile>bin\x86\Release\DspAudio.Vst.xml</DocumentationFile>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>x86</PlatformTarget>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <!--  <ItemGroup Condition=" '$(Platform)' == 'Jacobi_x86' ">
+    <Reference Include="Jacobi.Vst.Interop">
+      <HintPath>F:\DEV\WIN\CS_ROOT\Projects\svn_sound\xmid\References\VST.NET 0.9\Jacobi.Vst.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Jacobi.Vst.Core">
+      <HintPath>F:\DEV\WIN\CS_ROOT\Projects\svn_sound\xmid\References\VST.NET 0.9\Jacobi.Vst.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>-->
+  <ItemGroup>
+    <Reference Include="Jacobi.Vst.Core">
+      <HintPath>..\..\AssemblyReferences\vstnet\Win32_Release\Jacobi.Vst.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Jacobi.Vst.Interop">
+      <HintPath>..\..\AssemblyReferences\vstnet\Win32_Release\Jacobi.Vst.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="NAudio, Version=1.7.1.17, Culture=neutral, PublicKeyToken=ad670626f0936b7d, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\AssemblyReferences\NAudio\r559-v1.7.1.17\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Condition=" '$(Platform)' != 'XP_x86' " Include="System.Core">
+      <HintPath>C:\Program Files %28x86%29\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Condition=" '$(Platform)' == 'XP_x86' " Include="System.Core">
+      <HintPath>C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Source\Forms\EditorFrame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\EditorFrame.Designer.cs">
+      <DependentUpon>EditorFrame.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Forms\PluginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Forms\PluginForm.Designer.cs">
+      <DependentUpon>PluginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Forms\PluginProgram.cs" />
+    <Compile Include="Source\IMidiParserUI.cs" />
+    <Compile Include="Source\IMidiView.cs" />
+    <Compile Include="Source\Midi\NoteTransport.cs" />
+    <Compile Include="Source\Midi\VstMidiEnumerator.cs" />
+    <Compile Include="Source\Midi\VstMidiSystem.cs" />
+    <Compile Include="Source\Vst.Module\VstPluginBank.cs" />
+    <Compile Include="Source\Vst.Module\VstPluginChain.cs" />
+    <Compile Include="Source\Vst\IOModule.cs" />
+    <Compile Include="Source\Xml\ConvertHelper.cs" />
+    <Compile Include="Source\Xml\MidiFile.cs" />
+    <Compile Include="Source\Xml\MidiSmfFile.cs" />
+    <Compile Include="Source\Xml\MidiSmfFileSettings.cs" />
+    <Compile Include="Source\Xml\ChannelAssignment.cs" />
+    <Compile Include="Source\Xml\Plugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Vst.Module\PluginCalledEventArgs.cs" />
+    <Compile Include="Source\Xml\PluginCollector.cs" />
+    <Compile Include="Source\Vst.Module\VstCCParam.cs" />
+    <Compile Include="Source\Vst.Module\VstCCPgm.cs" />
+    <Compile Include="Source\Vst.Module\VstPlugin.cs" />
+    <Compile Include="Source\Vst.Module\VstPluginManager.cs" />
+    <Compile Include="Source\Vst\AudioProcess.cs" />
+    <Compile Include="Source\Vst\HostCommandStub.cs" />
+    <Compile Include="Source\Vst\INaudioVST.cs" />
+    <Compile Include="Source\Vst\INaudioVstWin.cs" />
+    <Compile Include="Source\Vst\AudioModule.cs" />
+    <Compile Include="Source\Vst\NAudioVST.cs" />
+    <Compile Include="Source\Vst\NAudioVstContainer.cs" />
+    <Compile Include="Source\Vst\NAudioVSTCycleEventArgs.cs" />
+    <Compile Include="Source\Vst\AutomationParam.cs" />
+    <Compile Include="Source\Vst\VSTStream32.cs" />
+    <Compile Include="Source\Vst\VSTStreamEventArgs.cs" />
+    <Compile Include="Source\Xml\PluginBase.cs" />
+    <Compile Include="Source\Xml\VstModule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Source\Forms\EditorFrame.resx">
+      <DependentUpon>EditorFrame.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms\PluginForm.resx">
+      <DependentUpon>PluginForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\gen.snd.common\gen.snd.common.csproj">
+      <Project>{669c9cd9-8b80-4d6d-b5d7-a39b1224a50e}</Project>
+      <Name>gen.snd.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\gen.snd.midi\gen.snd.midi.csproj">
+      <Project>{96A731DE-D50C-47D8-93FC-DC030D8E3C2E}</Project>
+      <Name>gen.snd.Midi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharedResources\SharedResources.csproj">
+      <Project>{AE81E8C4-19F9-4E6B-90A8-1F73BEDC8124}</Project>
+      <Name>SharedResources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.Cor3.Lite\System.Cor3.Lite.csproj">
+      <Project>{E88AC1AE-B545-4A2C-B136-3E42DC75EF7F}</Project>
+      <Name>System.Cor3.Lite</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
