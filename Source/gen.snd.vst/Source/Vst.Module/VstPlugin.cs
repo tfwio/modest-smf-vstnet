@@ -333,16 +333,22 @@ namespace gen.snd.Vst.Module
 		public Jacobi.Vst.Core.Host.IVstHostCommandStub HostCommandStub { get { return context.HostCommandStub; } }
 		/// <inheritdoc />
 		public Jacobi.Vst.Core.Host.IVstPluginCommandStub PluginCommandStub { get { return context.PluginCommandStub; } }
-		/// <inheritdoc />
+		
+    /// <inheritdoc />
 		public VstPluginInfo PluginInfo { get { return context.PluginInfo; } set { context.PluginInfo = value; } }
-		/// <inheritdoc />
+		
+    /// <inheritdoc />
 		public void Set<T>(string keyName, T value) { context.Set<T>(keyName,value); }
-		/// <inheritdoc />
+		
+    /// <inheritdoc />
 		public T Find<T>(string keyName) { return context.Find<T>(keyName); }
-		/// <inheritdoc />
+		
+    /// <inheritdoc />
 		public void Remove(string keyName) { context.Remove(keyName); }
-		/// <inheritdoc />
+		
+    /// <inheritdoc />
 		public void Delete(string keyName) { context.Delete(keyName); }
+
 		/// <inheritdoc />
 		public void AcceptPluginInfoData(bool raiseEvents) { context.AcceptPluginInfoData(raiseEvents); }
 		
