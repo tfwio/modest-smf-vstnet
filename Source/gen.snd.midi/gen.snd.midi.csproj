@@ -100,6 +100,7 @@
     <Compile Include="Source\MidiData.cs" />
     <Compile Include="Source\MidiMessage.cs" />
     <Compile Include="Source\MidiMessageEvent.cs" />
+    <Compile Include="Source\MidiMessagePacket.cs" />
     <Compile Include="Source\MidiMetaMessage.cs">
       <DependentUpon>MidiMessage.cs</DependentUpon>
     </Compile>

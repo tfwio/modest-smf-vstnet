@@ -1,25 +1,7 @@
-﻿/*
- * Created by SharpDevelop.
- * User: tfooo
- * Date: 11/12/2005
- * Time: 4:19 PM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
+﻿/* tfooo 11/12/2005 4:19 PM */
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Windows.Forms;
 
-using gen.snd.Forms;
-using gen.snd.Midi;
-//using modēst100.Forms;
-
-namespace modest100.Forms
+namespace System.Drawing
 {
 	public class GraphicsPens : IDisposable
 	{

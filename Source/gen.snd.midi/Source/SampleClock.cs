@@ -6,6 +6,12 @@ using System;
 
 namespace gen.snd
 {
+  /// <summary>
+  /// The SampleClock is ignorant to number of channels.
+  /// Aside form that, it can be used to determine MBQT
+  /// from Sample-Position and (maybe) vice-vs. (I hadn't
+  /// gone over this in a while...)
+  /// </summary>
 	public class SampleClock : IClock
 	{
 		#region IAudioClock

@@ -21,7 +21,6 @@
     <AssemblyOriginatorKeyFile>..\gen.snd.common\gen.snd.common.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
-    <NoWin32Manifest>False</NoWin32Manifest>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <SourceAnalysisOverrideSettingsFile>C:\Users\oio\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
@@ -32,7 +31,6 @@
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <FileAlignment>4096</FileAlignment>
     <NoWarn>108, 3270</NoWarn>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +49,12 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
     <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <ItemGroup>
@@ -80,10 +84,15 @@
     <Compile Include="Source\Modules\MidiEventControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Source\Modules\TimeConfigurationView.cs" />
+    <Compile Include="Source\Modules\TimeConfigurationView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Source\Modules\TimeConfigurationView.Designer.cs">
       <DependentUpon>TimeConfigurationView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Source\Rendering\MidiPianoViewRenderer.cs" />
+    <Compile Include="Source\Rendering\MidiTimeState.cs" />
+    <Compile Include="Source\Rendering\PianoGridRendererResources.cs" />
     <Compile Include="Source\Views\Naudios_VolumeSlider.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -95,18 +104,11 @@
       <DependentUpon>VolumeSlider.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Common.Extensions\VstListView.cs" />
-    <Compile Include="Source\Internals\CustomControlView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Source\Internals\MasterViewContainer.cs" />
-    <Compile Include="Source\Internals\MouseState.cs" />
-    <Compile Include="Source\Internals\MouseStateExtension.cs" />
-    <Compile Include="Source\Internals\RenderStateType.cs" />
     <Compile Include="Source\Common\IMidiViewContainer.cs" />
-    <Compile Include="Source\Rendering\GraphicsPens.cs" />
-    <Compile Include="Source\Rendering\MidiPianoViewRenderer.r086.cs" />
+    <Compile Include="Source\Rendering\Ren.cs" />
     <Compile Include="Source\Rendering\Decible.cs" />
-    <Compile Include="Source\Rendering\PianoGridRenderer.cs" />
+    <Compile Include="Source\Rendering\PianoGridRendererSnapSettings.cs" />
     <Compile Include="Source\Rendering\SliderControl.cs" />
     <Compile Include="Source\Views\Clock.cs">
       <SubType>Form</SubType>
@@ -121,9 +123,6 @@
       <DependentUpon>TestForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Common.Extensions\MidiTree.cs" />
-    <Compile Include="Source\Views\PluginManagerComponent.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Source\Common\ActionModifyMidiMessage.cs" />
     <Compile Include="Source\Common.Extensions\intobyte.cs" />
     <Compile Include="Source\Common\IRendererSettings.cs" />
@@ -195,7 +194,6 @@
     <Content Include="app.config">
       <DependentUpon>app.cs</DependentUpon>
     </Content>
-    <None Include="app.manifest" />
     <None Include="Properties\AssemblyInfo.cs.tpl" />
     <None Condition=" '$(Configuration)' == 'Release' " Include="settings-rel.cfg">
       <Link>settings.cfg</Link>
@@ -212,7 +210,7 @@
     </ProjectReference>
     <ProjectReference Include="..\gen.snd.midi\gen.snd.midi.csproj">
       <Project>{96A731DE-D50C-47D8-93FC-DC030D8E3C2E}</Project>
-      <Name>gen.snd.Midi</Name>
+      <Name>gen.snd.midi</Name>
     </ProjectReference>
     <ProjectReference Include="..\gen.snd.vst\gen.snd.vst.csproj">
       <Project>{3AE94169-B621-4352-9661-E5B293083C14}</Project>

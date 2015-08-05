@@ -24,7 +24,7 @@ namespace gen.snd.Midi
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="c">Channel (Nullable)</param>
+		/// <param name="c">Channel (Nullable)—or is this color?</param>
 		/// <param name="k"></param>
 		/// <param name="s"></param>
 		/// <param name="v1"></param>

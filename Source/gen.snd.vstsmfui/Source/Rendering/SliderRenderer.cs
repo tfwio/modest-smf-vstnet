@@ -30,9 +30,9 @@ namespace modest100.Rendering
 	{
 		static public void RenderSlider(Color back, Graphics g, Decible decible, System.Windows.Forms.Control control)
 		{
-			StringFormat format = new StringFormat();
+			StringFormat format  = new StringFormat();
 			format.LineAlignment = StringAlignment.Center;
-			format.Alignment = StringAlignment.Center;
+			format.Alignment     = StringAlignment.Center;
 			
 			using (Pen p = new Pen(control.ForeColor,1)) g.DrawRectangle(p, 0, 0, control.Width - 1, control.Height - 1);
 			using (Brush b = new SolidBrush(back)) g.FillRectangle(b, 1, 1, (int)((control.Width - 2) * decible.Percent), control.Height - 2);

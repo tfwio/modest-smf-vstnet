@@ -75,6 +75,7 @@ namespace gen.snd.Midi
 		/// A set of delegates
 		/// </summary>
 		List<MidiEventDelegate> MessageHandlers { get; }
+		
 		#endregion
 		#region PARSE TRACK
 		int SelectedTrackNumber { get; set; }

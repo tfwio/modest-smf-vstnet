@@ -350,13 +350,16 @@ namespace gen.snd.Vst.Module
 		
 		public void Dispose()
 		{
-			try {
-				if (context!=null) {
-					context.PluginCommandStub.Close();
-					context.Dispose();
-				}
-			}
-			catch{}
+			// try {
+			// 	if (
+      //     context!=null &&
+      //     context.PluginCommandStub != null
+      //     ) {
+			// 		context.PluginCommandStub.Close();
+			// 		context.Dispose();
+			// 	}
+			// }
+			// catch{}
 			context = null;
 		}
 		

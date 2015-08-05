@@ -209,11 +209,7 @@
     <Compile Include="Source\System.Sound\MidiHelper.cs" />
     <Compile Include="Source\Wave\Int32WaveChannelBase.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Source\Formats\IffForm" />
-    <Folder Include="Source\Effects" />
-    <Folder Include="Source\Windowing" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="..\..\Win32-DLL\DrumSynth2Wave\ds2wav.dll">
       <Link>ds2wav.dll</Link>
@@ -254,7 +250,7 @@
   <ItemGroup>
     <ProjectReference Include="..\gen.snd.midi\gen.snd.midi.csproj">
       <Project>{96A731DE-D50C-47D8-93FC-DC030D8E3C2E}</Project>
-      <Name>gen.snd.Midi</Name>
+      <Name>gen.snd.midi</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharedResources\SharedResources.csproj">
       <Project>{AE81E8C4-19F9-4E6B-90A8-1F73BEDC8124}</Project>

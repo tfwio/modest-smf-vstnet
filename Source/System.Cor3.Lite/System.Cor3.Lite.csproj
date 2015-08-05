@@ -61,42 +61,50 @@
   <ItemGroup>
     <!--D:\DEV\WIN\CS_ROOT\Projects\gen.snd.common\source\cor3.core\System.Drawing\CORNERS.cs-->
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\Core\ControlUtil.cs" />
-    <Compile Include="Source\Core\CORNERS.cs" />
-    <Compile Include="Source\Core\DblUnit.cs" />
-    <Compile Include="Source\Core\DICT.cs" />
-    <Compile Include="Source\Core\DPoint.cs" />
-    <Compile Include="Source\Core\FloatPoint.cs" />
-    <Compile Include="Source\Core\FloatRect.cs" />
-    <Compile Include="Source\Core\FRectCorners.cs" />
-    <Compile Include="Source\Core\RectangleDoubleUnit.cs" />
-    <Compile Include="Source\Core\RoundRectRenderer.cs" />
-    <Compile Include="Source\Core\RoundURectRenderer.cs" />
-    <Compile Include="Source\Core\Serial.cs" />
-    <Compile Include="Source\Core\SuperOld.cs" />
-    <Compile Include="Source\Core\System.DialogUtil.cs" />
-    <Compile Include="Source\Core\UDPoint.cs" />
-    <Compile Include="Source\Core\UnitD.cs" />
-    <Compile Include="Source\Core\UnitType.cs" />
-    <Compile Include="Source\Core\UPointD.cs" />
-    <Compile Include="Source\Core\WTF.cs" />
+    <Compile Include="Source\Drawing\GraphicsPens.cs" />
+    <Compile Include="Source\Internals\CustomControlView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Source\Internals\MouseState.cs" />
+    <Compile Include="Source\Internals\MouseStateExtension.cs" />
+    <Compile Include="Source\Internals\Renderer_SelectionBox.cs" />
+    <Compile Include="Source\Internals\RenderStateType.cs" />
+    <Compile Include="Source\System\ControlUtil.cs" />
+    <Compile Include="Source\System.Drawing\CORNERS.cs" />
+    <Compile Include="Source\System.Drawing\DblUnit.cs" />
+    <Compile Include="Source\System\DICT.cs" />
+    <Compile Include="Source\System.Drawing\DPoint.cs" />
+    <Compile Include="Source\System.Drawing\FloatPoint.cs" />
+    <Compile Include="Source\System.Drawing\FloatRect.cs" />
+    <Compile Include="Source\System.Drawing\FRectCorners.cs" />
+    <Compile Include="Source\System.Drawing\RectangleDoubleUnit.cs" />
+    <Compile Include="Source\System.Drawing\RoundRectRenderer.cs" />
+    <Compile Include="Source\System.Drawing\RoundURectRenderer.cs" />
+    <Compile Include="Source\System\Serial.cs" />
+    <Compile Include="Source\System\SuperOld.cs" />
+    <Compile Include="Source\System\System.DialogUtil.cs" />
+    <Compile Include="Source\System.Drawing\UDPoint.cs" />
+    <Compile Include="Source\System.Drawing\UnitD.cs" />
+    <Compile Include="Source\System.Drawing\UnitType.cs" />
+    <Compile Include="Source\System.Drawing\UPointD.cs" />
+    <Compile Include="Source\System\WTF.cs" />
     <Compile Include="Source\Extensions\Divisor.cs" />
     <Compile Include="Source\Extensions\DoubleMathExtension.cs" />
     <Compile Include="Source\Extensions\EnumExtension.cs" />
     <Compile Include="Source\Extensions\StringByteExtension.cs" />
     <Compile Include="Source\Interop\WinTheme.cs" />
-    <Compile Include="Source\MIDIOUTCAPS.cs" />
-    <Compile Include="Source\SplashForm.cs">
+    <Compile Include="Source\Interop\MIDIOUTCAPS.cs" />
+    <Compile Include="Source\Internals\SplashForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Source\StringHelper.cs" />
-    <Compile Include="Source\ToolStripUpDown.cs">
+    <Compile Include="Source\Extensions\StringHelper.cs" />
+    <Compile Include="Source\Internals\ToolStripUpDown.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Source\ViewPoint.cs">
+    <Compile Include="Source\Internals\ViewPoint.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Source\WinMM.cs" />
+    <Compile Include="Source\Interop\WinMM.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

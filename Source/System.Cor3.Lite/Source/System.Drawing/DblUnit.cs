@@ -37,18 +37,18 @@ namespace System.Cor3.Drawing
 		#region basic definitions
 		static double __px = 92;
 		#endregion
-		#region
+		#region ...
 		[DefaultValue(UnitType.Pixel)]
 		public UnitType CoordinateSpace {
 			get { return coordinateSpace; } set { coordinateSpace = value; }
 		} UnitType coordinateSpace = UnitType.Pixel;
+
 		[DefaultValue(UnitType.Pixel)]
 		public UnitType OutputUnit {
 			get { return outputUnit; } set { outputUnit = value; }
 		} UnitType outputUnit = UnitType.Pixel;
 		#endregion
 
-		#region REGEX
 		static readonly Regex RegexParser = new Regex(
 			@"(?<unit>([0-9.]+))\s*(?<type>(px|pt|pc|in|cm|mm))",
 			RegexOptions.CultureInvariant|
@@ -67,7 +67,6 @@ namespace System.Cor3.Drawing
 			m = null;
 		}
 
-		#endregion
 		#region REGEX TYPE
 		static UnitType ConvertType(string type)
 		{

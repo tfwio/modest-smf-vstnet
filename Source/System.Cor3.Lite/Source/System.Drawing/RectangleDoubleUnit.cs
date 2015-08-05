@@ -31,7 +31,6 @@ using System.Xml.Serialization;
 
 namespace System.Drawing
 {
-	#region “ RectangleDoubleUnit ”
 	public class RectangleDoubleUnit {
 		static public RectangleDoubleUnit Zero { get { return new RectangleDoubleUnit(0,0,0,0); } }
 		////////////////////////////////////////////////////////////////////////
@@ -106,5 +105,4 @@ namespace System.Drawing
 			return string.Format("FloatRect: X:{0},Y:{1},Width:{2},Height:{3}", X,Y,Width,Height);
 		}
 	}
-	#endregion
 }

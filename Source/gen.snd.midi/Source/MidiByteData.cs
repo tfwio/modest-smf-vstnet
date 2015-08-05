@@ -6,6 +6,7 @@ using System;
 
 namespace gen.snd.Midi
 {
+    
 	/// <summary>
 	/// four byte data slot convertable to int.
 	/// Thus far the byte data hasn't been used.

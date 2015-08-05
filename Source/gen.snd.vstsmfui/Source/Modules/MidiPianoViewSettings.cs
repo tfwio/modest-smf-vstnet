@@ -13,8 +13,6 @@ using System.Windows.Forms;
 
 using gen.snd;
 using gen.snd.Forms;
-// using modest100.Forms;
-// modēst100
 #endregion
 namespace modest100.Forms
 {
@@ -28,16 +26,11 @@ namespace modest100.Forms
 		public float NodeXMax  { get { return (float)Math.Floor(/*axmax*/Rect.Width / NodeSize.Width); } }
 		/// <inheritdoc/>
 		public float NodeYMax  { get { return (float)Math.Floor(/*aymax*/Rect.Height / NodeSize.Height); } }
-		#endregion
 		
-		public FloatPoint GridNodeMax {
-			get {
-				return new FloatPoint(
-					ClientRect.Width/this.NodeSize.Width,
-					ClientRect.Height/this.NodeSize.Height
-				).Floored;
-			}
-		}
+    
+    #endregion
+		
+		public FloatPoint GridNodeMax { get { return new FloatPoint( ClientRect.Width/this.NodeSize.Width, ClientRect.Height/this.NodeSize.Height ).Floored; } }
 		
 		#region Colors
 		
@@ -60,9 +53,9 @@ namespace modest100.Forms
 		public int Width { get { return Convert.ToInt32(ClientSize.X); } }
 		public int Height { get { return Convert.ToInt32(ClientSize.Y); } }
 		
-		public FloatRect ClientRect { get { return FloatRect.FromClientInfo(ClientSize,ClientPadding); } }
-		public FloatPoint ClientSize { get { return Ui.ClientRectangle.Size; } }
-		public Padding ClientPadding { get { return gutter; } set { gutter = value; } } Padding gutter;
+		public FloatRect ClientRect     { get { return FloatRect.FromClientInfo(ClientSize,ClientPadding); } }
+		public FloatPoint ClientSize    { get { return Ui.ClientRectangle.Size; } }
+		public Padding ClientPadding    { get { return gutter; } set { gutter = value; } } Padding gutter;
 		public Rectangle ClipBackground { get { return new Rectangle(0, gutter.Top, Width - gutter.Right, CalculatedHeight); } }
 		
 		#endregion
@@ -72,18 +65,23 @@ namespace modest100.Forms
 		public float NodeWidth {
 			get { return rowWidth; }
 		} float rowWidth = 4;
+
 		public float NodeHeight {
 			get { return rowHeight; }
 		} float rowHeight = 13;
-		public SizeF NodeSize { get { return new SizeF(rowWidth, rowHeight); } set { rowWidth = value.Width; rowHeight=value.Height; } }
+
+    public SizeF NodeSize {
+		  get { return new SizeF(rowWidth, rowHeight); }
+		  set { rowWidth = value.Width; rowHeight=value.Height; }
+		}
 
 		#endregion
 		
 		public FloatPoint GridSalad {
 			get {
 				return new FloatPoint(
-					Math.Floor((double)Width / rowWidth),
-					Math.Floor((double)Height / rowHeight)
+					Math.Floor((double)Width / NodeWidth),
+					Math.Floor((double)Height / NodeHeight)
 				);
 			}
 		}

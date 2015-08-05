@@ -25,7 +25,6 @@ using modest100.Forms;
 
 namespace modest100.Internals
 {
-
 	public class MasterViewContainer  : ViewPoint<MidiControlBase>, IMidiViewContainer
 	{
 		public MasterViewContainer()

@@ -26,7 +26,9 @@ namespace modest100.Rendering
 	public struct Decible
 	{
 		static public string fmt_db = "{0:F2} dB";
+
 		static public string fmt_percent = "{0:F2} %";
+
 		static public readonly float MinDb = -48;
 		
 		public static object NaN { get { return naN; }
@@ -35,13 +37,17 @@ namespace modest100.Rendering
 		public double Input { get; set; }
 		
 		public double Db { get { return 20 * Math.Log( Input ); } }
+
 		public double Percent { get { return 1 - ( Db / MinDb ); } }
 		
 		static public implicit operator String(Decible value) { return value.ToString(); }
+
 		static public implicit operator Decible(double value) { return Decible.Create(value); }
+
 		static public implicit operator Decible(string value) { return Decible.Create(value); }
 		
 		public string DecibleString { get { return string.Format(fmt_db,Db); } }
+
 		public string PercentString { get { return string.Format(fmt_percent,Percent); } }
 		
 		public override string ToString() { return DecibleString; }
@@ -49,6 +55,7 @@ namespace modest100.Rendering
 		public bool SetText(string value)
 		{
 			string clone = value.ToLower();
+
 			if (clone.Contains("db"))
 			{
 				Input = Convert.ToDouble(clone.Replace("db",""));

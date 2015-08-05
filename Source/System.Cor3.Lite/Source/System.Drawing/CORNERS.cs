@@ -34,7 +34,6 @@ namespace System.Drawing
 		public float[] Cornerpoints { get { return cornerpoints; } set { cornerpoints = value; } }
 		public enum EDGE { TopLeft, TopRight, BottomRight, BottomLeft }
 	
-		
 		#region all
 		bool HasIdenticalValues
 		{

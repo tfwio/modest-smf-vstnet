@@ -19,16 +19,10 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 #endregion
-using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 
-namespace modest100.Internals
+namespace System.Internals
 {
-  /// <summary></summary>
-  [FlagsAttribute]
-  public enum RenderStateType { None, Select, Deselect, Background, Mouse, MouseWheel, Text, Notes, XScroll, YScroll }
 
   /// <summary></summary>
   public interface ITrackMouse

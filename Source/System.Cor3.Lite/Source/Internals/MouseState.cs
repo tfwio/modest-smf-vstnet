@@ -21,21 +21,37 @@
 #endregion
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 
 namespace modest100.Internals
 {
+  /// <summary></summary>
+  [FlagsAttribute]
+  public enum RenderStateType { None, Select, Deselect, Background, Mouse, MouseWheel, Text, Notes, XScroll, YScroll }
+
+  /// <summary></summary>
+  public interface ITrackMouse
+  {
+    /// <summary></summary>
+    bool HasMouseDownPoint { get; }
+    /// <summary></summary>
+    FloatPoint MouseDownPoint { get; set; }
+    /// <summary></summary>
+    FloatPoint MouseMovePoint { get; set; }
+  }
   class MouseState
   {
-    
     FloatPoint PointDown { get;set; }
+
     FloatPoint PointMove { get;set; }
     
     public bool IsMouseMin { get { return MouseMinX || MouseMinY; } }
+
     public bool MouseMinX { get { return PointMove.X < 0; } }
+
     public bool MouseMinY { get { return PointMove.Y < 0; } }
+
     public FloatPoint InvMouseTrail { get { return new FloatPoint( MouseMinX ? -1*PointMove.X : PointMove.X, MouseMinY ? -1*PointMove.Y : PointMove.Y ); } }
+
     public FloatPoint InvMousePoint { get { return new FloatPoint( MouseMinX ? PointDown.X+PointMove.X : PointDown.X, MouseMinY ? PointDown.Y+PointMove.Y : PointDown.Y ); } }
     
     static public MouseState Create(ITrackMouse control)
