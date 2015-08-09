@@ -34,9 +34,11 @@ namespace ren_mbqt_layout
       // 
       // MainForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(723, 428);
+      this.ClientSize = new System.Drawing.Size(812, 386);
+      this.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.Name = "MainForm";
       this.Text = "ren_mbqt_layout";
       this.ResumeLayout(false);

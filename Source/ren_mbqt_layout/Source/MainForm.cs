@@ -5,154 +5,183 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using ren_mbqt_layout.Widgets;
 
 namespace ren_mbqt_layout
 {
+  
   /// <summary>
   /// Description of MainForm.
   /// </summary>
   public partial class MainForm : Form
   {
-    static readonly Dictionary<string, Color> AppColor = new Dictionary<string, Color>{
-      {"dark",Color.FromArgb(255,50,50,50) },
-      {"black",Color.Black },
-      {"white",Color.White },
-      {"main",Color.Red },
-    };
-    static readonly Dictionary<string, Brush> AppBrushes = new Dictionary<string, Brush>{
-      {"black",Brushes.Black },
-      {"white",Brushes.White },
-      {"main",Brushes.Red },
-    };
-    static readonly Dictionary<string, Pen> Pens = new Dictionary<string, Pen>{
-      {"main",new Pen(AppBrushes["main"],24){StartCap=LineCap.Round,EndCap=LineCap.Round}},
-      {"black",new Pen(AppBrushes["black"],24){StartCap=LineCap.Round,EndCap=LineCap.Round}},
-      {"white",new Pen(AppBrushes["white"],24){StartCap=LineCap.Round,EndCap=LineCap.Round}},
-    };
-
-    protected bool HasControlKey = false;
+    Timer appTimer = new Timer() { Interval = 10 };
+    FloatRect myRect = new FloatRect(200,100,100,100);
+    IncrementUtil Incrementor = new IncrementUtil();
+    
+    Widget[] Widgets { get; set; }
+    
+    public bool HasControlKey {
+      get { return hasControlKey; }
+      set { hasControlKey = value; }
+    } protected bool hasControlKey = false;
     
     public FloatPoint MouseD { get; set; }
     public FloatPoint MouseU { get; set; }
-    public FloatPoint MouseN { get; set; }
     public FloatPoint MouseM { get; set; }
     
-    public int OffsetX { get;set; }
-    public int OffsetY { get;set; }
+    // we should have an undo-redo state-machine
+    // even though were not using it yet.
+    public Stack<object> StateMachine;
     
+    public FloatPoint ClientMouse { get { return new FloatPoint(PointToClient(MousePosition)) - new FloatPoint(Padding.Left,Padding.Top); } }
     
-    FloatPoint ClientMouse { get { return new FloatPoint(PointToClient(MousePosition)) - new FloatPoint(Padding.Left,Padding.Top); } }
+    public event EventHandler<WheelArgs> Wheel;
+
+    protected virtual void OnWheel(int val)
+    {
+      var args = new WheelArgs(1,HasControlKey);
+      var handler = Wheel;
+      if (handler != null) handler(this, args);
+    }
+    
+    #region Mouse Overrides
     
     protected void OnMouseWheel(object sender, MouseEventArgs e)
     {
-      if (HasControlKey) {
-        OffsetX = (e.Delta > 0) ? OffsetX + 1 : OffsetX - 1;
-        if (OffsetX <= 0) OffsetX = 0;
-      } else {
-        this.OffsetY = (e.Delta > 0) ? OffsetY + 1 : OffsetY - 1;
-        if (OffsetY > 127) this.OffsetY = 127;
-        else if (this.OffsetY <= 0) this.OffsetY = 0;
-      }
+      OnWheel(e.Delta > 0 ? 1 : -1);
+      //      if (HasControlKey) {
+      //        OffsetX = (e.Delta > 0) ? OffsetX + 1 : OffsetX - 1;
+      //        if (OffsetX <= 0) OffsetX = 0;
+      //      } else {
+      //        this.OffsetY = (e.Delta > 0) ? OffsetY + 1 : OffsetY - 1;
+      //        if (OffsetY > 127) this.OffsetY = 127;
+      //        else if (this.OffsetY <= 0) this.OffsetY = 0;
+      //      }
     }
+    
     protected override void OnMouseDown(MouseEventArgs e)
     {
       base.OnMouseDown(e);
       MouseD = MousePosition;
     }
+
     protected override void OnMouseUp(MouseEventArgs e)
     {
       base.OnMouseUp(e);
-      MouseN = MousePosition;
-      MouseU = MousePosition;
-      MouseN = null;
-      MouseD = null;
-      
-    }
 
-    // we should have an undo-redo state-machine
-    // even though were not using it yet.
-    public Stack<object> StateMachine;
-    
+      MouseU = MousePosition;
+      MouseD = null;
+    }
     protected override void OnMouseMove(MouseEventArgs e)
     {
       base.OnMouseMove(e);
       MouseM = MousePosition;
-      Invalidate();
     }
 
-    Timer appTimer = new Timer()
+    #endregion
+
+    #region Key Overrides
+
+    protected override void OnKeyDown(KeyEventArgs e)
     {
-      Interval = 100
-    };
+      base.OnKeyDown(e);
+      hasControlKey = e.Control;
+    }
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+      base.OnKeyUp(e);
+      hasControlKey = e.Control;
+    }
+
+    #endregion
+
     public MainForm()
     {
       InitializeComponent();
-      this.DoubleBuffered = true;
-      this.MouseWheel += OnMouseWheel;
-      this.appTimer.Tick += AppTimer_Tick;
+      
+      MouseD = FloatPoint.Empty;
+      MouseM = FloatPoint.Empty;
+      MouseU = FloatPoint.Empty;
+      
+      DoubleBuffered = true;
+      MouseWheel += OnMouseWheel;
+      
+      appTimer.Tick += AppTimer_Tick;
       appTimer.Start();
-    }
-
-    readonly FloatPoint POrigin = new FloatPoint(30,30);
-    FloatPoint PCoords = new FloatPoint(0,0);
-    readonly float PFactor = 30F;
-    readonly float PIncrement = 0.05F;
-    float PValue = 0;
-    readonly float PMax = 1F;
-    readonly float PMin = 0F;
-
-    void IncrementY()
-    {
-      PValue += PIncrement;
-      PCoords.Y = PValue * PFactor;
-      if (PValue > PMax) PValue = PMin;
-      Invalidate();
+      
+      var TopGridLoc = new FloatRect(130,30,100,48);
+      var DPadding = new Padding(4);
+      
+      Widgets = new Widget[]
+      {
+        new MousePositionWidget(this){
+          Bounds=TopGridLoc,
+          Padding=DPadding
+        },
+        new ButtonWidget(this){
+          Padding=DPadding,
+          Bounds=TopGridLoc.Clone(),
+          Text="BSOME"
+        },
+        new ButtonWidget(this){
+          Padding=DPadding,
+          Bounds=TopGridLoc.Clone(),
+          Text="3SOME"
+        },
+        new ClockWidget(this)
+        {
+          Bounds=new FloatRect(40, 150, 200, 24),
+          Padding=DPadding
+        }
+      };
+      Widgets[1].Bounds.X += 100;
+      Widgets[2].Bounds.X += 200;
     }
 
     private void AppTimer_Tick(object sender, EventArgs e)
     {
-      IncrementY();
+      this.Incrementor.IncrementY();
+      foreach (var widget in Widgets) widget.Increment();
+      Invalidate();
     }
-
-    FloatRect myRect = new FloatRect(200,100,100,100);
-    FloatPoint PClock = new FloatPoint(40,150);
-
-
+    
     protected override void OnPaint(PaintEventArgs e)
     {
-      e.Graphics.Clear(AppColor["dark"]);
+      e.Graphics.Clear(Painter.DictColour[ColourClass.Dark50]);
 
       e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
       e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+      
+      Brush fontColour = Painter.DictBrush[ColourClass.White];
+      
+      Incrementor.PCoords.X = 30;
+      e.Graphics.DrawString(string.Format("X: {0,-7}\nY: {1,-7}", ClientMouse.X, ClientMouse.Y), this.Font, fontColour, Incrementor.PCoords);
 
-      PCoords.X = 30;
-      e.Graphics.DrawString("ASOME", this.Font, AppBrushes["black"], PCoords);
+      Incrementor.PCoords.X += 100;
+      e.Graphics.DrawString(string.Format("X: {0,-7}\nY: {1,-7}", MouseM.X, MouseM.Y), this.Font, fontColour, Incrementor.PCoords);
 
-      PCoords.X += 100;
-      e.Graphics.DrawString("BSOME", this.Font, AppBrushes["black"], PCoords);
+      Incrementor.PCoords.X += 100;
+      e.Graphics.DrawString("BSOME", this.Font, fontColour, Incrementor.PCoords);
 
-      PCoords.X += 100;
-      e.Graphics.DrawString("3SOME", this.Font, AppBrushes["black"], PCoords);
+      Incrementor.PCoords.X += 100;
+      e.Graphics.DrawString("3SOME", this.Font, fontColour, Incrementor.PCoords);
 
-      PCoords.X += 100;
-      e.Graphics.DrawString("XSOME", this.Font, AppBrushes["black"], PCoords);
+      Incrementor.PCoords.X += 100;
+      e.Graphics.DrawString("XSOME", this.Font, fontColour, Incrementor.PCoords);
 
-      PCoords.X += 100;
-      e.Graphics.DrawString("Some Text", this.Font, AppBrushes["black"], PCoords);
+      Incrementor.PCoords.X += 100;
+      e.Graphics.DrawString("Some Text", this.Font, fontColour, Incrementor.PCoords);
 
-      PCoords.X += 100;
-      e.Graphics.DrawString("Some Text", this.Font, AppBrushes["black"], PCoords);
+      Incrementor.PCoords.X += 100;
+      e.Graphics.DrawString("Some Text", this.Font, fontColour, Incrementor.PCoords);
 
-      PCoords.X += 100;
-      e.Graphics.DrawString("Some Text", this.Font, AppBrushes["black"], PCoords);
+      Incrementor.PCoords.X += 100;
+      e.Graphics.DrawString("Some Text", this.Font, fontColour, Incrementor.PCoords);
+      
+      e.Graphics.DrawPie(Painter.DictPen[ColourClass.Default], myRect, 45, 180);
 
-      e.Graphics.DrawString(
-        DateTime.Now.ToString("hh:mm:ss.fff tt"),
-        this.Font, AppBrushes["black"],
-        PClock
-      );
-
-      e.Graphics.DrawPie(Pens["main"], myRect, 45, 180);
+      for (int i = 0; i < Widgets.Length; i++) Widgets[i].Paint(e.Graphics);
 
     }
   }
