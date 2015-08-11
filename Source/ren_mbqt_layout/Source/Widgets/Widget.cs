@@ -6,27 +6,41 @@ namespace ren_mbqt_layout.Widgets
 {
   public class Widget : WidgetBase<MainForm>
   {
+    override public bool HasFocus {
+      get { return Parent.FocusedControl == this; }
+    }
+    
+    public bool SetFocus()
+    {
+      Parent.FocusedControl = this;
+      return HasFocus;
+    }
+    
     public Widget(MainForm parent) : base(parent)
     {
     }
     
-    public override bool HasMouseDown {
-      get {
-        return HasMouse && Parent.MouseD != null;
-      }
+    public event EventHandler<WheelArgs> Wheel {
+      add    { Parent.Wheel += value; }
+      remove { Parent.Wheel -= value; }
     }
     
-    public override bool HasMouse {
+    public override bool HasClientMouseDown {
       get {
-        return Bounds.Contains(Parent.PointToClient(Parent.MouseM));
+        return HasClientMouse && Parent.MouseD != null;
       }
+    }
+    protected void GetHasMouse(){
+      Bounds.Contains(Parent.PointToClient(Parent.MouseM));
+    }
+    public override bool HasClientMouse {
+      get { return Bounds.Contains(Parent.PointToClient(Parent.MouseM)); }
     }
     public override void Paint(Graphics g)
     {
       Painter.DrawBorder(g, this);
     }
   }
-  
 }
 
 

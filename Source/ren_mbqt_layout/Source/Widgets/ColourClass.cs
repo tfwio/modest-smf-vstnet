@@ -6,12 +6,11 @@ namespace ren_mbqt_layout.Widgets
 	public enum ColourClass
 	{
 	  Active,
-		Dark50,
-		Dark70,
-		Dark90,
 		Black,
-		White,
+		Dark50, Dark70, Dark90,
 		Default,
+		Focus,
+		White,
 	}
 }
 

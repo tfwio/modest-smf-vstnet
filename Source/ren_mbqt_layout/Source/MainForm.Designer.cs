@@ -30,18 +30,19 @@ namespace ren_mbqt_layout
     /// </summary>
     private void InitializeComponent()
     {
-      this.SuspendLayout();
-      // 
-      // MainForm
-      // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(812, 386);
-      this.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
-      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-      this.Name = "MainForm";
-      this.Text = "ren_mbqt_layout";
-      this.ResumeLayout(false);
+    	this.SuspendLayout();
+    	// 
+    	// MainForm
+    	// 
+    	this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
+    	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+    	this.ClientSize = new System.Drawing.Size(812, 386);
+    	this.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold);
+    	this.Margin = new System.Windows.Forms.Padding(4);
+    	this.Name = "MainForm";
+    	this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+    	this.Text = "ren_mbqt_layout";
+    	this.ResumeLayout(false);
 
     }
 
