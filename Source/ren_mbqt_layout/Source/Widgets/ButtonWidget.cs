@@ -16,13 +16,18 @@ namespace ren_mbqt_layout.Widgets
     
     virtual protected void ButtonWidget_MouseDown(object sender, MouseEventArgs e)
     {
-      if (HasClientMouse) this.SetFocus();
+      if (HasClientMouse)
+      {
+        this.SetFocus();
+        this.HasMouseDown = true;
+      }
       using (Region rgn = new Region(this.Bounds))
         Parent.Invalidate(rgn);
     }
     
     virtual protected void ButtonWidget_MouseUp(object sender, MouseEventArgs e)
     {
+      this.HasMouseDown = false;
       using (Region rgn = new Region(this.Bounds))
         Parent.Invalidate(rgn);
     }
@@ -52,31 +57,6 @@ namespace ren_mbqt_layout.Widgets
       }
     }
   }
-  public class MousePositionWidget : Widget
-  {
-    public override string Text {
-      get {
-        return Parent.MouseM == null ? "" : string.Format("{0}, {1}", Parent.MouseM.X, Parent.MouseM.Y);
-      }
-    }
-    
-    public MousePositionWidget(MainForm parent) : base(parent)
-    {
-      this.ValueFormat = "{0}";
-    }
-
-    public override void Paint(Graphics g)
-    {
-      base.Paint(g);
-      using (var region = new Region(Bounds))
-      {
-        g.Clip = region;
-        Painter.DrawText(g,this);
-        g.ResetClip();
-      }
-    }
-  }
-  
 }
 
 

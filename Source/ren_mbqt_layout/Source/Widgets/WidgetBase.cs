@@ -6,6 +6,10 @@ namespace ren_mbqt_layout.Widgets
 {
   public abstract class WidgetBase <TParent> where TParent : MainForm
   {
+    virtual public bool HasMouseDown {
+      get; set;
+    }
+    
     virtual public bool HasClientMouse {
       get { return false; }
     }
@@ -22,7 +26,7 @@ namespace ren_mbqt_layout.Widgets
     {
       get
       {
-        if (HasClientMouseDown) return ColourClass.Active;
+        if (HasMouseDown/* || HasClientMouseDown*/) return ColourClass.Active;
         else if (HasFocus) return ColourClass.Focus;
         else if (HasClientMouse) return ColourClass.White;
         else return ColourClass.Default;
@@ -72,7 +76,7 @@ namespace ren_mbqt_layout.Widgets
 
     #region Position
     
-    public FloatRect Bounds {
+    virtual public FloatRect Bounds {
       get;
       set;
     }

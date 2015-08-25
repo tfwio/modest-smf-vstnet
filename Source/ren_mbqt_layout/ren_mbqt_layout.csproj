@@ -52,13 +52,21 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\IncrementUtil.cs" />
-    <Compile Include="Source\WheelArgs.cs" />
+    <Compile Include="Source\Logi\Decible.cs" />
+    <Compile Include="Source\Logi\IncrementUtil.cs" />
+    <Compile Include="Source\Logi\IState.cs" />
+    <Compile Include="Source\Logi\MinMax.cs" />
+    <Compile Include="Source\Logi\Painter.Brushes.cs" />
+    <Compile Include="Source\Logi\Painter.cs" />
+    <Compile Include="Source\Logi\ScaledSliderValue.cs" />
+    <Compile Include="Source\Logi\WheelArgs.cs" />
     <Compile Include="Source\Widgets\ButtonWidget.cs" />
     <Compile Include="Source\Widgets\ClockWidget.cs" />
     <Compile Include="Source\Widgets\ColourClass.cs" />
+    <Compile Include="Source\Widgets\DoubleMinMax.cs" />
     <Compile Include="Source\Widgets\GridListWidget.cs" />
-    <Compile Include="Source\Widgets\Painter.cs" />
+    <Compile Include="Source\Widgets\MousePositionWidget.cs" />
+    <Compile Include="Source\Widgets\SliderWidget.cs" />
     <Compile Include="Source\Widgets\Widget.cs" />
     <Compile Include="Source\Widgets\WidgetBase.cs" />
     <None Include="Source\UI\GraphicsTableLayout.cs" />
@@ -80,7 +88,9 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Source\Logi" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\gen.snd.common\gen.snd.common.csproj">
       <Project>{669C9CD9-8B80-4D6D-B5D7-A39B1224A50E}</Project>

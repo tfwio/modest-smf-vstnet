@@ -14,7 +14,7 @@ namespace ren_mbqt_layout
   /// </summary>
   public partial class MainForm : Form
   {
-    Timer         appTimer = new Timer() { Interval = 100 };
+    Timer         appTimer = new Timer() { Interval = 500 };
     FloatRect     myRect = new FloatRect(200,100,100,100);
     IncrementUtil Incrementor = new IncrementUtil();
     Widget[]      Widgets { get; set; }
@@ -113,16 +113,21 @@ namespace ren_mbqt_layout
       var TopGridLoc = new FloatRect(10,10,100,28);
       var DPadding = new Padding(4);
       
+      float i=TopGridLoc.X + TopGridLoc.Width;
+      var sliderrect=new FloatRect( 460, 10, 200, 24);
+      
       Widgets = new Widget[]
       {
         new MousePositionWidget(this){ Bounds=TopGridLoc, Padding=DPadding },
-        new ButtonWidget(this){ Padding=DPadding, Bounds=TopGridLoc.Clone(), Text="BSOME" },
-        new ButtonWidget(this){ Padding=DPadding, Bounds=TopGridLoc.Clone(), Text="3SOME" },
+        new ButtonWidget(this){ Padding=DPadding, Bounds=new FloatRect( i, 10, 100, 24), Text="ASOME" },
+        new ButtonWidget(this){ Padding=DPadding, Bounds=new FloatRect( i=i+100, 10, 50, 24), Text="➤" },
+        new ButtonWidget(this){ Padding=DPadding, Bounds=new FloatRect( i=i+50, 10, 100, 24), Text="CSOME" },
+        new SliderWidget(this){ Padding=DPadding, Bounds=sliderrect, Text="SLIDE",
+          SliderValue=new DoubleMinMax(){ Minimum=0,Maximum=200,Value=100 }
+        },
         new ClockWidget(this) { Bounds=new FloatRect(40, 150, 200, 24), Padding=DPadding },
       };
-      
-      Widgets[1].Bounds.X += 100;
-      Widgets[2].Bounds.X += 200;
+      Widgets[4].Bounds.X = (i=i+100);
     }
     
     private void AppTimer_Tick(object sender, EventArgs e)

@@ -66,7 +66,7 @@ namespace gen.snd.Vst
 
 		public VstPluginManager PluginManager { get { return pluginManager; } } VstPluginManager pluginManager;
 		
-        public IMidiParserUI Parent { get { return parent; } } IMidiParserUI parent;
+    public IMidiParserUI Parent { get { return parent; } } IMidiParserUI parent;
 
 		public NAudioVST VstPlayer { get { return vstPlayer; } } NAudioVST vstPlayer;
 
@@ -109,8 +109,6 @@ namespace gen.snd.Vst
 			this.parent = parent;
 			this.vstPlayer = new NAudioVST(this);
 			this.pluginManager = new VstPluginManager(this);
-//			this.VstPlayer.BufferCycle -= HandleProcessed;
-//			this.VstPlayer.BufferCycle += HandleProcessed;
 		}
 		
 	}

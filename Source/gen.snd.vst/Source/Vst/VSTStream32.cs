@@ -65,8 +65,11 @@ namespace gen.snd.Vst
 			get { return parent; }
 			set { parent = value; }
 		} NAudioVST parent;
+		
 		IMidiParser MidiParser { get { return parent.Parent.Parent.MidiParser; } }
+		
 		VstPluginManager PluginManager { get { return parent.Parent.PluginManager; } }
+		
 		#endregion
 		#region VST PLUGIN
 		VstPlugin module_instrument { get { return parent.Parent.PluginManager.MasterPluginInstrument; } }
@@ -90,6 +93,7 @@ namespace gen.snd.Vst
 			int actualSamples = newsamplecount.FloorMinimum(0).ToInt32() / nch;
 			
 			Loop o = parent.One;
+			
 			if ((parent.SampleOffset+actualSamples) > o.End) {
 				newsamplecount = (o.End - (parent.SampleOffset)).ToInt32() * nch;
 				actualSamples = (newsamplecount.FloorMinimum(0).ToInt32() / nch);
@@ -99,10 +103,13 @@ namespace gen.snd.Vst
 				parent.SampleOffset = o.Begin;
 				newsamplecount = sampleCount;
 			}
+			
 			return newsamplecount.FloorMinimum(0).ToInt32();
+			
 		}
 		#endregion
 		#region BUFFER FLUSH
+		
 		float[] ProcessToMixer(VstPlugin plugin, VstAudioBuffer[] buffer)
 		{
 			int indexOutput = 0;
@@ -125,6 +132,7 @@ namespace gen.snd.Vst
 			}
 			return actualOutput;
 		}
+		
 		#endregion
 		
 		#region AUDIO PROCESS
@@ -147,8 +155,10 @@ namespace gen.snd.Vst
 				try
 				{
 					if (mod==null) mod = IOModule.Create(blockSize,module_instrument,module_effect);
+					
 					mod.Reset(blockSize,module_instrument,module_effect);
 					mod.GeneralProcess(module_instrument,module_effect);
+					
 					actualBuffer = module_effect==null ? mod.Inputs.Outputs.ToArray() : mod.Outputs.Outputs.ToArray();
 				}
 				catch (Exception ex) {
@@ -163,7 +173,9 @@ namespace gen.snd.Vst
 		#endregion
 
 		#region WAVE
+		
 		private WaveFormat waveFormat;
+		
 		public override WaveFormat WaveFormat { get { return waveFormat; } }
 		/// <summary>
 		/// Probably reflected in Read(float[] buffer, int offset, int sampleCount) as sampleCount.
@@ -189,10 +201,11 @@ namespace gen.snd.Vst
 		public int Read(float[] buffer, int offset, int sampleCount)
 		{
 			numSamplesToProcess = GetSamplesWithinLoop(sampleCount,Parent.Settings.Channels);
-			int numSamplesPerChannel = NumSamplesPerChannel;
 			
+			int numSamplesPerChannel = NumSamplesPerChannel;
 			float[] tempBuffer = ProcessReplace( numSamplesPerChannel );
 			for (int i = 0; i < numSamplesToProcess; i++) buffer[i + offset] = tempBuffer[i];
+			
 			Parent.OnBufferCycle( numSamplesPerChannel );
 			return numSamplesToProcess;
 		}
@@ -203,8 +216,8 @@ namespace gen.snd.Vst
 		}
 
 		#region Read(byte[] buffer, int offset, int count)
+		
 		/// <summary>
-		/// 
 		/// </summary>
 		/// <param name="buffer"></param>
 		/// <param name="offset">always Zero. (see Position)</param>
@@ -217,6 +230,7 @@ namespace gen.snd.Vst
 			int samplesRead = Read(waveBuffer.FloatBuffer, offset / 4, samplesRequired);
 			return samplesRead * 4;
 		}
+		
 		#endregion
 		
 	}

@@ -111,6 +111,7 @@ namespace modest100.Forms
       finally {
         
         ChanelNumbers.Clear();
+        
         if (Parser!=null)
         {
           foreach ( MidiMessage n in Parser.MidiDataList[ Parser.SelectedTrackNumber ].Where(nn=> nn is MidiNote) )

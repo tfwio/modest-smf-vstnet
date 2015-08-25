@@ -6,6 +6,12 @@ namespace ren_mbqt_layout.Widgets
 {
   public class Widget : WidgetBase<MainForm>
   {
+    public FloatPoint PointToClient(FloatPoint point)
+    {
+      FloatPoint p1 = Parent.PointToClient(point);
+      p1 = Bounds.Location-p1;
+      return p1;
+    }
     override public bool HasFocus {
       get { return Parent.FocusedControl == this; }
     }

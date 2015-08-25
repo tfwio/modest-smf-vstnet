@@ -35,7 +35,6 @@ namespace gen.snd.Vst
 		
 		public void Dispose()
 		{
-			
 			this.mod0Input = null;
 			this.mod1Input = null;
 			this.mod0Output = null;
@@ -63,10 +62,7 @@ namespace gen.snd.Vst
 		}
 		public IOModule Reset(int blockSize, VstPlugin vstI, VstPlugin vstO)
 		{
-	//			if (BlockSize!=BlockSize)
-	//			{
-				BlockSize = blockSize;
-	//			}
+			BlockSize = blockSize;
 			PluginResetBuffers(vstI,vstO,blockSize);
 			return this;
 		}
@@ -75,7 +71,6 @@ namespace gen.snd.Vst
 			if (Inputs==null || Inputs.BlockSize!=BlockSize) PluginResetBuffers(vstInput,vstOutput,BlockSize);
 			PluginProcess(vstInput,BlockSize,Inputs[0].ToArray(),Inputs[1].ToArray());
 			return PluginProcess2(vstOutput,Inputs[1].ToArray(),Outputs[1].ToArray());
-			
 		}
 		void PluginResetBuffers(VstPlugin input, VstPlugin output, int blockSize)
 		{

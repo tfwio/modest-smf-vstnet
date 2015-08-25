@@ -79,13 +79,13 @@ namespace modest100.Forms
 			public Brush AnotherBrush = new SolidBrush(Color.FromArgb(48, Color.DodgerBlue));
 		}
 
-		static public GraphicsPens DefaultPens {
+		public static GraphicsPens DefaultPens {
 			get {
 				return new GraphicsPens();
 			}
 		}
 
-		static public MidiTimeState TimeState {
+		public static MidiTimeState TimeState {
 			get;
 			set;
 		}
@@ -171,7 +171,7 @@ namespace modest100.Forms
 		}
 
 		/// 
-		static public void GetBackgroundGrid_Ebony(Graphics g, int off, int i, GraphicsPens pens)
+		public static void GetBackgroundGrid_Ebony(Graphics g, int off, int i, GraphicsPens pens)
 		{
 			int corner = 7;
 			
@@ -194,7 +194,7 @@ namespace modest100.Forms
 		}
 
 		/// y-plane top to bottom
-		static public void GetBackgroundGrid_Ebony(Graphics g, float off, GraphicsPens pens)
+		public static void GetBackgroundGrid_Ebony(Graphics g, float off, GraphicsPens pens)
 		{
 			for (float i = ui_view_settings.Rect.Top; i <= ui_view_settings.Rect.Bottom; i += ui_view_settings.NodeHeight)
 				GetBackgroundGrid_Ebony(g, Convert.ToInt32(off), Convert.ToInt32(i), pens);
