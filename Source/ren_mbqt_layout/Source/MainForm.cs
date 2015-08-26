@@ -123,7 +123,7 @@ namespace ren_mbqt_layout
         new ButtonWidget(this){ Padding=DPadding, Bounds=new FloatRect( i=i+100, 10, 50, 24), Text="➤" },
         new ButtonWidget(this){ Padding=DPadding, Bounds=new FloatRect( i=i+50, 10, 100, 24), Text="CSOME" },
         new SliderWidget(this){ Padding=DPadding, Bounds=sliderrect, Text="SLIDE",
-          SliderValue=new DoubleMinMax(){ Minimum=0,Maximum=200,Value=100 }
+          SliderValue=new DoubleMinMax(){ Minimum=0,Maximum=1,Value=.5 }
         },
         new ClockWidget(this) { Bounds=new FloatRect(40, 150, 200, 24), Padding=DPadding },
       };

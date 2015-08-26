@@ -1,6 +1,7 @@
 ﻿/* oio * 8/3/2015 * Time: 6:39 AM
  */
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 namespace ren_mbqt_layout.Widgets
@@ -8,8 +9,12 @@ namespace ren_mbqt_layout.Widgets
   public class SliderWidget : ButtonWidget
   {
     public DoubleMinMax SliderValue { get; set; }
-    public DoubleMinMax ThumbValue { get; set; }
+    // public DoubleMinMax ThumbValue { get; set; }
+    
     public float ThumbWidth { get;set; }
+    
+    FloatRect mthumb;
+    
     double size,left;
     
     public override FloatRect Bounds {
@@ -21,7 +26,11 @@ namespace ren_mbqt_layout.Widgets
         UpdateBounds();
       }
     }
-    
+    protected override void ButtonWidget_MouseDown(object sender, MouseEventArgs e)
+    {
+      UpdateBounds();
+      base.ButtonWidget_MouseDown(sender, e);
+    }
     protected override void ButtonWidget_MouseMove(object sender, MouseEventArgs e)
     {
       if (HasMouseDown)
@@ -31,45 +40,30 @@ namespace ren_mbqt_layout.Widgets
         Parent.Invalidate(this.Bounds);
       }
     }
-    FloatRect mthumb;
     public void UpdateBounds()
     {
       size = Bounds.Width;
       left = Bounds.Left;
-      ThumbValue.Minimum=ThumbWidth / 2;
-      ThumbValue.Maximum=size-ThumbValue.Minimum;
+      
       FloatPoint mouse = Parent.PointToClient(MainForm.MousePosition);
-      SliderValue.Value = (mouse.X-left)/200;
-      ThumbValue.Value = ThumbValue.Contain(SliderValue.Value);
-//      mthumb = new FloatRect(){
-//          X=Convert.ToSingle((mouse.X-ThumbValue.Minimum)),
-//          Y=PaddedBounds.Top,
-//          Width=ThumbWidth,
-//          Height=PaddedBounds.Height
-//        };
-      this.Text = string.Format( "{0:p2}", SliderValue.Contain(SliderValue.Value) );
+      SliderValue.Value = (mouse.X-left)/size;
+      Debug.Print( "Value: {0:n2}, {1}, {2}", SliderValue.Value, SliderValue.Minimum, SliderValue.Maximum );
+      this.Text = string.Format( "{0:p2}", SliderValue.Value );
     }
     public SliderWidget(MainForm parent) : base(parent)
     {
       ThumbWidth = 10;
-      ThumbValue = new DoubleMinMax();
-      SliderValue = new DoubleMinMax();
-      SliderValue.Minimum = 0;
-      SliderValue.Maximum = 1;
-      this.ValueFormat = "{0}";
-      //      this.Click += ButtonWidget_Click;
-//			this.MouseDown += ButtonWidget_MouseDown;
-//			this.MouseUp += ButtonWidget_MouseUp;
-//			this.MouseMove += ButtonWidget_MouseMove;
-      ;
+      SliderValue = new DoubleMinMax(){
+        Minimum=0,
+        Maximum=1,
+      };
+      ValueFormat = "{0}";
     }
 
     public override void Paint(Graphics g)
     {
       base.Paint(g);
-      using (var region = new Region(this.PaddedBounds)) {
-        
-        g.Clip = region;
+      using (g.Clip = new Region(this.PaddedBounds)) {
         
         var msize = this.Bounds.Clone();
         msize.Width = Convert.ToSingle(Bounds.Width * this.SliderValue.Value);
@@ -77,8 +71,7 @@ namespace ren_mbqt_layout.Widgets
         FloatPoint mouse = Parent.PointToClient(MainForm.MousePosition);
         
         g.FillRectangle(new SolidBrush(ColourFg),msize);
-//        g.FillRectangle(new SolidBrush(Color.Black),mthumb);
-        
+
         Painter.DrawText(g, this);
       }
     }
