@@ -14,11 +14,11 @@ namespace ren_mbqt_layout
   /// </summary>
   public partial class MuiForm : Form, IMui
   {
-    Timer         appTimer = new Timer() { Interval = 500 };
+    Timer         appTimer = new Timer() { Interval = 90 };
     FloatRect     myRect = new FloatRect(200,100,100,100);
     IncrementUtil Incrementor = new IncrementUtil();
     
-    public Widget[]      Widgets { get; set; }
+    public Widget[] Widgets { get; set; }
     public Widget FocusedControl { get; set; }
     public FloatPoint MouseD { get; set; }
     public FloatPoint MouseU { get; set; }
@@ -143,14 +143,13 @@ namespace ren_mbqt_layout
     
     protected override void OnPaint(PaintEventArgs e)
     {
-      e.Graphics.Clear(Painter.DictColour[ColourClass.Dark50]);
-      e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-      e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-      
-      Brush fontColour = Painter.DictBrush[ColourClass.White];
       if (MouseM==null) return;
       
-      e.Graphics.DrawPie(Painter.DictPen[ColourClass.Default], myRect, 45, 180);
+      e.Graphics.Clear(Painter.DictColour[ColourClass.Dark50]);
+      
+//      e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+//      e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+//      e.Graphics.DrawPie(Painter.DictPen[ColourClass.Default], myRect, 45, 180);
       
       for (int i = 0; i < Widgets.Length; i++) Widgets[i].Paint(e.Graphics);
       
