@@ -106,17 +106,17 @@ namespace ren_mbqt_layout
     
     public MuiForm()
     {
-      var asm = System.Reflection.Assembly.GetExecutingAssembly();
-      var finf = new System.IO.FileInfo(asm.Location);
-      var finf2 = new System.IO.FileInfo(System.IO.Path.Combine(finf.Directory.FullName,"asset/adfx3.ttf"));
-      System.Diagnostics.Debug.Print(finf2.FullName);
       DoubleBuffered = true;
       MouseD = FloatPoint.Empty;
       MouseU = FloatPoint.Empty;
       MouseM = FloatPoint.Empty;
       
       InitializeComponent();
-      this.Font = LocalFonts.GetFontResource(finf2,Font.Size);
+//      var asm = System.Reflection.Assembly.GetExecutingAssembly();
+//      var finf = new System.IO.FileInfo(asm.Location);
+//      var finf2 = new System.IO.FileInfo(System.IO.Path.Combine(finf.Directory.FullName,"asset/adfx3.ttf"));
+//      System.Diagnostics.Debug.Print(finf2.FullName);
+//      this.Font = LocalFonts.GetFontResource(finf2,Font.Size);
       
       MouseWheel += OnMouseWheel;
       
