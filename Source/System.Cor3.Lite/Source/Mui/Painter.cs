@@ -1,10 +1,7 @@
-﻿/* oio * 8/3/2015 * Time: 6:39 AM
- */
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-namespace ren_mbqt_layout.Widgets
+using Mui.Widgets;
+namespace Mui
 {
   
   public partial class Painter

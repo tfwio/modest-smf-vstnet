@@ -2,34 +2,32 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-namespace ren_mbqt_layout.Widgets
+namespace Mui.Widgets
 {
-  public abstract class WidgetBase <TParent> where TParent : IMui
+  public abstract class WidgetBase
   {
-    virtual public bool HasMouseDown {
-      get; set;
-    }
+    /// <summary>If set, overrides colourclass</summary>
+    virtual public Color? ForegroundColor { get; set; }
     
-    virtual public bool HasClientMouse {
-      get { return false; }
-    }
+    // <summary>If set, overrides colourclass</summary>
+    //Color BackgroundColor { get; set; }
     
-    virtual public bool HasClientMouseDown {
-      get { return false; }
-    }
+    virtual public bool HasMouseDown { get; set; }
     
-    virtual public Color ColourFg { get { return Painter.DictColour[ColourClassFg]; } }
+    virtual public bool HasClientMouse { get { return false; } }
+    
+    virtual public bool HasClientMouseDown { get { return false; } }
+    
+    virtual public Color ColourFg { get { return ForegroundColor.HasValue ? ForegroundColor.Value : Painter.DictColour[ColourClassFg]; } }
     
     abstract public bool HasFocus { get; }
     
-    public ColourClass ColourClassFg
-    {
+    public ColourClass ColourClassFg {
       get
       {
         if (HasMouseDown/* || HasClientMouseDown*/) return ColourClass.Active;
-        else if (HasFocus) return ColourClass.Focus;
-        else if (HasClientMouse) return ColourClass.White;
-        else return ColourClass.Default;
+        if (HasFocus) return ColourClass.Focus;
+        return HasClientMouse ? ColourClass.White : ColourClass.Default;
       }
     }
 
@@ -54,14 +52,11 @@ namespace ren_mbqt_layout.Widgets
     
     #region Not Useful
     
-    public FloatPoint Offset {
-      get;
-      set;
-    }
+    public FloatPoint Offset { get; set; }
 
     #endregion
     
-    public WidgetBase(TParent parent)
+    protected WidgetBase(IMui parent)
     {
       this.Parent = parent;
     }
@@ -76,15 +71,9 @@ namespace ren_mbqt_layout.Widgets
 
     #region Position
     
-    virtual public FloatRect Bounds {
-      get;
-      set;
-    }
+    virtual public FloatRect Bounds { get; set; }
 
-    public Padding Padding {
-      get;
-      set;
-    }
+    public Padding Padding { get; set; }
 
     public FloatRect PaddedBounds {
       get {
@@ -97,51 +86,30 @@ namespace ren_mbqt_layout.Widgets
 
     #endregion
     
-    public TParent Parent {
-      get;
-      set;
-    }
+    public IMui Parent { get; set; }
 
-    virtual public string Text {
-      get;
-      set;
-    }
+    virtual public string Text { get; set; }
 
     virtual public Font Font {
       get { return font == null ? Parent.Font : font; }
       set { font = value; }
-    } Font font;
+    }
+    Font font;
 
     // this should attach to its parent
-    bool IsActive {
-      get;
-      set;
-    }
+    bool IsActive { get; set; }
 
-    bool NeedsPaint {
-      get;
-      set;
-    }
+    bool NeedsPaint { get; set; }
 
     #region Value
     
-    public object DoubleValue {
-      get;
-      set;
-    }
+    public object DoubleValue { get; set; }
 
-    virtual public object Value {
-      get;
-      set;
-    }
+    virtual public object Value { get; set; }
 
     public string ValueFormat {
-      get {
-        return valueFormat;
-      }
-      set {
-        valueFormat = value;
-      }
+      get { return valueFormat; }
+      set { valueFormat = value; }
     } internal string valueFormat = "{0}";
 
     #endregion

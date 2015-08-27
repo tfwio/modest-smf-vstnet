@@ -21,8 +21,9 @@
 using System;
 using System.Drawing;
 #endregion
-namespace ren_mbqt_layout /* modest100|Naudio's */
+namespace Mui
 {
+  // Probably based on something from NAudio
 	public struct Decible
 	{
 		static public string fmt_db = "{0:F2} dB";

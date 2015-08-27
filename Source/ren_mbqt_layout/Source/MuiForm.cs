@@ -3,9 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Windows.Forms;
-using ren_mbqt_layout.Widgets;
+using Mui;
+using Mui.Widgets;
 
 namespace ren_mbqt_layout
 {
@@ -100,14 +101,22 @@ namespace ren_mbqt_layout
 
     #endregion
     
+    SimpleWidgetGroup Facto = new DefaultWidgetGroup();
+    PrivateFontCollection LocalFonts = new System.Drawing.Text.PrivateFontCollection();
+    
     public MuiForm()
     {
+      var asm = System.Reflection.Assembly.GetExecutingAssembly();
+      var finf = new System.IO.FileInfo(asm.Location);
+      var finf2 = new System.IO.FileInfo(System.IO.Path.Combine(finf.Directory.FullName,"asset/adfx3.ttf"));
+      System.Diagnostics.Debug.Print(finf2.FullName);
       DoubleBuffered = true;
       MouseD = FloatPoint.Empty;
       MouseU = FloatPoint.Empty;
       MouseM = FloatPoint.Empty;
       
       InitializeComponent();
+      this.Font = LocalFonts.GetFontResource(finf2,Font.Size);
       
       MouseWheel += OnMouseWheel;
       
@@ -122,16 +131,12 @@ namespace ren_mbqt_layout
       
       Widgets = new Widget[]
       {
-        new MousePositionWidget(this){ Bounds=TopGridLoc, Padding=DPadding },
-        new ButtonWidget(this){ Padding=DPadding, Bounds=new FloatRect( i, 10, 100, 24), Text="ASOME" },
-        new ButtonWidget(this){ Padding=DPadding, Bounds=new FloatRect( i=i+100, 10, 50, 24), Text="➤" },
-        new ButtonWidget(this){ Padding=DPadding, Bounds=new FloatRect( i=i+50, 10, 100, 24), Text="CSOME" },
-        new SliderWidget(this){ Padding=DPadding, Bounds=sliderrect, Text="SLIDE",
-          SliderValue=new DoubleMinMax(){ Minimum=0,Maximum=1,Value=.5 }
-        },
         new ClockWidget(this) { Bounds=new FloatRect(40, 150, 200, 24), Padding=DPadding },
       };
-      Widgets[4].Bounds.X = (i=i+100);
+      
+      
+      Facto.Parent = this;
+      Facto.Initialize();
     }
     
     private void AppTimer_Tick(object sender, EventArgs e)
@@ -140,7 +145,6 @@ namespace ren_mbqt_layout
       foreach (var widget in Widgets) widget.Increment();
       Invalidate();
     }
-    
     protected override void OnPaint(PaintEventArgs e)
     {
       if (MouseM==null) return;
@@ -152,7 +156,7 @@ namespace ren_mbqt_layout
 //      e.Graphics.DrawPie(Painter.DictPen[ColourClass.Default], myRect, 45, 180);
       
       for (int i = 0; i < Widgets.Length; i++) Widgets[i].Paint(e.Graphics);
-      
+      Facto.Paint(e);
     }
   }
   

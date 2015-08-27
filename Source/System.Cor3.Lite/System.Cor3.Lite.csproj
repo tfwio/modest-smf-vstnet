@@ -69,6 +69,27 @@
     <Compile Include="Source\Internals\MouseStateExtension.cs" />
     <Compile Include="Source\Internals\Renderer_SelectionBox.cs" />
     <Compile Include="Source\Internals\RenderStateType.cs" />
+    <Compile Include="Source\Interop\FontResource.cs" />
+    <Compile Include="Source\Mui.Widgets\ButtonWidget.cs" />
+    <Compile Include="Source\Mui.Widgets\ClockWidget.cs" />
+    <Compile Include="Source\Mui.Widgets\GridListWidget.cs" />
+    <Compile Include="Source\Mui.Widgets\MousePositionWidget.cs" />
+    <Compile Include="Source\Mui.Widgets\SliderWidget.cs" />
+    <Compile Include="Source\Mui.Widgets\Widget.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetBase.cs" />
+    <Compile Include="Source\Mui\ColourClass.cs" />
+    <Compile Include="Source\Mui\Decible.cs" />
+    <Compile Include="Source\Mui\DefaultWidgetGroup.cs" />
+    <Compile Include="Source\Mui\DoubleMinMax.cs" />
+    <Compile Include="Source\Mui\IMui.cs" />
+    <Compile Include="Source\Mui\IncrementUtil.cs" />
+    <Compile Include="Source\Mui\IState.cs" />
+    <Compile Include="Source\Mui\MinMax.cs" />
+    <Compile Include="Source\Mui\Painter.Brushes.cs" />
+    <Compile Include="Source\Mui\Painter.cs" />
+    <Compile Include="Source\Mui\ScaledSliderValue.cs" />
+    <Compile Include="Source\Mui\WheelArgs.cs" />
+    <Compile Include="Source\Mui\WidgetGroup.cs" />
     <Compile Include="Source\System\ControlUtil.cs" />
     <Compile Include="Source\System.Drawing\CORNERS.cs" />
     <Compile Include="Source\System.Drawing\DblUnit.cs" />
@@ -106,6 +127,9 @@
     </Compile>
     <Compile Include="Source\Interop\WinMM.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Source\Mui" />
+    <Folder Include="Source\Mui.Widgets" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

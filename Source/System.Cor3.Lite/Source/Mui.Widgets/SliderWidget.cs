@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-namespace ren_mbqt_layout.Widgets
+namespace Mui.Widgets
 {
   public class SliderWidget : ButtonWidget
   {
@@ -13,8 +13,6 @@ namespace ren_mbqt_layout.Widgets
     // public DoubleMinMax ThumbValue { get; set; }
     
     public float ThumbWidth { get;set; }
-    
-    FloatRect mthumb;
     
     double size,left;
     

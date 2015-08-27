@@ -2,9 +2,9 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-namespace ren_mbqt_layout.Widgets
+namespace Mui.Widgets
 {
-  public class Widget : WidgetBase<IMui>
+  public class Widget : WidgetBase
   {
     protected internal FloatPoint Mouse { get { return Parent.PointToClient(Form.MousePosition); } }
     

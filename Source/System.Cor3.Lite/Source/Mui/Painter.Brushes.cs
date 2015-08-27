@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-namespace ren_mbqt_layout.Widgets
+namespace Mui
 {
 	public partial class Painter
 	{
