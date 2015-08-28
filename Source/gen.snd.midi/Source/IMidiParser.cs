@@ -30,33 +30,47 @@ namespace gen.snd.Midi
 		#endregion
 		
 		#region CH
+		
 		/// <summary>
 		/// if not -1, the Midi Track @SelectedTrackNumber will contain data primary to a view.
 		/// </summary>
 		int SelectedTrackChannel { get; }
+		
 		/// <summary>
 		/// A set of midi data channels (not track-number) used for filtering data for ui.
 		/// </summary>
 		List<int> ChannelFilter { get; }
+		
 		#endregion
+		
 		#region DATA (DictionaryList<int,MidiMessage>)
+		
 		DictionaryList<int,MidiMessage> MidiDataList { get; }
+		
 		#endregion
+		
 		#region DATA standard global
+		
 		Stack<MidiMessage> TempoChanges { get; }
+		
 		MidiKeySignature KeySignature { get;set; }
+		
 		MidiTimeSignature TimeSignature { get;set; }
+		
 		#endregion
 		
 		#region TIME
 		
 		ulong TicksPerQuarterNote { get; set; }
+		
 		int RunningStatus32 { get; set; }
 		
 		SampleClock MidiTimeInfo { get;set; }
 		
 		void ResetTiming();
+		
 		void GetDivision();
+		
 		#endregion
 		
 		void OnMidiMessage(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse);
@@ -64,6 +78,7 @@ namespace gen.snd.Midi
 		#region PARSE (handlers)
 		
 		bool UseEventHandler { get; }
+		
 		bool HasTrackReaderDelegate { get; }
 
 		/// <summary>
@@ -77,47 +92,67 @@ namespace gen.snd.Midi
 		List<MidiEventDelegate> MessageHandlers { get; }
 		
 		#endregion
+		
 		#region PARSE TRACK
+		
 		int SelectedTrackNumber { get; set; }
+		
 		bool IsTrackSelected { get; }
+		
 		MidiReaderLoadTrackDelegate LoadTrack { get; set; }
+		
 		/// <summary>
 		/// Specifically targeting Meta information helpful for a main-parse
 		/// algorithm.
 		/// </summary>
 		string TrackSelectAction();
+		
 		long ParseTrack();
 		
 		void ParseTrackMeta(int trackNo);
+		
 		int GetTrackMessage(int position, int delta);
+		
 		#endregion
+		
 		#region PARSE TRACK event
 		
 		event EventHandler<MidiMessageEvent> ProcessMidiMessage;
+		
 		event EventHandler<ProgressChangedEventArgs> TrackLoadProgressChanged;
 		
 		event EventHandler AfterTrackLoaded;
+		
 		event EventHandler BeforeTrackLoaded;
+		
 		event EventHandler TrackChanged;
 		
 		#endregion
 		
 		#region FILE
+		
 		smf_mthd SmfFileHandle { get; set; }
+		
 		string MidiFileName { get; set; }
+		
 		#endregion
+		
 		#region FILE event
+		
 		/// <summary>
 		/// FILE event Loaded
 		/// </summary>
 		event EventHandler FileLoaded;
+		
 		/// <summary>
 		/// FILE event Unloaded
 		/// </summary>
 		event EventHandler ClearView;
+		
 		#endregion
 		
 		void Dispose();
+		
 		string ToString();
 
 		#region NO

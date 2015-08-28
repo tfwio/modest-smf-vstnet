@@ -10,7 +10,6 @@ using System.IO;
 using System.Windows.Forms;
 
 using gen.snd.Midi.Common;
-using gen.snd.Midi.Structures;
 using CliEvent = System.EventArgs;
 
 namespace gen.snd.Midi
@@ -115,14 +114,8 @@ namespace gen.snd.Midi
 		/// <inheritdoc/>
 		public int GetMetaLen(int offset, int plus) { return SmfFileHandle[SelectedTrackNumber, offset + 2]; }
 
-		public byte[] GetMetaData(int offset)
-		{
-			return SmfFileHandle[SelectedTrackNumber, offset, SmfFileHandle[SelectedTrackNumber, offset + 2] + 3];
-		}
-//		public byte[] GetMetaStringValue(int offset)
-//		{
-//			return (SmfFileHandle[SelectedTrackNumber, offset, 3]);
-//		}
+		public byte[] GetMetaData(int offset) { return SmfFileHandle[SelectedTrackNumber, offset, SmfFileHandle[SelectedTrackNumber, offset + 2] + 3]; }
+
 		public byte[] GetMetaValue(int offset)
 		{
 			switch ((MetaMsgU16FF)SmfFileHandle.Get16BitInt32(SelectedTrackNumber, offset)) {
@@ -174,46 +167,28 @@ namespace gen.snd.Midi
 		/// <summary>
 		/// Next Position (rse)
 		/// </summary>
-		public int GetNextRsePosition(int offset)
-		{
-			return Increment(offset, 0);
-		}
+		public int GetNextRsePosition(int offset) { return Increment(offset, 0); }
 		/// <summary>
 		/// Next Position (rse)
 		/// </summary>
-		public int GetNextPosition(int offset)
-		{
-			return Increment(offset, 1);
-		}
+		public int GetNextPosition(int offset) { return Increment(offset, 1); }
 		/// <summary>
 		/// Next Position (rse)
 		/// </summary>
 		int Increment(int offset, int plus)
 		{
 			int ExpandedRSE = RunningStatus32 << 8;
-			if (MidiMessageInfo.IsNoteOff(ExpandedRSE))
-				return offset + plus + 1; else if (MidiMessageInfo.IsNoteOn(ExpandedRSE))
-				return offset + plus + 1; else if (MidiMessageInfo.IsKeyAftertouch(ExpandedRSE))
-				return offset + plus + 1; else if (MidiMessageInfo.IsControlChange(ExpandedRSE))
-				return offset + plus + 1; else if (MidiMessageInfo.IsProgramChange(ExpandedRSE))
-				return offset + plus; else if (MidiMessageInfo.IsChannelAftertouch(ExpandedRSE))
-				return offset + plus; else if (MidiMessageInfo.IsPitchBend(ExpandedRSE))
-				return offset + plus + 1; else if (MidiMessageInfo.IsSystemMessage(ExpandedRSE)) {
-				Debug.Print(
-					"SSX {1:X} :: {2:X} :: {0:X2}",
-					SmfFileHandle[SelectedTrackNumber,offset + plus + SmfFileHandle[SelectedTrackNumber,offset+plus]],
-					ExpandedRSE,
-					RunningStatus32
-				);
-				return offset + plus + SmfFileHandle[SelectedTrackNumber, offset + plus];
-			} else if (MidiMessageInfo.IsSystemCommon(ExpandedRSE)) {
-				return offset + plus + SmfFileHandle[SelectedTrackNumber, offset + plus];
-			} else if (MidiMessageInfo.IsSystemRealtime(ExpandedRSE)) {
-				return offset + plus;
-			}
-			else if (!MidiMessageInfo.IsMidiBMessage(RunningStatus32))
-				/*Debug.Assert(false, string.Format("warning… {0:X2}", ExpandedRSE) )*/
-				return -1;
+			if (MidiMessageInfo.IsNoteOff(ExpandedRSE))           return offset + plus + 1;
+			if (MidiMessageInfo.IsNoteOn(ExpandedRSE))            return offset + plus + 1;
+			if (MidiMessageInfo.IsKeyAftertouch(ExpandedRSE))     return offset + plus + 1;
+			if (MidiMessageInfo.IsControlChange(ExpandedRSE))     return offset + plus + 1;
+			if (MidiMessageInfo.IsProgramChange(ExpandedRSE))     return offset + plus;
+			if (MidiMessageInfo.IsChannelAftertouch(ExpandedRSE)) return offset + plus;
+			if (MidiMessageInfo.IsPitchBend(ExpandedRSE))         return offset + plus + 1;
+			if (MidiMessageInfo.IsSystemMessage(ExpandedRSE))     return offset + plus + SmfFileHandle[SelectedTrackNumber, offset + plus];
+			if (MidiMessageInfo.IsSystemCommon(ExpandedRSE))      return offset + plus + SmfFileHandle[SelectedTrackNumber, offset + plus];
+			if (MidiMessageInfo.IsSystemRealtime(ExpandedRSE))    return offset + plus;
+			if (!MidiMessageInfo.IsMidiBMessage(RunningStatus32)) return -1;
 			return -1;
 		}
 		#endregion
@@ -223,55 +198,45 @@ namespace gen.snd.Midi
 		#region Event Value (String)
 
 		/// <summary> RSE </summary>
-		public string GetRseEventValueString(int offset)
-		{
-			return GetEventValueString(offset, 0);
-		}
-		public string GetEventValueString(int offset)
-		{
-			return GetEventValueString(offset, 1);
-		}
+		public string GetRseEventValueString(int offset) { return GetEventValueString(offset, 0); }
+		
+		public string GetEventValueString   (int offset) { return GetEventValueString(offset, 1); }
+		
 		string GetEventValueString(int offset, int plus)
 		{
 			int ExpandedRSE = RunningStatus32 << 8;
 			int delta = GetNextRsePosition(offset + plus);
-			if (delta == -1)
-				Debug.Assert(false, string.Format("warning… {0:X2}", ExpandedRSE)); else if (MidiMessageInfo.IsNoteOn(ExpandedRSE))
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex(); else if (MidiMessageInfo.IsNoteOff(ExpandedRSE))
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex(); else if (MidiMessageInfo.IsKeyAftertouch(ExpandedRSE))
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex(); else if (MidiMessageInfo.IsControlChange(ExpandedRSE))
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex(); else if (MidiMessageInfo.IsProgramChange(ExpandedRSE))
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex(); else if (MidiMessageInfo.IsChannelAftertouch(ExpandedRSE))
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex(); else if (MidiMessageInfo.IsPitchBend(ExpandedRSE))
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex(); else if (MidiMessageInfo.IsSystemMessage(ExpandedRSE)) {
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, SmfFileHandle[SelectedTrackNumber, offset + plus] + 1]).StringifyHex();
-			} else if (MidiMessageInfo.IsSystemCommon(ExpandedRSE)) {
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, SmfFileHandle[SelectedTrackNumber, offset + plus] + 1]).StringifyHex();
-			} else if (MidiMessageInfo.IsSystemRealtime(ExpandedRSE))
-				return (SmfFileHandle[SelectedTrackNumber, offset + plus, 4]).StringifyHex();
+			if (delta == -1)                                           Debug.Assert(false, string.Format("warning… {0:X2}", ExpandedRSE));
+			else if (MidiMessageInfo.IsNoteOn(ExpandedRSE))            return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex();
+			else if (MidiMessageInfo.IsNoteOff(ExpandedRSE))           return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex();
+			else if (MidiMessageInfo.IsKeyAftertouch(ExpandedRSE))     return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex();
+			else if (MidiMessageInfo.IsControlChange(ExpandedRSE))     return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex();
+			else if (MidiMessageInfo.IsProgramChange(ExpandedRSE))     return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex();
+			else if (MidiMessageInfo.IsChannelAftertouch(ExpandedRSE)) return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex();
+			else if (MidiMessageInfo.IsPitchBend(ExpandedRSE))         return (SmfFileHandle[SelectedTrackNumber, offset + plus, 2]).StringifyHex();
+			else if (MidiMessageInfo.IsSystemMessage(ExpandedRSE))     return (SmfFileHandle[SelectedTrackNumber, offset + plus, SmfFileHandle[SelectedTrackNumber, offset + plus] + 1]).StringifyHex();
+			else if (MidiMessageInfo.IsSystemCommon(ExpandedRSE))      return (SmfFileHandle[SelectedTrackNumber, offset + plus, SmfFileHandle[SelectedTrackNumber, offset + plus] + 1]).StringifyHex();
+			else if (MidiMessageInfo.IsSystemRealtime(ExpandedRSE))    return (SmfFileHandle[SelectedTrackNumber, offset + plus, 4]).StringifyHex();
 			return null;
 		}
-		public byte[] GetRseEventValue(int offset)
-		{
-			return GetEventValue(offset, 0);
-		}
-		public byte[] GetEventValue(int offset)
-		{
-			return GetEventValue(offset, 1);
-		}
+		
+		public byte[] GetRseEventValue(int offset) { return GetEventValue(offset, 0); }
+		public byte[] GetEventValue   (int offset) { return GetEventValue(offset, 1); }
+		
 		byte[] GetEventValue(int offset, int plus)
 		{
 			List<byte> returned = new List<byte> { (byte)(RunningStatus32 & 0xff) };
 			int ExpandedRSE = RunningStatus32 << 8;
 			int delta = GetNextRsePosition(offset + plus);
-			if (MidiMessageInfo.IsNoteOn(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsNoteOff(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsKeyAftertouch(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsControlChange(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsProgramChange(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsChannelAftertouch(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsPitchBend(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsSystemMessage(ExpandedRSE)) {
+			
+			if (MidiMessageInfo.IsNoteOn(ExpandedRSE))                 returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsNoteOff(ExpandedRSE))           returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsKeyAftertouch(ExpandedRSE))     returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsControlChange(ExpandedRSE))     returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsProgramChange(ExpandedRSE))     returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsChannelAftertouch(ExpandedRSE)) returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsPitchBend(ExpandedRSE))         returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsSystemMessage(ExpandedRSE)) {
 				returned.Clear();
 				returned.AddRange(SmfFileHandle[selectedTrackNumber, offset, 1]);
 				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, SmfFileHandle[SelectedTrackNumber, offset + plus] + 1]);
@@ -281,10 +246,7 @@ namespace gen.snd.Midi
 				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, SmfFileHandle[SelectedTrackNumber, offset + plus] + 1]);
 			} else if (MidiMessageInfo.IsSystemRealtime(ExpandedRSE))
 				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
-			else if (delta == -1)
-			{
-				Debug.Assert(false, string.Format("warning… {0:X2}", ExpandedRSE));
-			}
+			else if (delta == -1)                                      Debug.Assert(false, string.Format("warning… {0:X2}", ExpandedRSE));
 			byte[] bytes = returned.ToArray();
 			return bytes;
 		}
@@ -293,27 +255,27 @@ namespace gen.snd.Midi
 			List<byte> returned = new List<byte> { (byte)(running & 0xff) };
 			int ExpandedRSE = running==0xFF7F ? running : running << 8;
 			int delta = GetNextRsePosition(offset + plus);
-			if (delta == -1 && running != 0xFF7F)
+			if (delta == -1 && running != 0xFF7F)                      Debug.Assert(false,"Unknown Message!");
+			else if (MidiMessageInfo.IsNoteOn(ExpandedRSE))            returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsNoteOff(ExpandedRSE))           returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsKeyAftertouch(ExpandedRSE))     returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsControlChange(ExpandedRSE))     returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsProgramChange(ExpandedRSE))     returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsChannelAftertouch(ExpandedRSE)) returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsPitchBend(ExpandedRSE))         returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			else if (MidiMessageInfo.IsSystemMessage(ExpandedRSE))
 			{
-				Debug.Assert(false,"Unknown Message!");
-			}
-			else if (MidiMessageInfo.IsNoteOn(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsNoteOff(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsKeyAftertouch(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsControlChange(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsProgramChange(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsChannelAftertouch(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsPitchBend(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]); else if (MidiMessageInfo.IsSystemMessage(ExpandedRSE)) {
 				returned.Clear();
 				returned.AddRange(SmfFileHandle[selectedTrackNumber, offset, 1]);
 				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, SmfFileHandle[SelectedTrackNumber, offset + plus] + 1]);
-			} else if (MidiMessageInfo.IsSystemCommon(ExpandedRSE)) {
+			}
+			else if (MidiMessageInfo.IsSystemCommon(ExpandedRSE))
+			{
 				returned.Clear();
 				returned.AddRange(SmfFileHandle[selectedTrackNumber, offset, 2]);
 				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, SmfFileHandle[SelectedTrackNumber, offset + plus] + 1]);
-			} else if (MidiMessageInfo.IsSystemRealtime(ExpandedRSE))
-				returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
+			}
+			else if (MidiMessageInfo.IsSystemRealtime(ExpandedRSE))    returned.AddRange(SmfFileHandle[SelectedTrackNumber, offset + plus, 2]);
 			
 			byte[] bytes = returned.ToArray();
 			return bytes;
