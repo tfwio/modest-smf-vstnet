@@ -62,6 +62,7 @@
     <!--D:\DEV\WIN\CS_ROOT\Projects\gen.snd.common\source\cor3.core\System.Drawing\CORNERS.cs-->
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Drawing\GraphicsPens.cs" />
+    <Compile Include="Source\Extensions\FileInfoExtension.cs" />
     <Compile Include="Source\Internals\CustomControlView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -69,27 +70,27 @@
     <Compile Include="Source\Internals\MouseStateExtension.cs" />
     <Compile Include="Source\Internals\Renderer_SelectionBox.cs" />
     <Compile Include="Source\Internals\RenderStateType.cs" />
+    <Compile Include="Source\Interop\FontIndex.cs" />
     <Compile Include="Source\Interop\FontResource.cs" />
     <Compile Include="Source\Mui.Widgets\ButtonWidget.cs" />
     <Compile Include="Source\Mui.Widgets\ClockWidget.cs" />
     <Compile Include="Source\Mui.Widgets\GridListWidget.cs" />
     <Compile Include="Source\Mui.Widgets\MousePositionWidget.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetGroup.cs" />
     <Compile Include="Source\Mui.Widgets\SliderWidget.cs" />
     <Compile Include="Source\Mui.Widgets\Widget.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetBase.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetLayout.cs" />
     <Compile Include="Source\Mui\ColourClass.cs" />
     <Compile Include="Source\Mui\Decible.cs" />
-    <Compile Include="Source\Mui\DefaultWidgetGroup.cs" />
-    <Compile Include="Source\Mui\DoubleMinMax.cs" />
     <Compile Include="Source\Mui\IMui.cs" />
     <Compile Include="Source\Mui\IncrementUtil.cs" />
     <Compile Include="Source\Mui\IState.cs" />
-    <Compile Include="Source\Mui\MinMax.cs" />
-    <Compile Include="Source\Mui\Painter.Brushes.cs" />
+    <Compile Include="Source\Mui\Painter.Brushes.cs">
+      <DependentUpon>Painter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\Mui\Painter.cs" />
     <Compile Include="Source\Mui\ScaledSliderValue.cs" />
-    <Compile Include="Source\Mui\WheelArgs.cs" />
-    <Compile Include="Source\Mui\WidgetGroup.cs" />
     <Compile Include="Source\System\ControlUtil.cs" />
     <Compile Include="Source\System.Drawing\CORNERS.cs" />
     <Compile Include="Source\System.Drawing\DblUnit.cs" />
@@ -101,6 +102,8 @@
     <Compile Include="Source\System.Drawing\RectangleDoubleUnit.cs" />
     <Compile Include="Source\System.Drawing\RoundRectRenderer.cs" />
     <Compile Include="Source\System.Drawing\RoundURectRenderer.cs" />
+    <Compile Include="Source\System\DoubleMinMax.cs" />
+    <Compile Include="Source\System\MinMax.cs" />
     <Compile Include="Source\System\Serial.cs" />
     <Compile Include="Source\System\SuperOld.cs" />
     <Compile Include="Source\System\System.DialogUtil.cs" />
@@ -108,7 +111,10 @@
     <Compile Include="Source\System.Drawing\UnitD.cs" />
     <Compile Include="Source\System.Drawing\UnitType.cs" />
     <Compile Include="Source\System.Drawing\UPointD.cs" />
-    <Compile Include="Source\System\WTF.cs" />
+    <Compile Include="Source\System\WheelArgs.cs" />
+    <Compile Include="Source\System\WTF.cs">
+      <DependentUpon>SuperOld.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\Extensions\Divisor.cs" />
     <Compile Include="Source\Extensions\DoubleMathExtension.cs" />
     <Compile Include="Source\Extensions\EnumExtension.cs" />

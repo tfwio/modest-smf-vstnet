@@ -6,6 +6,17 @@ namespace Mui.Widgets
 {
   public class Widget : WidgetBase
   {
+    public int WidthMin { get; set; }
+    public int WidthMax { get; set; }
+	  
+    public int HeightMin { get; set; }
+    public int HeightMax { get; set; }
+    
+    public Widget(IMui parent) : base(parent) {
+    }
+    public Widget() {
+    }
+    
     protected internal FloatPoint Mouse { get { return Parent.PointToClient(Form.MousePosition); } }
     
     public FloatPoint PointToClient(FloatPoint point)
@@ -22,10 +33,6 @@ namespace Mui.Widgets
     {
       Parent.FocusedControl = this;
       return HasFocus;
-    }
-    
-    public Widget(IMui parent) : base(parent)
-    {
     }
     
     public event EventHandler<WheelArgs> Wheel {
@@ -47,9 +54,9 @@ namespace Mui.Widgets
     public override bool HasClientMouse {
       get { return Bounds.Contains(Parent.PointToClient(Parent.MouseM)); }
     }
-    public override void Paint(Graphics g)
+    public override void Paint(Graphics graphics)
     {
-      Painter.DrawBorder(g, this);
+      Painter.DrawBorder(graphics, this);
     }
   }
 }

@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Cor3.Lite", "..\sour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedResources", "..\Source\SharedResources\SharedResources.csproj", "{AE81E8C4-19F9-4E6B-90A8-1F73BEDC8124}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ren_mbqt_layout", "..\Source\ren_mbqt_layout\ren_mbqt_layout.csproj", "{E90E54FB-A49B-457F-A7F7-FE630DEACC7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuiTest", "..\Source\ren_mbqt_layout\MuiTest.csproj", "{E90E54FB-A49B-457F-A7F7-FE630DEACC7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

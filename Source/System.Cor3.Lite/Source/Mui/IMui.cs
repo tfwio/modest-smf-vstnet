@@ -8,23 +8,28 @@ namespace Mui
 {
 	public interface IMui
 	{
+	  System.Drawing.Text.FontIndex FontIndex { get; }
+	  
 	  Point PointToClient(Point point);
+	  
 	  void Invalidate();
+	  
 	  void Invalidate(Region region);
+	  
 	  void Invalidate(Rectangle region);
 	  
 		Widget FocusedControl { get; set; }
-
+    
 		FloatPoint MouseD { get; set; }
-
+    
 		FloatPoint MouseU { get; set; }
-
+    
 		FloatPoint MouseM { get; set; }
-
+    
 		bool HasControlKey { get; set; }
-
+    
 		Font Font { get; set; }
-
+    
 		FloatPoint ClientMouse { get; }
 
 		// we should have an undo-redo state-machine
@@ -36,8 +41,20 @@ namespace Mui
 		
 		Widget[] Widgets { get; set; }
 		
+		event EventHandler Resize;
+		
+		event KeyEventHandler KeyDown;
+		
+		event KeyEventHandler KeyUp;
+		
+		// Added Mouse Events
+		
 		event EventHandler<WheelArgs> Wheel;
-
+		
+		//void OnWheel(int val);
+		
+		// Mouse Events
+		
 		event EventHandler Click;
 
 		event MouseEventHandler MouseUp;

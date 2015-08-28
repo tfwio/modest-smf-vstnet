@@ -4,8 +4,15 @@ using System.Drawing;
 using System.Windows.Forms;
 namespace Mui.Widgets
 {
+  /// <summary>
+  /// We use this in place of interface
+  /// </summary>
   public abstract class WidgetBase
   {
+    public WidgetGroup Container { get; set; }
+    
+    #region Color
+    
     /// <summary>If set, overrides colourclass</summary>
     virtual public Color? ForegroundColor { get; set; }
     
@@ -23,15 +30,19 @@ namespace Mui.Widgets
     abstract public bool HasFocus { get; }
     
     public ColourClass ColourClassFg {
-      get
-      {
-        if (HasMouseDown/* || HasClientMouseDown*/) return ColourClass.Active;
-        if (HasFocus) return ColourClass.Focus;
+      get {
+        if (HasMouseDown/* || HasClientMouseDown*/)
+          return ColourClass.Active;
+        if (HasFocus)
+          return ColourClass.Focus;
         return HasClientMouse ? ColourClass.White : ColourClass.Default;
       }
     }
-
+    
+    #endregion
+    
     #region event-Mouse
+    
     public event EventHandler Click {
       add    { Parent.Click += value; }
       remove { Parent.Click -= value; }
@@ -48,25 +59,27 @@ namespace Mui.Widgets
       add    { Parent.MouseMove += value; }
       remove { Parent.MouseMove -= value; }
     }
+    
     #endregion
     
-    #region Not Useful
+    #region Not Implemented
     
     public FloatPoint Offset { get; set; }
 
+    // Not implemented; Should derive from parent 'activecontrol'
+    bool IsActive { get; set; }
+    
+    // not implemented
+    bool NeedsPaint { get; set; }
+
     #endregion
     
+    protected WidgetBase()
+    {
+    }
     protected WidgetBase(IMui parent)
     {
       this.Parent = parent;
-    }
-
-    virtual public void Increment()
-    {
-    }
-
-    virtual public void Increment<T>(T data)
-    {
     }
 
     #region Position
@@ -85,21 +98,26 @@ namespace Mui.Widgets
     }
 
     #endregion
+
+    virtual public void Increment()
+    {
+    }
+
+    virtual public void Increment<T>(T data)
+    {
+    }
     
     public IMui Parent { get; set; }
 
     virtual public string Text { get; set; }
 
     virtual public Font Font {
-      get { return font == null ? Parent.Font : font; }
+      get { return font ?? Parent.Font; }
       set { font = value; }
     }
     Font font;
-
-    // this should attach to its parent
-    bool IsActive { get; set; }
-
-    bool NeedsPaint { get; set; }
+    
+    abstract public void Paint(Graphics graphics);
 
     #region Value
     
@@ -110,11 +128,10 @@ namespace Mui.Widgets
     public string ValueFormat {
       get { return valueFormat; }
       set { valueFormat = value; }
-    } internal string valueFormat = "{0}";
+    }
+    internal string valueFormat = "{0}";
 
     #endregion
-    
-    abstract public void Paint(Graphics g);
     
   }
 }

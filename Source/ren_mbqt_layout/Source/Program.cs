@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 namespace ren_mbqt_layout
 {
+  
   /// <summary>
   /// Class with program entry point.
   /// </summary>

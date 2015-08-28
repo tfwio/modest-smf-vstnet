@@ -1,7 +1,7 @@
 ﻿using System;
-namespace Mui
+namespace System
 {
-	public class MinMax<T>
+  public class MinMax<T> where T:struct
 	{
 		virtual public T Minimum {
 			get;
