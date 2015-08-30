@@ -43,21 +43,73 @@ namespace Mui.Widgets
     
     #region event-Mouse
     
-    public event EventHandler Click {
+    protected event EventHandler Click;
+
+    protected virtual void OnClick(EventArgs e)
+    {
+      var handler = Click;
+      if (handler != null)
+        handler(this, e);
+    }
+
+    protected event MouseEventHandler MouseDown;
+
+    protected virtual void OnMouseDown(MouseEventArgs e)
+    {
+      var handler = MouseDown;
+      if (handler != null)
+        handler(this, e);
+    }
+
+    protected event MouseEventHandler MouseUp;
+
+    protected virtual void OnMouseUp(MouseEventArgs e)
+    {
+      var handler = MouseUp;
+      if (handler != null)
+        handler(this, e);
+    }
+
+    protected event MouseEventHandler MouseMove;
+
+    protected virtual void OnMouseMove(MouseEventArgs e)
+    {
+      var handler = MouseMove;
+      if (handler != null)
+        handler(this, e);
+    }
+    protected event EventHandler<WheelArgs> Wheel;
+
+    protected virtual void OnWheel(WheelArgs e)
+    {
+      var handler = Wheel;
+      if (handler != null)
+        handler(this, e);
+    }
+    
+    #endregion
+    
+    #region ParentEvents
+    
+    public event EventHandler ParentClick {
       add    { Parent.Click += value; }
       remove { Parent.Click -= value; }
     }
-    public event MouseEventHandler MouseDown {
+    public event MouseEventHandler ParentMouseDown {
       add    { Parent.MouseDown += value; }
       remove { Parent.MouseDown -= value; }
     }
-    public event MouseEventHandler MouseUp {
+    public event MouseEventHandler ParentMouseUp {
       add    { Parent.MouseUp += value; }
       remove { Parent.MouseUp -= value; }
     }
-    public event MouseEventHandler MouseMove {
+    public event MouseEventHandler ParentMouseMove {
       add    { Parent.MouseMove += value; }
       remove { Parent.MouseMove -= value; }
+    }
+    public event EventHandler<WheelArgs> ParentWheel {
+      add    { Parent.Wheel += value; }
+      remove { Parent.Wheel -= value; }
     }
     
     #endregion
@@ -117,7 +169,7 @@ namespace Mui.Widgets
     }
     Font font;
     
-    abstract public void Paint(Graphics graphics);
+    abstract public void Paint(PaintEventArgs arg);
 
     #region Value
     

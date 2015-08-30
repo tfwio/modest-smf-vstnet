@@ -8,52 +8,54 @@ namespace Mui.Widgets
   public class ButtonWidget : Widget
   {
     // Not used
-    virtual protected void ButtonWidget_Click(object sender, EventArgs e)
+    virtual protected void ButtonWidget_ParentClick(object sender, EventArgs e)
     {
       using (Region rgn = new Region(this.Bounds))
         Parent.Invalidate(rgn);
     }
     
-    virtual protected void ButtonWidget_MouseDown(object sender, MouseEventArgs e)
+    virtual protected void ButtonWidget_ParentMouseDown(object sender, MouseEventArgs e)
     {
       if (HasClientMouse)
       {
         this.SetFocus();
         this.HasMouseDown = true;
+        OnMouseDown(e);
       }
-      using (Region rgn = new Region(this.Bounds))
-        Parent.Invalidate(rgn);
+      using (Region rgn = new Region(this.Bounds)) Parent.Invalidate(rgn);
     }
     
-    virtual protected void ButtonWidget_MouseUp(object sender, MouseEventArgs e)
+    virtual protected void ButtonWidget_ParentMouseUp(object sender, MouseEventArgs e)
     {
       this.HasMouseDown = false;
-      using (Region rgn = new Region(this.Bounds))
-        Parent.Invalidate(rgn);
+      using (Region rgn = new Region(this.Bounds)) Parent.Invalidate(rgn);
+      OnMouseUp(e);
     }
 
-    virtual protected void ButtonWidget_MouseMove(object sender, MouseEventArgs e)
+    virtual protected void ButtonWidget_ParentMouseMove(object sender, MouseEventArgs e)
     {
-//      if (HasFocus)
-//        using (Region rgn = new Region(this.Bounds))
-//          Parent.Invalidate(rgn);
+      using (Region rgn = new Region(this.Bounds))
+        Parent.Invalidate(rgn);
     }
     public ButtonWidget(IMui parent) : base(parent)
     {
       this.ValueFormat = "{0}";
       //      this.Click += ButtonWidget_Click;
-      this.MouseDown += ButtonWidget_MouseDown;
-      this.MouseUp += ButtonWidget_MouseUp;
-      this.MouseMove += ButtonWidget_MouseMove;;
+      this.ParentMouseDown += ButtonWidget_ParentMouseDown;
+      this.ParentMouseUp += ButtonWidget_ParentMouseUp;
+      this.ParentMouseMove += ButtonWidget_ParentMouseMove;;
     }
 
-    public override void Paint(Graphics g)
+    public override void Paint(PaintEventArgs arg)
     {
-      base.Paint(g);
+      base.Paint(arg);
       using (var region = new Region(this.Bounds))
       {
-        g.Clip = region;
-        Painter.DrawText(g,this);
+        arg.Graphics.Clip = region;
+        
+        Painter.DrawText(arg.Graphics,this);
+        
+        arg.Graphics.ResetClip();
       }
     }
   }

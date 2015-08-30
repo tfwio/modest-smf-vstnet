@@ -14,63 +14,51 @@ namespace Mui.Widgets
     
     public float ThumbWidth { get;set; }
     
-    double size,left;
-    
     public override FloatRect Bounds {
-      get {
-        return base.Bounds;
-      }
-      set {
-        base.Bounds = value;
-        UpdateBounds();
-      }
+      get { return base.Bounds; }
+      set { base.Bounds = value; UpdateBounds(); }
     }
-    protected override void ButtonWidget_MouseDown(object sender, MouseEventArgs e)
+    protected override void ButtonWidget_ParentMouseDown(object sender, MouseEventArgs e)
     {
       if (HasClientMouse) UpdateBounds();
-      base.ButtonWidget_MouseDown(sender, e);
+      base.ButtonWidget_ParentMouseDown(sender, e);
     }
-    protected override void ButtonWidget_MouseMove(object sender, MouseEventArgs e)
+    protected override void ButtonWidget_ParentMouseMove(object sender, MouseEventArgs e)
     {
       if (HasMouseDown)
       {
-        base.ButtonWidget_MouseMove(sender, e);
+        base.ButtonWidget_ParentMouseMove(sender, e);
         UpdateBounds();
         Parent.Invalidate(this.Bounds);
       }
     }
     public void UpdateBounds()
     {
-      size = Bounds.Width;
-      left = Bounds.Left;
-      
-      SliderValue.Value = (Mouse.X-left)/size;
+      SliderValue.Value = (Mouse.X-Bounds.Left)/Bounds.Width;
       Debug.Print( "Value: {0:n2}, {1}, {2}", SliderValue.Value, SliderValue.Minimum, SliderValue.Maximum );
       this.Text = string.Format( "{0:p2}", SliderValue.Value );
     }
     public SliderWidget(IMui parent) : base(parent)
     {
       ThumbWidth = 10;
-      SliderValue = new DoubleMinMax(){
-        Minimum=0,
-        Maximum=1,
-      };
+      SliderValue = new DoubleMinMax(){ Minimum=0, Maximum=1, };
       ValueFormat = "{0}";
     }
 
-    public override void Paint(Graphics g)
+    public override void Paint(PaintEventArgs arg)
     {
-      base.Paint(g);
-      using (g.Clip = new Region(this.PaddedBounds)) {
+      base.Paint(arg);
+      using (var rgn = new Region(this.PaddedBounds))
+      {
+        arg.Graphics.Clip = rgn;
         
         var msize = this.Bounds.Clone();
         msize.Width = Convert.ToSingle(Bounds.Width * this.SliderValue.Value);
         
-        FloatPoint mouse = Parent.PointToClient(Mouse);
+        arg.Graphics.FillRectangle(new SolidBrush(ColourFg),msize);
+        Painter.DrawText(arg.Graphics, this);
         
-        g.FillRectangle(new SolidBrush(ColourFg),msize);
-
-        Painter.DrawText(g, this);
+        arg.Graphics.ResetClip();
       }
     }
   }

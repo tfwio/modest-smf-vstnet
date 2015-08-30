@@ -8,6 +8,8 @@ namespace Mui
 {
 	public interface IMui
 	{
+	  Size Size { get; set; }
+	  
 	  System.Drawing.Text.FontIndex FontIndex { get; }
 	  
 	  Point PointToClient(Point point);

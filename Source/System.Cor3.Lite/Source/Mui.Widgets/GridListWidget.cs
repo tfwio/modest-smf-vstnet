@@ -11,9 +11,9 @@ namespace Mui.Widgets
 		{
 		}
 
-		public override void Paint(Graphics g)
+		public override void Paint(PaintEventArgs arg)
 		{
-			base.Paint(g);
+			base.Paint(arg);
 		}
 	}
 }

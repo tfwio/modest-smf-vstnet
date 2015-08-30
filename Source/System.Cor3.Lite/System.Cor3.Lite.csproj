@@ -63,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Drawing\GraphicsPens.cs" />
     <Compile Include="Source\Extensions\FileInfoExtension.cs" />
+    <Compile Include="Source\Extensions\NumericExtensions.cs" />
     <Compile Include="Source\Internals\CustomControlView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -81,11 +82,14 @@
     <Compile Include="Source\Mui.Widgets\Widget.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetBase.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetLayout.cs" />
+    <Compile Include="Source\Mui\AlignHorizontal.cs" />
+    <Compile Include="Source\Mui\AlignVertical.cs" />
     <Compile Include="Source\Mui\ColourClass.cs" />
     <Compile Include="Source\Mui\Decible.cs" />
     <Compile Include="Source\Mui\IMui.cs" />
     <Compile Include="Source\Mui\IncrementUtil.cs" />
     <Compile Include="Source\Mui\IState.cs" />
+    <Compile Include="Source\Mui\MuiBase.cs" />
     <Compile Include="Source\Mui\Painter.Brushes.cs">
       <DependentUpon>Painter.cs</DependentUpon>
     </Compile>

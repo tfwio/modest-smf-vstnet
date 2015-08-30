@@ -10,12 +10,14 @@ namespace Mui
     {
       if (widget.Bounds != null)
       {
-        using (Region rgn = new Region(widget.Bounds))
-        using (var pen1=GetPen(widget.ColourFg,3))
+        using (var rgn = new Region(widget.Bounds))
+          using (var pen1=GetPen(widget.ColourFg,3))
         {
           graphics.Clip = rgn;
+          
           graphics.FillRectangle(DictBrush[ColourClass.Dark90],widget.Bounds);
           graphics.DrawRectangle(pen1,widget.Bounds);
+          
           graphics.ResetClip();
         }
       }
@@ -50,23 +52,18 @@ namespace Mui
         }
        );
     }
-		static public void RenderSlider(Graphics g, Widget widget, Color back, Decible decible, System.Windows.Forms.Control control)
-		{
-			StringFormat format  = new StringFormat();
-			format.LineAlignment = StringAlignment.Center;
-			format.Alignment     = StringAlignment.Center;
-			
-			using (Pen p = new Pen(control.ForeColor,1)) g.DrawRectangle(p, 0, 0, control.Width - 1, control.Height - 1);
-			using (Brush b = new SolidBrush(back)) g.FillRectangle(b, 1, 1, (int)((control.Width - 2) * decible.Percent), control.Height - 2);
-			using (Brush b = new SolidBrush(control.ForeColor))
-				g.DrawString(
-					decible.ToString(),
-					control.Font,
-					b,
-					control.ClientRectangle,
-					format
-				);
-		}
+    static public void RenderSlider(Graphics g, Widget widget, Color back, Decible decible, System.Windows.Forms.Control control)
+    {
+      using (var format  = new StringFormat())
+      {
+        format.LineAlignment = StringAlignment.Center;
+        format.Alignment     = StringAlignment.Center;
+        using (Pen p = new Pen(control.ForeColor,1)) g.DrawRectangle(p, 0, 0, control.Width - 1, control.Height - 1);
+        using (Brush b = new SolidBrush(back)) g.FillRectangle(b, 1, 1, (int)((control.Width - 2) * decible.Percent), control.Height - 2);
+        using (Brush b = new SolidBrush(control.ForeColor))
+          g.DrawString( decible.ToString(), control.Font, b, control.ClientRectangle, format );
+      }
+    }
   }
 }
 

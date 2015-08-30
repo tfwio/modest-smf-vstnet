@@ -29,15 +29,15 @@ namespace Mui.Widgets
       this.ValueFormat = "hh:mm:ss.fff tt";
     }
     
-    public override void Paint(Graphics g)
+    public override void Paint(PaintEventArgs arg)
     {
-      base.Paint(g);
+      base.Paint(arg);
       using (var region = new Region(this.Bounds))
       {
         var nloc = PaddedBounds.Clone();
         nloc.Location = nloc.Location + new FloatPoint(1,1);
         
-        g.DrawString(
+        arg.Graphics.DrawString(
           DateTime.Now.ToString(ValueFormat),
           this.Font,
           Painter.GetBrush(ColourClassFg),

@@ -19,13 +19,16 @@ namespace Mui.Widgets
 			this.ValueFormat = "{0}";
 		}
 
-		public override void Paint(Graphics g)
+		public override void Paint(PaintEventArgs arg)
 		{
-			base.Paint(g);
-			using (var region = new Region(Bounds)) {
-				g.Clip = region;
-				Painter.DrawText(g, this);
-				g.ResetClip();
+			base.Paint(arg);
+			using (var region = new Region(Bounds))
+			{
+				arg.Graphics.Clip = region;
+				
+				Painter.DrawText(arg.Graphics, this);
+				
+				arg.Graphics.ResetClip();
 			}
 		}
 	}

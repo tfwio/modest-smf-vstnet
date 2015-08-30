@@ -52,6 +52,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\DefaultWidgetGroup.cs" />
+    <Compile Include="Source\FontAwesome.cs" />
+    <Compile Include="Source\FontAwesomeChar.cs" />
+    <Compile Include="Source\MenuWidgetGroup.cs" />
     <Compile Include="Source\MuiForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,13 +71,7 @@
     <None Include="asset\adfx3.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="asset\AmalgamR.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="asset\fontawesome-webfont.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="asset\FontAwesome.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

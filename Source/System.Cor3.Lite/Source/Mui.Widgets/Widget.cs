@@ -6,17 +6,31 @@ namespace Mui.Widgets
 {
   public class Widget : WidgetBase
   {
-    public int WidthMin { get; set; }
-    public int WidthMax { get; set; }
-	  
-    public int HeightMin { get; set; }
-    public int HeightMax { get; set; }
+    
+    #region Logical Size and Position (for use within layout)
+    
+    public int? WidthMin { get; set; }
+    public int? WidthMax { get; set; }
+    
+    public int? HeightMin { get; set; }
+    public int? HeightMax { get; set; }
+    
+    public int X { get { return Convert.ToInt32(Bounds.X); } set { Bounds.X = value; } }
+    public int Y { get { return Convert.ToInt32(Bounds.Y); } set { Bounds.Y = value; } }
+    
+    public int Width  { get { return Convert.ToInt32(Bounds.Width); }  set { Bounds.Width = value.Contain(WidthMin,WidthMax); } }
+    public int Height { get { return Convert.ToInt32(Bounds.Height); } set { Bounds.Height = value.Contain(HeightMin,HeightMax); } }
+    
+    #endregion
     
     public Widget(IMui parent) : base(parent) {
     }
     public Widget() {
     }
     
+    #region Logical Mouse
+    
+    // disable once AccessToStaticMemberViaDerivedType
     protected internal FloatPoint Mouse { get { return Parent.PointToClient(Form.MousePosition); } }
     
     public FloatPoint PointToClient(FloatPoint point)
@@ -25,6 +39,18 @@ namespace Mui.Widgets
       p1 = Bounds.Location-p1;
       return p1;
     }
+    
+    protected void GetHasMouse(){
+      Bounds.Contains(Parent.PointToClient(Parent.MouseM));
+    }
+    
+    
+    public override bool HasClientMouseDown {
+      get {
+        return HasClientMouse && Parent.MouseD != null;
+      }
+    }
+    
     override public bool HasFocus {
       get { return Parent.FocusedControl == this; }
     }
@@ -35,28 +61,18 @@ namespace Mui.Widgets
       return HasFocus;
     }
     
-    public event EventHandler<WheelArgs> Wheel {
-      add    { Parent.Wheel += value; }
-      remove { Parent.Wheel -= value; }
-    }
-    
-    public override bool HasClientMouseDown {
-      get {
-        return HasClientMouse && Parent.MouseD != null;
-      }
-    }
-    protected void GetHasMouse(){
-      Bounds.Contains(Parent.PointToClient(Parent.MouseM));
-    }
     /// <summary>
     /// Mouse is contained within the current control.
     /// </summary>
     public override bool HasClientMouse {
       get { return Bounds.Contains(Parent.PointToClient(Parent.MouseM)); }
     }
-    public override void Paint(Graphics graphics)
+    
+    #endregion
+    
+    public override void Paint(PaintEventArgs arg)
     {
-      Painter.DrawBorder(graphics, this);
+      Painter.DrawBorder(arg.Graphics, this);
     }
   }
 }

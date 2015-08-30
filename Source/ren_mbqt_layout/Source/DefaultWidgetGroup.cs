@@ -7,61 +7,55 @@ using Mui;
 using Mui.Widgets;
 namespace ren_mbqt_layout
 {
+  
 	public class DefaultWidgetGroup : WidgetGroup
 	{
+    public override void DoLayout()
+    {
+      base.DoLayout();
+      Width = Parent.Size.Width;
+      LeftToRight();
+    }
 		public override void Initialize()
 		{
 		  base.Initialize();
 		  
-		  if (Bounds==null) Bounds = FloatRect.Zero;
-		  
-		  float height = 48;
-			float top = Bounds.Top;
-			
-			var TopGridLoc = new FloatRect(10, top, 100, height);
-			
+		  if (Bounds==null) Bounds = new FloatRect(Gap+64,0,Parent.Size.Width,64);
 			var DPadding = new Padding(4);
 			
-			float i = TopGridLoc.X + TopGridLoc.Width;
-			
-			var sliderrect = new FloatRect(460, top, 200, height);
-			Widgets = new Widget[] {
+			Widgets = new Widget[5]
+			{
 				new MousePositionWidget(Parent) {
-					Bounds = TopGridLoc,
+			    Bounds = new FloatRect(0,0,140,Height),
 					Padding = DPadding
 				},
 				new ButtonWidget(Parent) {
 					Padding = DPadding,
-					Bounds = new FloatRect(i, top, 100, height),
+			    Bounds = new FloatRect(0,0,100,Height),
 					Text = "ASOME"
 				},
 				new ButtonWidget(Parent) {
 					Padding = DPadding,
-					Bounds = new FloatRect(i = i + 100, top, 50, height),
-					Font=Parent.FontIndex["awesome",24f],
-//					Font=new Font("FontAwesome",24),
-//					Text=Convert.ToChar(uint.Parse("f00d",System.Globalization.NumberStyles.HexNumber)).ToString(),
-					Text="g"
+			    Bounds = new FloatRect(0,0,50,Height),
+					Font=Parent.FontIndex["awesome",18f],
+					Text=Convert.ToChar(uint.Parse("f00b",System.Globalization.NumberStyles.HexNumber)).ToString()
 				},
 				new ButtonWidget(Parent) {
 					Padding = DPadding,
-					Bounds = new FloatRect(i = i + 50, top, 100, height),
+			    Bounds = new FloatRect(0,0,150,Height),
 					Text = "CSOME"
 				},
 				new SliderWidget(Parent) {
 					Padding = DPadding,
-					Bounds = sliderrect,
+			    Bounds = new FloatRect(0,0,250,Height),
 					Text = "SLIDE",
-					SliderValue = new DoubleMinMax() {
-						Minimum = 0,
-						Maximum = 1,
-						Value = .5
-					}
+					SliderValue = new DoubleMinMax() { Minimum = 0, Maximum = 1, Value = .5 }
 				},
 			};
-			Widgets[4].Bounds.X = (i = i + 100);
+			LeftToRight();
 		}
-	
+		
+		
 	}
 }
 

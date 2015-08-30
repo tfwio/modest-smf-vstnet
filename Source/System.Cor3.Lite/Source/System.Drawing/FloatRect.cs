@@ -59,7 +59,7 @@ namespace System.Drawing
     /// <summary> (read only) </summary>
     [XmlIgnore] public float Top { get { return Location.Y; } /*set { Location.Y = value; }*/ }
     /// <summary> (read only) </summary>
-    [XmlIgnore] public float Bottom { get { return Location.Y + Size.Y; } /*set { Size.Y = value-Location.Y; }*/ }
+    [XmlIgnore] public float Bottom { get { return Location.Y+Size.Y; } /*set { Size.Y = value-Location.Y; }*/ }
     [XmlIgnore] public float Left { get { return Location.X; } set { Location.X = value; } }
     /// <summary> (read only) </summary>
     [XmlIgnore] public float Right { get { return (Location.AddX(Size)).X; } /*set { Size.X = value-Location.X; }*/ }
