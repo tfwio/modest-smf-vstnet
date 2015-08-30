@@ -51,7 +51,7 @@ namespace ren_mbqt_layout
       file = System.Reflection.Assembly.GetExecutingAssembly().GetAppFile("asset/adfx3.ttf");
       FontIndex.AddFamily(file, "adfx");
       
-      file = System.Reflection.Assembly.GetExecutingAssembly().GetAppFile("asset/FontAwesome.ttf");
+      file = System.Reflection.Assembly.GetExecutingAssembly().GetAppFile("asset/fontawesome-webfont.ttf");
       FontIndex.AddFamily(file, "awesome");
       DoubleBuffered = true;
       
