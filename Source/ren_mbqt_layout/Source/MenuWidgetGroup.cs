@@ -9,35 +9,6 @@ using Mui.Widgets;
 namespace ren_mbqt_layout
 {
   
-  public struct FaChar
-  {
-    public char CharValue { get; set; }
-    public string Key { get; set; }
-    public FaChar(char CharValue, string Key)
-    {
-      this.CharValue = CharValue;
-      this.Key = Key;
-    }
-    public FaChar(FontAwesome CharValue, string Key)
-    {
-      this.CharValue = (char)CharValue;
-      this.Key = Key;
-    }
-    public FaChar(uint CharValue, string Key)
-    {
-      this.CharValue = (char)CharValue;
-      this.Key = Key;
-    }
-    public FaChar(KeyValuePair<string,string> KeyValue)
-    {
-      this.Key = KeyValue.Key;
-      this.CharValue = KeyValue.Value[0];
-    }
-    static public implicit operator KeyValuePair<string,string>(FaChar input) { return input.CharValue.ToString(); }
-    static public implicit operator string(FaChar input) { return input.CharValue.ToString(); }
-    static public implicit operator char(FaChar input) { return input.CharValue; }
-    
-  }
 	public class MenuWidgetGroup : WidgetGroup
 	{
 	  
@@ -52,16 +23,14 @@ namespace ren_mbqt_layout
 			var awesome=Parent.FontIndex["awesome",18f];
 			Widgets = new Widget[]
 			{
-			  new ButtonWidget(Parent) { Text = FontAwesomeChar.Bars, Bounds = DefaultBounds, Padding=DPadding, Font=awesome }, // bars
-			  new ButtonWidget(Parent) { Text = Awesome["h-bars"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // h-bars
-			  new ButtonWidget(Parent) { Text = Awesome["v-bars"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // v-bars
-			  new ButtonWidget(Parent) { Text = Awesome["fore"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // fore
-				new ButtonWidget(Parent) { Text = Awesome["back"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // back
-				new ButtonWidget(Parent) { Text = Awesome["folder-open"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // folder-open
-				new ButtonWidget(Parent) { Text = Awesome["folder-open-o"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // folder-open
-				new ButtonWidget(Parent) { Text = Awesome["font"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // font
-				new ButtonWidget(Parent) { Text = Awesome["forward"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // forward
-				new ButtonWidget(Parent) { Text = Awesome["keyboard"], Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // keyboard
+			  new ButtonWidget(Parent) { Text = FontAwesomeChar.Bars.ToString(), Bounds = DefaultBounds, Padding=DPadding, Font=awesome }, // bars
+			  new ButtonWidget(Parent) { Text = FontAwesomeChar.EllipsisH.ToString(), Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // h-bars
+			  new ButtonWidget(Parent) { Text = FontAwesomeChar.EllipsisV.ToString(), Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // v-bars
+			  new ButtonWidget(Parent) { Text = FontAwesomeChar.Forward.ToString(), Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // fore
+			  new ButtonWidget(Parent) { Text = FontAwesomeChar.Backward.ToString(), Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // back
+			  new ButtonWidget(Parent) { Text = FontAwesomeChar.FolderOpen.ToString(), Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // folder-open
+			  new ButtonWidget(Parent) { Text = FontAwesomeChar.FolderOpenO.ToString(), Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // folder-open
+			  new ButtonWidget(Parent) { Text = FontAwesomeChar.Save.ToString(), Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // font
 			};
 			TopToBottom();
 		}
