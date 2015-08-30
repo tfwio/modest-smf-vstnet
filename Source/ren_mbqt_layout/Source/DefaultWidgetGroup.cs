@@ -20,15 +20,19 @@ namespace ren_mbqt_layout
 		{
 		  base.Initialize();
 		  
-		  if (Bounds==null) Bounds = new FloatRect(Gap+64,0,Parent.Size.Width,64);
+		  if (Bounds==null) Bounds = new FloatRect(0,0,Parent.Size.Width,48);
 			var DPadding = new Padding(4);
 			
-			Widgets = new Widget[5]
+			Widgets = new Widget[]
 			{
 				new MousePositionWidget(Parent) {
 			    Bounds = new FloatRect(0,0,140,Height),
 					Padding = DPadding
 				},
+        new ClockWidget(Parent) {
+          Bounds = new FloatRect(0,0, 200, Height),
+          Padding = DPadding,
+        },
 				new ButtonWidget(Parent) {
 					Padding = DPadding,
 			    Bounds = new FloatRect(0,0,100,Height),
@@ -36,7 +40,7 @@ namespace ren_mbqt_layout
 				},
 				new ButtonWidget(Parent) {
 					Padding = DPadding,
-			    Bounds = new FloatRect(0,0,50,Height),
+			    Bounds = new FloatRect(0,0,48,Height),
 					Font=Parent.FontIndex["awesome",18f],
 					Text=Convert.ToChar(uint.Parse("f00b",System.Globalization.NumberStyles.HexNumber)).ToString()
 				},

@@ -6,7 +6,7 @@ namespace Mui
   
   public partial class Painter
   {
-    static public void DrawBorder(Graphics graphics, Widget widget)
+    static public void DrawBorder(Graphics graphics, Widget widget, Pen pBorder=null, Brush bFill=null)
     {
       if (widget.Bounds != null)
       {
@@ -15,7 +15,7 @@ namespace Mui
         {
           graphics.Clip = rgn;
           
-          graphics.FillRectangle(DictBrush[ColourClass.Dark90],widget.Bounds);
+          graphics.FillRectangle(bFill??DictBrush[ColourClass.Dark40],widget.Bounds);
           graphics.DrawRectangle(pen1,widget.Bounds);
           
           graphics.ResetClip();
@@ -60,8 +60,7 @@ namespace Mui
         format.Alignment     = StringAlignment.Center;
         using (Pen p = new Pen(control.ForeColor,1)) g.DrawRectangle(p, 0, 0, control.Width - 1, control.Height - 1);
         using (Brush b = new SolidBrush(back)) g.FillRectangle(b, 1, 1, (int)((control.Width - 2) * decible.Percent), control.Height - 2);
-        using (Brush b = new SolidBrush(control.ForeColor))
-          g.DrawString( decible.ToString(), control.Font, b, control.ClientRectangle, format );
+        using (Brush b = new SolidBrush(control.ForeColor)) g.DrawString( decible.ToString(), control.Font, b, control.ClientRectangle, format );
       }
     }
   }

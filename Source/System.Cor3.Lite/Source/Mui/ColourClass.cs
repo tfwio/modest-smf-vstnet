@@ -7,6 +7,7 @@ namespace Mui
 	{
 	  Active,
 		Black,
+		Dark20, Dark30, Dark40,
 		Dark50, Dark70, Dark90,
 		Default,
 		Focus,

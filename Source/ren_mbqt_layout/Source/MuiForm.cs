@@ -19,7 +19,7 @@ namespace ren_mbqt_layout
     
     #region Timer
     
-    Timer appTimer = new Timer() { Interval = 100 };
+    Timer appTimer = new Timer() { Interval = 30 };
     public event EventHandler Tick {
       add { appTimer.Tick += value; }
       remove { appTimer.Tick -= value; }
@@ -78,10 +78,6 @@ namespace ren_mbqt_layout
       Widgets = new Widget[] {
         Facto,
         WidgetMenu,
-        new ClockWidget(this) {
-          Bounds = new FloatRect(48, 150, 200, 24),
-          Padding = DPadding,
-        },
       };
       Facto.Initialize(this);
       WidgetMenu.Initialize(this);
@@ -92,8 +88,10 @@ namespace ren_mbqt_layout
       if (MouseM == null) return;
       e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
       e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+      e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+      e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
       
-      e.Graphics.Clear(Painter.DictColour[ColourClass.Dark50]);
+      e.Graphics.Clear(Painter.DictColour[ColourClass.Dark20]);
       
 //      WidgetMenu.Paint(e);
 //      Facto.Paint(e);

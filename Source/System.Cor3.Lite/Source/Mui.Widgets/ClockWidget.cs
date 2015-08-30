@@ -31,18 +31,20 @@ namespace Mui.Widgets
     
     public override void Paint(PaintEventArgs arg)
     {
-      base.Paint(arg);
+      //base.Paint(arg);
+      //Painter.DrawBorder(arg.Graphics, this, Pens.Transparent, Brushes.Transparent);
       using (var region = new Region(this.Bounds))
       {
         var nloc = PaddedBounds.Clone();
         nloc.Location = nloc.Location + new FloatPoint(1,1);
-        
-        arg.Graphics.DrawString(
-          DateTime.Now.ToString(ValueFormat),
-          this.Font,
-          Painter.GetBrush(ColourClassFg),
-          PaddedBounds
-         );
+        Text = DateTime.Now.ToString(ValueFormat);
+        Painter.DrawText(arg.Graphics,this);
+//        arg.Graphics.DrawString(
+//          ,
+//          this.Font,
+//          Painter.GetBrush(ColourClassFg),
+//          PaddedBounds
+//         );
       }
     }
   }
