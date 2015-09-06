@@ -82,7 +82,7 @@ namespace Mui
     
     virtual public void DoLayout() { }
 
-    virtual public void Initialize(){
+    override public void Initialize(){
       Parent.Resize += Parent_Resize;
       if (Widgets == null) return;
       foreach (var widget in EnumerateWidgets()) widget.Container = this;

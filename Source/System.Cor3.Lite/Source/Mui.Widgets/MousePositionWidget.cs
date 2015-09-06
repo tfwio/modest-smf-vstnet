@@ -21,7 +21,7 @@ namespace Mui.Widgets
 
 		public override void Paint(PaintEventArgs arg)
 		{
-			base.Paint(arg);
+//			base.Paint(arg);
 			using (var region = new Region(Bounds))
 			{
 				arg.Graphics.Clip = region;

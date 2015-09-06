@@ -34,11 +34,12 @@ namespace ren_mbqt_layout
       // 
       // MuiForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(640, 401);
-      this.Font = new System.Drawing.Font("FreeSans", 12F, System.Drawing.FontStyle.Bold);
-      this.Margin = new System.Windows.Forms.Padding(4);
+      this.ClientSize = new System.Drawing.Size(779, 433);
+      this.Font = new System.Drawing.Font("Segoe UI Light", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.Location = new System.Drawing.Point(0, 0);
+      this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
       this.Name = "MuiForm";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "MUI";

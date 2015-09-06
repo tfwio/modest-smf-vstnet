@@ -15,7 +15,8 @@ namespace Mui
         {
           graphics.Clip = rgn;
           
-          graphics.FillRectangle(bFill??DictBrush[ColourClass.Dark40],widget.Bounds);
+          if (widget.Parent.FocusedControl==widget)
+            graphics.FillRectangle(bFill??DictBrush[ColourClass.Dark40],widget.Bounds);
           graphics.DrawRectangle(pen1,widget.Bounds);
           
           graphics.ResetClip();

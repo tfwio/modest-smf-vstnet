@@ -64,6 +64,7 @@
     <Compile Include="Source\Drawing\GraphicsPens.cs" />
     <Compile Include="Source\Extensions\FileInfoExtension.cs" />
     <Compile Include="Source\Extensions\NumericExtensions.cs" />
+    <Compile Include="Source\Extensions\System.FieldStringExtension.cs" />
     <Compile Include="Source\Internals\CustomControlView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -73,7 +74,7 @@
     <Compile Include="Source\Internals\RenderStateType.cs" />
     <Compile Include="Source\Interop\FontIndex.cs" />
     <Compile Include="Source\Interop\FontResource.cs" />
-    <Compile Include="Source\Mui.Widgets\ButtonWidget.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetButton.cs" />
     <Compile Include="Source\Mui.Widgets\ClockWidget.cs" />
     <Compile Include="Source\Mui.Widgets\GridListWidget.cs" />
     <Compile Include="Source\Mui.Widgets\MousePositionWidget.cs" />
@@ -89,7 +90,9 @@
     <Compile Include="Source\Mui\IMui.cs" />
     <Compile Include="Source\Mui\IncrementUtil.cs" />
     <Compile Include="Source\Mui\IState.cs" />
-    <Compile Include="Source\Mui\MuiBase.cs" />
+    <Compile Include="Source\Mui\MuiBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Source\Mui\Painter.Brushes.cs">
       <DependentUpon>Painter.cs</DependentUpon>
     </Compile>
@@ -137,9 +140,6 @@
     </Compile>
     <Compile Include="Source\Interop\WinMM.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Source\Mui" />
-    <Folder Include="Source\Mui.Widgets" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -46,9 +46,7 @@ namespace Mui.Widgets
     
     
     public override bool HasClientMouseDown {
-      get {
-        return HasClientMouse && Parent.MouseD != null;
-      }
+      get { return HasClientMouse && Parent.MouseD != null; }
     }
     
     override public bool HasFocus {
@@ -65,7 +63,7 @@ namespace Mui.Widgets
     /// Mouse is contained within the current control.
     /// </summary>
     public override bool HasClientMouse {
-      get { return Bounds.Contains(Parent.PointToClient(Parent.MouseM)); }
+      get { return HitTest(ClientMouse); }
     }
     
     #endregion

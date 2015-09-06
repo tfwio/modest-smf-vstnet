@@ -10,7 +10,7 @@ namespace ren_mbqt_layout
 {
   // After writing a little over 50% of these manually, I jumped over to
   // DenWilliams (and friends):// https://github.com/denwilliams/FontAwesome-WindowsForms/blob/e2e6bbb075d8427287194f3b7da72f6a05e3dc1e/FontAwesomeIcons/IconType.cs
-  static public class FontAwesomeChar
+  static public class FaChar
   {
     static public char Adjust               = (char)(uint)0xf042;
     static public char Adn                  = (char)(uint)0xf170;

@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 namespace Mui.Widgets
 {
-  public class SliderWidget : ButtonWidget
+  public class SliderWidget : WidgetButton
   {
     
     public DoubleMinMax SliderValue { get; set; }
@@ -18,19 +18,20 @@ namespace Mui.Widgets
       get { return base.Bounds; }
       set { base.Bounds = value; UpdateBounds(); }
     }
-    protected override void ButtonWidget_ParentMouseDown(object sender, MouseEventArgs e)
+    protected override void OnMouseDown(MouseEventArgs e)
     {
+      base.OnMouseDown(e);
       if (HasClientMouse) UpdateBounds();
-      base.ButtonWidget_ParentMouseDown(sender, e);
     }
-    protected override void ButtonWidget_ParentMouseMove(object sender, MouseEventArgs e)
+//    protected override void OnMouseMove(MouseEventArgs e)
+//    {
+//      base.OnMouseMove(e);
+//      Parent.Invalidate(this.Bounds);
+//    }
+    protected override void WidgetButton_ParentMouseMove(object sender, MouseEventArgs e)
     {
-      if (HasMouseDown)
-      {
-        base.ButtonWidget_ParentMouseMove(sender, e);
-        UpdateBounds();
-        Parent.Invalidate(this.Bounds);
-      }
+      base.WidgetButton_ParentMouseMove(sender, e);
+      if (HasMouseDown) UpdateBounds();
     }
     public void UpdateBounds()
     {

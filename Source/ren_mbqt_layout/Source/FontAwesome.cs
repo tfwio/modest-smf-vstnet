@@ -53,6 +53,7 @@ namespace ren_mbqt_layout
     BarChartO            = 0xf080,
     Barcode              = 0xf02a,
     Bars                 = 0xf0c9,
+    // Battery
     Beer                 = 0xf0fc,
     Behance              = 0xf1b4,
     BehanceSquare        = 0xf1b5,

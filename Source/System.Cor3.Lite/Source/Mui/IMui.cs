@@ -12,6 +12,10 @@ namespace Mui
 	  
 	  System.Drawing.Text.FontIndex FontIndex { get; }
 	  
+	  event EventHandler Tick;
+	  void AppTimer_Tick(object sender, EventArgs e);
+	  IncrementUtil Incrementor { get; set; }
+	  
 	  Point PointToClient(Point point);
 	  
 	  void Invalidate();
@@ -56,6 +60,8 @@ namespace Mui
 		//void OnWheel(int val);
 		
 		// Mouse Events
+		
+		event EventHandler DoubleClick;
 		
 		event EventHandler Click;
 

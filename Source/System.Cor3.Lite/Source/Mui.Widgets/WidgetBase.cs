@@ -9,6 +9,37 @@ namespace Mui.Widgets
   /// </summary>
   public abstract class WidgetBase
   {
+    static protected readonly Color DefaultBackgroundColor = Painter.DictColour[ColourClass.Dark40];
+    
+    bool IsInitialized { get; set; }
+    
+    public Color BackgroundColor { get; set; }
+    
+    /// <summary>
+    /// Visible to rendering process.
+    /// - Is within the boundary of the window.
+    /// - Is marked as visible.
+    /// </summary>
+    public bool IsVisible { get; set; }
+    
+    /// <summary>
+    /// Enable/Disable Enabled state.
+    /// </summary>
+    public bool Enabled { get; set; }
+    
+    public FloatPoint ClientMouse {
+      get { return Parent.ClientMouse; }
+    }
+    /// <summary>
+    /// We're dealing with ClientCoordinates here (relative to the window)
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
+    public bool HitTest(Point point)
+    {
+      return Bounds.Contains(Parent.ClientMouse);
+    }
+    
     public WidgetGroup Container { get; set; }
     
     #region Color
@@ -31,10 +62,8 @@ namespace Mui.Widgets
     
     public ColourClass ColourClassFg {
       get {
-        if (HasMouseDown/* || HasClientMouseDown*/)
-          return ColourClass.Active;
-        if (HasFocus)
-          return ColourClass.Focus;
+        if (HasMouseDown /* || HasClientMouseDown*/ ) return ColourClass.Active;
+        if (HasFocus) return ColourClass.Focus;
         return HasClientMouse ? ColourClass.White : ColourClass.Default;
       }
     }
@@ -43,6 +72,14 @@ namespace Mui.Widgets
     
     #region event-Mouse
     
+    protected event EventHandler DoubleClick;
+
+    protected virtual void OnDoubleClick(EventArgs e)
+    {
+      var handler = DoubleClick;
+      if (handler != null)
+        handler(this, e);
+    }
     protected event EventHandler Click;
 
     protected virtual void OnClick(EventArgs e)
@@ -90,6 +127,11 @@ namespace Mui.Widgets
     #endregion
     
     #region ParentEvents
+
+    public event EventHandler ParentDoubleClick {
+      add    { Parent.DoubleClick += value; }
+      remove { Parent.DoubleClick -= value; }
+    }
     
     public event EventHandler ParentClick {
       add    { Parent.Click += value; }
@@ -111,6 +153,47 @@ namespace Mui.Widgets
       add    { Parent.Wheel += value; }
       remove { Parent.Wheel -= value; }
     }
+    virtual protected void WidgetButton_ParentClick(object sender, EventArgs e)
+    {
+      if (HasClientMouse) {
+        OnClick(e);
+        using (var rgn = new Region(this.Bounds))
+          Parent.Invalidate(rgn);
+      }
+    }
+    
+    virtual protected void WidgetButton_ParentMouseDown(object sender, MouseEventArgs e)
+    {
+      if (HasClientMouse)
+      {
+        if (e.Button == MouseButtons.Left) OnMouseDown(e);
+        this.HasMouseDown = true;
+        OnMouseDown(e);
+      }
+      using (var rgn = new Region(this.Bounds)) Parent.Invalidate(rgn);
+    }
+    
+    virtual protected void WidgetButton_ParentMouseUp(object sender, MouseEventArgs e)
+    {
+      this.HasMouseDown = false;
+      if (HasClientMouse) using (var rgn = new Region(this.Bounds)) Parent.Invalidate(rgn);
+      if (HasMouseDown || HasClientMouse) { OnMouseUp(e); }
+    }
+
+    virtual protected void WidgetButton_ParentMouseMove(object sender, MouseEventArgs e)
+    {
+      if (HasClientMouse || HasClientMouseDown)
+      {
+        OnMouseMove(e);
+      }
+      //      if (HasClientMouse)
+      //      {
+      //        using (var rgn = new Region(this.Bounds))
+      //          Parent.Invalidate(rgn);
+      //      }
+      //        using (var rgn = new Region(this.Bounds))
+      //          Parent.Invalidate(rgn);
+    }
     
     #endregion
     
@@ -129,9 +212,17 @@ namespace Mui.Widgets
     protected WidgetBase()
     {
     }
-    protected WidgetBase(IMui parent)
+    protected WidgetBase(IMui parent) : this()
     {
       this.Parent = parent;
+      this.Initialize();
+    }
+    virtual public void Initialize()
+    {
+      this.ParentClick += WidgetButton_ParentClick;
+      this.ParentMouseDown += WidgetButton_ParentMouseDown;
+      this.ParentMouseUp += WidgetButton_ParentMouseUp;
+      this.ParentMouseMove += WidgetButton_ParentMouseMove;;
     }
 
     #region Position

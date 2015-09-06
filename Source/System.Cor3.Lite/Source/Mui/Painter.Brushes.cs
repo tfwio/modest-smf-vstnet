@@ -30,6 +30,7 @@ namespace Mui
       { ColourClass.Dark70, Color.FromArgb(255, 70, 70, 70) },
       { ColourClass.Dark90, Color.FromArgb(255, 90, 90, 90) },
       { ColourClass.Default, Color.Red },
+      { ColourClass.Disabled, Color.Gray },
       { ColourClass.Focus, Color.Orange },
       { ColourClass.White, Color.White },
     };
@@ -43,19 +44,21 @@ namespace Mui
       { ColourClass.Dark70, new SolidBrush(DictColour[ColourClass.Dark70]) },
       { ColourClass.Dark90, new SolidBrush(DictColour[ColourClass.Dark90]) },
       { ColourClass.Default, new SolidBrush(DictColour[ColourClass.Default]) },
+      { ColourClass.Disabled, new SolidBrush(DictColour[ColourClass.Disabled]) },
       { ColourClass.Focus, new SolidBrush(DictColour[ColourClass.Focus]) },
       { ColourClass.White, new SolidBrush(DictColour[ColourClass.White]) },
     };
     static public readonly Dictionary<ColourClass, Pen> DictPen = new Dictionary<ColourClass, Pen> {
       { ColourClass.Active, new Pen(DictBrush[ColourClass.Active], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.Black, new Pen(DictBrush[ColourClass.Black], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
-      { ColourClass.Default, new Pen(DictBrush[ColourClass.Default], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.Dark20, new Pen(DictBrush[ColourClass.Dark20], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.Dark30, new Pen(DictBrush[ColourClass.Dark30], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.Dark40, new Pen(DictBrush[ColourClass.Dark40], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.Dark50, new Pen(DictBrush[ColourClass.Dark50], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.Dark70, new Pen(DictBrush[ColourClass.Dark70], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.Dark90, new Pen(DictBrush[ColourClass.Dark90], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
+      { ColourClass.Default, new Pen(DictBrush[ColourClass.Default], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
+      { ColourClass.Disabled, new Pen(DictBrush[ColourClass.Disabled], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.Focus, new Pen(DictBrush[ColourClass.Focus], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
       { ColourClass.White, new Pen(DictBrush[ColourClass.White], 2) { StartCap = LineCap.Round, EndCap = LineCap.Round } },
     };

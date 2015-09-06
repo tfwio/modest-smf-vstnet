@@ -13,31 +13,9 @@ namespace ren_mbqt_layout
   /// <summary>
   /// Description of MainForm.
   /// </summary>
-  public partial class MuiForm : MuiBase, IMui
+  public partial class MuiForm : MuiBase
   {
-    public FontIndex FontIndex { get; protected set; }
-    
-    #region Timer
-    
-    Timer appTimer = new Timer() { Interval = 30 };
-    public event EventHandler Tick {
-      add { appTimer.Tick += value; }
-      remove { appTimer.Tick -= value; }
-    }
-    void AppTimer_Tick(object sender, EventArgs e)
-    {
-      this.Incrementor.IncrementY();
-      // none of the widgets implement this guy.
-      foreach (var widget in Widgets)
-        widget.Increment();
-      // draw
-      Invalidate();
-    }
-    
-    #endregion
-    
     FloatRect myRect = new FloatRect(200, 100, 100, 100);
-    IncrementUtil Incrementor = new IncrementUtil();
     
     WidgetGroup Facto = null;
     WidgetGroup WidgetMenu = null;
@@ -61,13 +39,13 @@ namespace ren_mbqt_layout
       
       InitializeComponent();
       
-      Facto = new DefaultWidgetGroup();
-      WidgetMenu = new MenuWidgetGroup();
+      Facto = new TopMenuWidgetGroup(){Parent=this};
+      WidgetMenu = new LeftMenuWidgetGroup(){Parent=this};
       
       MouseWheel += OnMouseWheel;
       
-      appTimer.Tick += AppTimer_Tick;
-      appTimer.Start();
+      AppTimer.Tick += AppTimer_Tick;
+      AppTimer.Start();
       
       var TopGridLoc = new FloatRect(10, 10, 100, 28);
       var DPadding = new Padding(4);
@@ -91,11 +69,13 @@ namespace ren_mbqt_layout
       e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
       e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
       
-      e.Graphics.Clear(Painter.DictColour[ColourClass.Dark20]);
+      e.Graphics.Clear(Painter.DictColour[ColourClass.Dark40]);
+//      using (var p = new Pen(Color.FromArgb(255, 0x99,0xff,0x00), 6))
+//        e.Graphics.DrawRectangle(p, new FloatRect(0,0,Width,Height));
       
 //      WidgetMenu.Paint(e);
 //      Facto.Paint(e);
-      foreach (var widget in Widgets) widget.Paint(e);
+        foreach (var widget in Widgets) widget.Paint(e);
     }
   }
   
