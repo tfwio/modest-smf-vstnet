@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>System.Cor3.Lite</id>
+    <version>1.0</version>
+    <title>System.Cor3.Light</title>
+    <authors>tfwroble@gmail.com</authors>
+    <owners>tfwxo</owners>
+    <!-- <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl> -->
+    <!-- <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl> -->
+    <!-- <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple abstraction layer</description>
+    <releaseNotes>Simple pack.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Cor3</tags>
+  </metadata>
+</package>
