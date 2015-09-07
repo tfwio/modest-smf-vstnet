@@ -84,6 +84,7 @@ namespace Mui
 
     override public void Initialize(){
       Parent.Resize += Parent_Resize;
+      Parent.ResizeEnd += Parent_Resize;
       if (Widgets == null) return;
       foreach (var widget in EnumerateWidgets()) widget.Container = this;
       DoLayout();

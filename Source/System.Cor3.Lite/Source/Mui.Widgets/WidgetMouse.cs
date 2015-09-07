@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 namespace Mui.Widgets
 {
-	public class MousePositionWidget : Widget
+	public class WidgetMouse : Widget
 	{
 		public override string Text {
 			get {
@@ -14,7 +14,7 @@ namespace Mui.Widgets
 			}
 		}
 
-		public MousePositionWidget(IMui parent) : base(parent)
+		public WidgetMouse(IMui parent) : base(parent)
 		{
 			this.ValueFormat = "{0}";
 		}

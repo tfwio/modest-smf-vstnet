@@ -8,6 +8,8 @@ namespace Mui
 {
 	public interface IMui
 	{
+	  int Width { get; set; }
+	  int Height { get; set; }
 	  Size Size { get; set; }
 	  
 	  System.Drawing.Text.FontIndex FontIndex { get; }
@@ -33,6 +35,8 @@ namespace Mui
 		FloatPoint MouseM { get; set; }
     
 		bool HasControlKey { get; set; }
+		bool HasAltKey { get; set; }
+		bool HasShiftKey { get; set; }
     
 		Font Font { get; set; }
     
@@ -48,6 +52,10 @@ namespace Mui
 		Widget[] Widgets { get; set; }
 		
 		event EventHandler Resize;
+		event EventHandler ResizeBegin;
+		event EventHandler ResizeEnd;
+		event EventHandler SizeChanged;
+		event EventHandler ClientSizeChanged;
 		
 		event KeyEventHandler KeyDown;
 		

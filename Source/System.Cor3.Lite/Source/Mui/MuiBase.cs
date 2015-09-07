@@ -35,6 +35,7 @@ namespace Mui
         widget.Increment();
       // draw
       Invalidate();
+      
     }
     
     #endregion
@@ -54,6 +55,16 @@ namespace Mui
 			set { hasControlKey = value; }
 		} protected bool hasControlKey = false;
 
+		public bool HasShiftKey {
+			get { return hasShiftKey; }
+			set { hasShiftKey = value; }
+		} protected bool hasShiftKey = false;
+
+		public bool HasAltKey {
+			get { return hasAltKey; }
+			set { hasAltKey = value; }
+		} protected bool hasAltKey = false;
+
 		// we should have an undo-redo state-machine
 		// even though were not using it yet.
 		// Rather than using 'object' as our state, we should be using
@@ -70,7 +81,7 @@ namespace Mui
 
 		protected virtual void OnWheel(int val)
 		{
-			var args = new WheelArgs(1, HasControlKey);
+			var args = new WheelArgs(val, HasControlKey, HasShiftKey, HasAltKey);
 			var handler = Wheel;
 			if (handler != null)
 				handler(this, args);
@@ -78,7 +89,9 @@ namespace Mui
 
 		protected void OnMouseWheel(object sender, MouseEventArgs e)
 		{
-			OnWheel(e.Delta > 0 ? 1 : -1);
+		  int result=e.Delta > 0 ? 1 : -1;
+			OnWheel(result);
+//			System.Diagnostics.Debug.Print("Mouse Wheel: {0}",result);
 		}
 
 		#endregion
@@ -107,13 +120,17 @@ namespace Mui
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			base.OnKeyDown(e);
+			hasShiftKey = e.Shift;
 			hasControlKey = e.Control;
+			hasAltKey = e.Alt;
 		}
 
 		protected override void OnKeyUp(KeyEventArgs e)
 		{
 			base.OnKeyUp(e);
+			hasShiftKey = e.Shift;
 			hasControlKey = e.Control;
+			hasAltKey = e.Alt;
 		}
 	#endregion
 	}

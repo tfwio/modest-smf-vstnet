@@ -3,7 +3,24 @@ using System.Drawing;
 using Mui.Widgets;
 namespace Mui
 {
-  
+  static public class PainterHelper
+  {
+    
+    static public void DrawText(this Graphics graphics, string text, Color color, Font font, FloatRect rect, StringAlignment hAlign=StringAlignment.Center)
+    {
+      graphics.DrawString(
+        text,
+        font,
+        new SolidBrush(color),
+        rect,
+        new StringFormat()
+        {
+          Alignment=hAlign,
+          LineAlignment=StringAlignment.Center,
+        }
+       );
+    }
+  }
   public partial class Painter
   {
     static public void DrawBorder(Graphics graphics, Widget widget, Pen pBorder=null, Brush bFill=null)

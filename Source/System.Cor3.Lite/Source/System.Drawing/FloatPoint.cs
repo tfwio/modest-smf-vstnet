@@ -376,6 +376,7 @@ namespace System.Drawing
     #endregion
     
 //		public FloatPoint() : this(0,0){  }
+    public FloatPoint(){}
     public FloatPoint(FloatPoint y){ this._X = y.X; this._Y = y.Y; }
     public FloatPoint(float x, float y){ _X = x; _Y = y; }
     public FloatPoint(int value) : this(value,value) {  }

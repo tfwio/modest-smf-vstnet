@@ -412,7 +412,7 @@ namespace modest100.Forms
       get { return (Ren.ui_view_settings.NodeWidth * 4* 4); }
     }
     public double WedgeQ {
-      get { return Ren.ui_view_settings.ClientRect.Width / Wedge; }
+      get { return Ren.ui_view_settings.ClientRect.Height / Wedge; }
     }
     
     #region Drawing Layers (not in background)

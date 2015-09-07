@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 namespace Mui.Widgets
 {
-  public class ClockWidget : Widget
+  public class WidgetClock : Widget
   {
     FloatPoint PClock = new FloatPoint(40,150);
     
@@ -24,7 +24,7 @@ namespace Mui.Widgets
       base.Increment();
     }
 
-    public ClockWidget(IMui parent) : base(parent)
+    public WidgetClock(IMui parent) : base(parent)
     {
       this.ValueFormat = "hh:mm:ss.fff tt";
     }

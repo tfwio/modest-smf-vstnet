@@ -23,14 +23,14 @@ namespace modest100.Forms
 		/// <inheritdoc/>
 		public FloatPoint NodeMax { get { return new FloatPoint(NodeXMax,NodeYMax); } }
 		/// <inheritdoc/>
-		public float NodeXMax  { get { return (float)Math.Floor(/*axmax*/Rect.Width / NodeSize.Width); } }
+		public float NodeXMax  { get { return (float)Math.Floor(/*axmax*/Rect.Height / NodeSize.Width); } }
 		/// <inheritdoc/>
 		public float NodeYMax  { get { return (float)Math.Floor(/*aymax*/Rect.Height / NodeSize.Height); } }
 		
     
     #endregion
 		
-		public FloatPoint GridNodeMax { get { return new FloatPoint( ClientRect.Width/this.NodeSize.Width, ClientRect.Height/this.NodeSize.Height ).Floored; } }
+		public FloatPoint GridNodeMax { get { return new FloatPoint( ClientRect.Height/this.NodeSize.Width, ClientRect.Height/this.NodeSize.Height ).Floored; } }
 		
 		#region Colors
 		

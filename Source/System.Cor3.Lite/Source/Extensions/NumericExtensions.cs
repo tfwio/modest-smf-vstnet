@@ -9,6 +9,11 @@ namespace System
 	    if (min.HasValue && number < min) return min.Value;
 	    return max.HasValue && number > max.Value ? max.Value : number;
 	  }
+	  static public int Contain(this int number, float? min, float? max)
+	  {
+	    if (min.HasValue && number < min) return Convert.ToInt32(min.Value);
+	    return max.HasValue && number > max.Value ? Convert.ToInt32(max.Value) : number;
+	  }
 	  static public uint Contain(this uint number, uint? min, uint? max)
 	  {
 	    if (min.HasValue && number < min) return min.Value;

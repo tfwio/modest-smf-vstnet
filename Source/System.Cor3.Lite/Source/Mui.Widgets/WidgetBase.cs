@@ -9,6 +9,39 @@ namespace Mui.Widgets
   /// </summary>
   public abstract class WidgetBase
   {
+    #region Position
+    
+    virtual public FloatRect Bounds { get; set; }
+
+    public Padding Padding { get; set; }
+
+    public FloatRect PaddedBounds {
+      get {
+        if (Bounds == null)
+          return null;
+        var NewRect = FloatRect.ApplyPadding(Bounds, Padding);
+        return NewRect;
+      }
+    }
+
+    #endregion
+    
+    
+    #region Logical Size and Position (for use within layout)
+    
+    public int? WidthMin { get; set; }
+    public int? WidthMax { get; set; }
+    
+    public int? HeightMin { get; set; }
+    public int? HeightMax { get; set; }
+    
+    public int X { get { return Convert.ToInt32(Bounds.X); } set { Bounds.X = value; } }
+    public int Y { get { return Convert.ToInt32(Bounds.Y); } set { Bounds.Y = value; } }
+    
+    public int Width  { get { return Convert.ToInt32(Bounds.Width); }  set { Bounds.Width = value.Contain(WidthMin,WidthMax); } }
+    public int Height { get { return Convert.ToInt32(Bounds.Height); } set { Bounds.Height = value.Contain(HeightMin,HeightMax); } }
+    
+    #endregion
     static protected readonly Color DefaultBackgroundColor = Painter.DictColour[ColourClass.Dark40];
     
     bool IsInitialized { get; set; }
@@ -153,6 +186,9 @@ namespace Mui.Widgets
       add    { Parent.Wheel += value; }
       remove { Parent.Wheel -= value; }
     }
+    
+    
+    
     virtual protected void WidgetButton_ParentClick(object sender, EventArgs e)
     {
       if (HasClientMouse) {
@@ -215,8 +251,9 @@ namespace Mui.Widgets
     protected WidgetBase(IMui parent) : this()
     {
       this.Parent = parent;
-      this.Initialize();
+      Initialize();
     }
+    
     virtual public void Initialize()
     {
       this.ParentClick += WidgetButton_ParentClick;
@@ -225,22 +262,6 @@ namespace Mui.Widgets
       this.ParentMouseMove += WidgetButton_ParentMouseMove;;
     }
 
-    #region Position
-    
-    virtual public FloatRect Bounds { get; set; }
-
-    public Padding Padding { get; set; }
-
-    public FloatRect PaddedBounds {
-      get {
-        if (Bounds == null)
-          return null;
-        var NewRect = FloatRect.ApplyPadding(Bounds, Padding);
-        return NewRect;
-      }
-    }
-
-    #endregion
 
     virtual public void Increment()
     {

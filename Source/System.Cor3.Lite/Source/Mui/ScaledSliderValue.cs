@@ -26,7 +26,7 @@ namespace Mui
 		{
 			SliderValue.Minimum = 0;
 			try {
-				SliderValue.Maximum = Parent.Bounds.Width;
+				SliderValue.Maximum = Parent.Bounds.Height;
 			}
 			catch {
 			}

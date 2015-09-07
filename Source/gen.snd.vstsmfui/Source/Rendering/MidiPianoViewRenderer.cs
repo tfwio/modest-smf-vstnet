@@ -333,7 +333,7 @@ namespace modest100.Forms
 		#region Rectangle Utility
 		static RectangleDoubleUnit RectangleMe(float i)
 		{
-			return new RectangleDoubleUnit(ui_view_settings.ClientPadding.Left, i, ui_view_settings.Rect.Width, ui_view_settings.NodeSize.Height);
+			return new RectangleDoubleUnit(ui_view_settings.ClientPadding.Left, i, ui_view_settings.Rect.Height, ui_view_settings.NodeSize.Height);
 		}
 
 		/// <summary>

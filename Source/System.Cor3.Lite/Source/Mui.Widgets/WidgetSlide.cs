@@ -6,7 +6,8 @@ using System.Drawing;
 using System.Windows.Forms;
 namespace Mui.Widgets
 {
-  public class SliderWidget : WidgetButton
+  
+  public class WidgetSlideH : WidgetButton
   {
     
     public DoubleMinMax SliderValue { get; set; }
@@ -39,7 +40,7 @@ namespace Mui.Widgets
       Debug.Print( "Value: {0:n2}, {1}, {2}", SliderValue.Value, SliderValue.Minimum, SliderValue.Maximum );
       this.Text = string.Format( "{0:p2}", SliderValue.Value );
     }
-    public SliderWidget(IMui parent) : base(parent)
+    public WidgetSlideH(IMui parent) : base(parent)
     {
       ThumbWidth = 10;
       SliderValue = new DoubleMinMax(){ Minimum=0, Maximum=1, };
@@ -63,6 +64,7 @@ namespace Mui.Widgets
       }
     }
   }
+  
 }
 
 
