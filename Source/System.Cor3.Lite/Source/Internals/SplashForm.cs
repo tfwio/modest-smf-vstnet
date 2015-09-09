@@ -24,6 +24,19 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 
+/**
+ * This source file is a bit of a mess of a couple ideas thrown into immediate usage. 
+ * 
+ * 1. primary usage is to simply use a bitmap as a background-image for a transparent form.
+ *    This transparent form is SplashFormController.
+ *    This is what we're using in its simplicity.
+ * 2. Take idea (1.) and place a form over it (SplashForm).
+ *    Our overlay can have controls added to it unlike SplashFormController.
+ * 
+ * This really is a horrible idea for a splash form.
+ * 
+ */
+
 namespace System.Windows.Forms
 {
 	/// <summary>
