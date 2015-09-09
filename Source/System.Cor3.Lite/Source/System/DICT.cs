@@ -127,14 +127,18 @@ namespace System
 			MessageBox.Show(
 				string.Format(
 //					Strings.DictionaryList_ErrorMessage,
-					"Argument ‘{0}’ as allready been added to the Dictionary.",
+					"Argument ‘{0}’ has allready been added to the Dictionary.",
 					parameter
 				),
 //				Strings.DictionaryList_ErrorMessage_Title
 				"DictionaryList Usage Error"
 			);
 		}
-		
+		/// <summary>
+    /// If the key is not present in the dictionary, one is added.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
 		public void AddV(TKey key, params TValue[] value)
 		{
 			if (!ContainsKey(key)) CreateKey(key);
