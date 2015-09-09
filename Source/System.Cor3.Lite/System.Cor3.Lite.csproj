@@ -62,7 +62,11 @@
     <!--D:\DEV\WIN\CS_ROOT\Projects\gen.snd.common\source\cor3.core\System.Drawing\CORNERS.cs-->
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Drawing\GraphicsPens.cs" />
+    <Compile Include="Source\Extensions\DllExtension.cs" />
     <Compile Include="Source\Extensions\FileInfoExtension.cs" />
+    <Compile Include="Source\Extensions\MachineType.cs">
+      <DependentUpon>DllExtension.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\Extensions\NumericExtensions.cs" />
     <Compile Include="Source\Extensions\System.FieldStringExtension.cs" />
     <Compile Include="Source\Internals\CustomControlView.cs">
