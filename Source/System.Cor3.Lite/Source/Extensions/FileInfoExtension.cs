@@ -6,8 +6,7 @@ namespace System
 	{
 	  static public System.IO.DirectoryInfo GetAppDirectory(this System.Reflection.Assembly assembly)
 	  {
-      var asm = System.Reflection.Assembly.GetExecutingAssembly();
-      var finf = new System.IO.FileInfo(asm.Location);
+      var finf = new System.IO.FileInfo(assembly.Location);
       return finf.Directory;
 	  }
 	  static public System.IO.FileInfo GetAppFile(this System.Reflection.Assembly assembly, string filePath)
