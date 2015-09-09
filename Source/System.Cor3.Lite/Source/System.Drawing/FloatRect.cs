@@ -38,6 +38,17 @@ namespace System.Drawing
       return point >= this.Location && point <= this.BottomRight;
     }
     
+    public FloatRect Shrink(float amount, bool floor=true)
+    {
+      var a2       = amount+amount;
+      var rect     = Clone();
+      rect.Width  -= a2;
+      rect.Height -= a2;
+      rect.Y      += amount;
+      rect.X      += amount;
+      return rect;
+    }
+    
     /// <summary>
     /// returns a floored copy (EG: Math.Floor(...))
     /// </summary>
