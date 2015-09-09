@@ -54,10 +54,6 @@ What's worth pointing out: we're missing the ability to loop a particular bar ru
 
 As pointed out, we are missing calculations for **Tempo-Changes**.
 
-Our MIDI parser is dependant upon a few key classes.
-
-When the parser is parsing our data, it appends data to a main MidiMessage dictionary via a specific delegate From within the MIDI Parser.  An Event is triggered upon the occurance of each Midi Message, entailing a little bit of information about each message.  We have defined methods which take care of parsing, however it would.
-
 - (**TimeConfiguration**) ModestForm.VstContainer.VstPlayer.Settings
 - **SampleClock**
 - **VstMidiEnumerator**
