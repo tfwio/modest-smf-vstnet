@@ -168,7 +168,7 @@ namespace gen.snd.Midi
 			ParseTrackMeta(metaTrackId);
 			
 			MidiEventDelegate backup = this.MessageHandler;
-			this.MessageHandler = PARSER_MidiDataList;
+      MessageHandler = PARSER_MidiDataList;
 			ParseAll();
 			this.MessageHandler = backup;
 		}
@@ -312,8 +312,8 @@ namespace gen.snd.Midi
 				case (int)MetaMsgU16FF.Cue:
 					// FF07
 				case (int)MetaMsgU16FF.Port:
-					// FF08
-					this.MessageHandler(MidiMsgType.MetaStr, ntrack, position, CurrentIntMessage, CurrentByte, TicksPerQuarterNote, RunningStatus32, false);
+          // FF08
+          this.MessageHandler(MidiMsgType.MetaStr, ntrack, position, CurrentIntMessage, CurrentByte, TicksPerQuarterNote, RunningStatus32, false);
 					//lve.AddItem( c4, MeasureBarTick( TicksPerQuarterNote ), TicksPerQuarterNote.ToString(), ""/*(RunningStatus32 & 0x0F)+1*/, MetaHelpers.MetaNameFF( CurrentIntMessage ) , GetMetaString( position ) );
 					DELTA_Returned = GetMetaNextPos(position);
 					break;
@@ -330,9 +330,9 @@ namespace gen.snd.Midi
 				case (int)MetaMsgU16FF.TimeSignature:
 					// FF58
 				case (int)MetaMsgU16FF.KeySignature:
-					// FF59
-					// why is this filtered and no others ? see gettrackmessage
-					if (HasTrackReaderDelegate) this.MessageHandler(MidiMsgType.MetaInf, ntrack, position, CurrentIntMessage, CurrentByte, TicksPerQuarterNote, RunningStatus32, false);
+          // FF59
+          // why is this filtered and no others ? see gettrackmessage
+          this.MessageHandler(MidiMsgType.MetaInf, ntrack, position, CurrentIntMessage, CurrentByte, TicksPerQuarterNote, RunningStatus32, false);
 					DELTA_Returned = GetMetaNextPos(position);
 					break;
 				case (int)MetaMsgU16FF.SystemSpecific:
@@ -620,11 +620,11 @@ namespace gen.snd.Midi
 			
 			return SmfFileHandle.Tracks[SelectedTrackNumber].track.Length;
 		}
-		#endregion
-		#region READ ALL TRACKS
+    #endregion
+    #region READ (PARSE) ALL TRACKS
 
-		// when IsTrackSelected, the total number of ticks in the track.
-		long totlen = 0;
+    // when IsTrackSelected, the total number of ticks in the track.
+    long totlen = 0;
 
 		/// <summary>
 		/// Parse all tracks to mididatalist
@@ -656,10 +656,10 @@ namespace gen.snd.Midi
 //			OnAfterTrackLoaded(EventArgs.Empty);
 //			return SmfFileHandle.Tracks[SelectedTrackNumber].track.Length;
 		}
-		
-		#region PARSER_MidiDataList
 
-		void PARSER_MidiDataList(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse)
+    #region PARSER_MidiDataList (DEFAULT PARSER!)
+
+    void PARSER_MidiDataList(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse)
 		{
 			switch (t)
 			{

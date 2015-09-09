@@ -26,7 +26,7 @@ namespace mui_smf
 			Widgets = new Widget[]
 			{
 				new WidgetMouse(Parent) {
-			    Bounds = new FloatRect(4,4,140,Height),
+			    Bounds = new FloatRect(4,0,140,Height),
 					Padding = DPadding
 				},
         new WidgetClock(Parent) {
@@ -42,7 +42,7 @@ namespace mui_smf
 					Padding = DPadding,
 			    Bounds = new FloatRect(0,0,48,Height),
 					Font=Parent.FontIndex["awesome",18f],
-					Text=Convert.ToChar(uint.Parse("f00b",System.Globalization.NumberStyles.HexNumber)).ToString()
+					Text=FontAwesome.Adjust
 				},
 				new WidgetButton(Parent) {
 					Padding = DPadding,

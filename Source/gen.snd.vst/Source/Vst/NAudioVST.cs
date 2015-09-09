@@ -226,7 +226,10 @@ namespace gen.snd.Vst
 				else xAudio = new DirectSoundOut(TimeConfiguration.Instance.Latency);
 			}
 			else if (audioDriver==Driver.ASIO) xAudio = new AsioOut(1);
-			if (CurrentChannel!=null) { CurrentChannel.Dispose(); CurrentChannel = null; }
+
+      if (CurrentChannel!=null) { CurrentChannel.Dispose(); CurrentChannel = null; }
+
+
 			xAudio.PlaybackStopped -= Event_PlaybackStopped;
 			xAudio.PlaybackStopped += Event_PlaybackStopped;
 		}

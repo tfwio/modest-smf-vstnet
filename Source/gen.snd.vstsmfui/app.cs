@@ -31,7 +31,7 @@ namespace modest100
 			Application.SetCompatibleTextRenderingDefault(false);
 			
 			// Customize Time Configuration
-			gen.snd.TimeConfiguration.Instance.Latency = 8000;
+			gen.snd.TimeConfiguration.Instance.Latency = 5096;
 			gen.snd.TimeConfiguration.Instance.Rate = 44100;
 			
 			

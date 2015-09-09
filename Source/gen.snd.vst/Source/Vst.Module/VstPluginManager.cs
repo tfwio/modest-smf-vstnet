@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 
 using Jacobi.Vst.Core;
@@ -214,13 +215,16 @@ namespace gen.snd.Vst.Module
 			try {
 				ctx = new VstPlugin(pluginPath,Parent);
 			} catch (Exception xx) {
-				System.Windows.Forms.MessageBox.Show(
-					xx.ToString(), "VstPluginManager", System.Windows.Forms.MessageBoxButtons.OK,
-					System.Windows.Forms.MessageBoxIcon.Error
-				);
+			  haserror = true;
+//			  System.Diagnostics.Debug.Print("{0}",xx);
+//				System.Windows.Forms.MessageBox.Show(
+//					xx.ToString(), "VstPluginManager", System.Windows.Forms.MessageBoxButtons.OK,
+//					System.Windows.Forms.MessageBoxIcon.Error
+//				);
+			  Console.Out.WriteLine("Had an error loading");
 			}
 			if (!ignoreAdd && !haserror) PluginsList.Add(pluginPath);
-//			if (ctx!=null) ctx.PluginCommandStub.Open();
+			if (ctx!=null) ctx.PluginCommandStub.Open();
 			return ctx;
 		}
 		

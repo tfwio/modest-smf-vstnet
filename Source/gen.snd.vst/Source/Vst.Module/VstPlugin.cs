@@ -289,7 +289,7 @@ namespace gen.snd.Vst.Module
 			PluginCommandStub.SetSampleRate( Convert.ToSingle(Host.VstPlayer.Settings.Rate) );
 			Set("PluginPath", PluginPath = path);
 			Set("HostCmdStub", Host.VstHost );
-			if (context!=null) Open();
+//			if (context!=null) Open();
 		}
 		public void Renew()
 		{

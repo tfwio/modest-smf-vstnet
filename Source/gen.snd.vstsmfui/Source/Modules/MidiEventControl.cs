@@ -224,7 +224,7 @@ namespace modest100.Forms
 			                          	this.ccevent,
 			                          	this.ccmsg});
 			this.lve.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.lve.Font = new System.Drawing.Font("Ubuntu Mono", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+			this.lve.Font = new System.Drawing.Font("FreeMono", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
 			this.lve.FullRowSelect = true;
 			this.lve.LabelWrap = false;
 			this.lve.Location = new System.Drawing.Point(0, 0);

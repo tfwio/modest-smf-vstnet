@@ -23,14 +23,14 @@ namespace mui_smf
 			var awesome=Parent.FontIndex["awesome",18f];
 			Widgets = new Widget[]
 			{
-			  new WidgetButton(Parent) { Text = FaStr.Bars, Bounds = DefaultBounds, Padding=DPadding, Font=awesome }, // bars
-			  new WidgetButton(Parent) { Text = FaStr.Music, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // h-bars
-			  new WidgetButton(Parent) { Text = FaStr.EllipsisV, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // v-bars
-			  new WidgetButton(Parent) { Text = FaStr.Play, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // fore
-			  new WidgetButton(Parent) { Text = FaStr.Backward, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // back
-			  new WidgetButton(Parent) { Text = FaStr.FolderOpen, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // folder-open
-			  new WidgetButton(Parent) { Text = FaStr.FolderOpenO, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // folder-open
-			  new WidgetButton(Parent) { Text = FaStr.Save, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // font
+			  new WidgetButton(Parent) { Text = FontAwesome.Bars, Bounds = DefaultBounds, Padding=DPadding, Font=awesome }, // bars
+			  new WidgetButton(Parent) { Text = FontAwesome.Music, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // h-bars
+			  new WidgetButton(Parent) { Text = FontAwesome.EllipsisV, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // v-bars
+			  new WidgetButton(Parent) { Text = FontAwesome.Play, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // fore
+			  new WidgetButton(Parent) { Text = FontAwesome.Backward, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // back
+			  new WidgetButton(Parent) { Text = FontAwesome.FolderOpen, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // folder-open
+			  new WidgetButton(Parent) { Text = FontAwesome.FolderOpenO, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // folder-open
+			  new WidgetButton(Parent) { Text = FontAwesome.Save, Bounds = DefaultBounds.Clone(), Padding=DPadding, Font=awesome }, // font
 			};
 			TopToBottom();
 		}
