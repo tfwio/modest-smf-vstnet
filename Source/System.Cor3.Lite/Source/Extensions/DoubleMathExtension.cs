@@ -38,8 +38,39 @@ namespace System
 			float f = self;
 			foreach (float input in inputs) f += input;
 			return f;
-		}
-	}
+    }
+    static public float Minimum(this float input, float min)
+    {
+      if (input <= min) return min;
+      return input;
+    }
+    /// this method seems to be used a bit too much.  lighten up.
+    static public double Floor(this float input)
+    {
+      return Math.Floor(input);
+    }
+    /// this method seems to be used a bit too much.  lighten up.
+    static public double FloorMinimum(this float input, float min)
+    {
+      return Math.Floor(Minimum(input, min));
+    }
+    static public double Maximum(this float input, double max)
+    {
+      return input > max ? max : input;
+    }
+    static public double FloorMaximum(this float input, double max)
+    {
+      return input.Maximum(max).Floor();
+    }
+    static public double MinMax(this float input, double min, double max)
+    {
+      return input.Maximum(max).Minimum(min);
+    }
+    static public double FloorMinMax(this float input, double min, double max)
+    {
+      return input.MinMax(min, max).Floor();
+    }
+  }
 	static public class DoubleMathExtension
 	{
 		static public float ToSingle(this double value) { return Convert.ToSingle(value); }
@@ -48,27 +79,31 @@ namespace System
 		{
 			if (input <= min) return min;
 			return input;
-		}
-		/// this method seems to be used a bit too much.  lighten up.
-		static public double FloorMinimum(this double input, double min)
-		{
-			return Math.Floor(Minimum(input,min));
-		}
-		static public double Maximum(this double input, double max)
+    }
+    static public double Floor(this double input)
+    {
+      return Math.Floor(input);
+    }
+    /// this method seems to be used a bit too much.  lighten up.
+    static public double FloorMinimum(this double input, double min)
+    {
+      return Math.Floor(Minimum(input, min));
+    }
+    static public double Maximum(this double input, double max)
 		{
 			return input > max ? max : input;
 		}
 		static public double FloorMaximum(this double input, double max)
 		{
-			return Math.Floor(Maximum(input,max));
+			return input.Maximum(max).Floor();
 		}
 		static public double MinMax(this double input, double min, double max)
 		{
-			return Minimum(Maximum(input,max),min);
+			return input.Minimum(min).Maximum(max);
 		}
 		static public double FloorMinMax(this double input, double min, double max)
 		{
-			return Math.Floor(Minimum(Maximum(input,max),min));
+			return input.Minimum(min).Maximum(max).Floor();
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace Mui
 		Left,
 		Center,
 		Right,
-		Full,
+		Fill,
 	}
 }
 

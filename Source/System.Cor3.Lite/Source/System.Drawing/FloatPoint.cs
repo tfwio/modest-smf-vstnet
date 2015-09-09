@@ -36,6 +36,24 @@ namespace System.Drawing
   /// </remarks>
   public class FloatPoint : IComparable
   {
+    /// <summary>
+    /// X &lt; input.X ? X : input.X, Y &lt; input.Y ? Y : input.Y
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public FloatPoint Nearest(FloatPoint input)
+    {
+      return new FloatPoint(X < input.X ? X : input.X, Y < input.Y ? Y : input.Y);
+    }
+    /// <summary>
+    /// FloatPoint(X &gt; input.X ? X : input.X, Y &gt; input.Y ? Y : input.Y) 
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public FloatPoint Furthest(FloatPoint input)
+    {
+      return new FloatPoint(X > input.X ? X : input.X, Y > input.Y ? Y : input.Y);
+    }
     /// Returnes a Floored point (copy)
     static public FloatPoint Floor(FloatPoint source)
     {

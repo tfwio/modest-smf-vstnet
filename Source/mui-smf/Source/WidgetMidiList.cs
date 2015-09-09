@@ -10,7 +10,21 @@ using Mui.Widgets;
 using System.Linq;
 namespace mui_smf
 {
-
+  static class Ex
+  {
+    static public int MinMax(this int input, int min, int max)
+    {
+      return input.Min(min).Max(max);
+    }
+    static public int Max(this int input, int max)
+    {
+      return input > max ? input : max;
+    }
+    static public int Min(this int input, int min)
+    {
+      return input < min ? input : min;
+    }
+  }
   public class WidgetMidiList : Widget
   {
     // 48-1 = C3
@@ -18,7 +32,7 @@ namespace mui_smf
     
     // we would like to center C3 on the following for the default view
     const float DefaultRatioOfInterest = 0.5f;
-    int LineHeight = 14;
+    internal int LineHeight = 14;
     int MinLinesVisible = 5;
     
     #region Grid Info
@@ -37,7 +51,7 @@ namespace mui_smf
     PointF[] HeaderPoint { get { return new PointF[2] { new FloatPoint { X = Container.Bounds.Left, Y = Container.Bounds.Top + HeightHeader }, new FloatPoint { X = Container.Bounds.Right, Y = Container.Bounds.Top + HeightHeader }, }; } }
     PointF[] FooterPoint { get { return new PointF[2] { new PointF { X = Bounds.Left, Y = Bounds.Bottom - HeightFooter }, new PointF { X = Bounds.Right, Y = Container.Bounds.Bottom - HeightFooter }, }; } }
     
-    FloatRect GridRect
+    public FloatRect GridRect
     {
       get
       {
@@ -67,8 +81,11 @@ namespace mui_smf
       public int XO { get; set; }
     }
     const int DefaultPixelsPerQuarterNote = 4;
-    int PixelsPerQuarterNote = DefaultPixelsPerQuarterNote;
-    
+    internal int PixelsPerQuarterNote = DefaultPixelsPerQuarterNote;
+    internal int PixelsPerNote { get { return PixelsPerQuarterNote * 4; } }
+    internal int PixelsPerQuarter { get { return PixelsPerNote * 4; } }
+    internal int PixelsPerBar { get { return PixelsPerQuarter * 4; } }
+
     const int DefaultNotesPerBar = 16;
     int NotesPerBar = DefaultNotesPerBar;
     
@@ -133,46 +150,37 @@ namespace mui_smf
     void parent_Resize(object sender, EventArgs e)
     {
       if (Parent==null) return;
-      System.Threading.Thread.SpinWait(300);
       Width=Container.Width;
       Height= Container.Height;
+      LineOffset = LineOffset.Contain(5 - MaxVisibleRows, 127);
     }
-    
-    int LineOffset = 80;
-    int MaxVisibleRows { get { return Convert.ToInt32(Math.Floor(GridRect.Height / LineHeight)); } }
+
+    internal int LineOffset = 80;
+    internal int MaxVisibleRows { get { return Convert.ToInt32(Math.Floor(GridRect.Height / LineHeight)); } }
     
     RowInfo VisibleRowFirst { get { return GetVLines(LineOffset).FirstOrDefault(a => a.CanDo == true); } }
     RowInfo VisibleRowLast { get {  return GetVLines(LineOffset) .LastOrDefault (a => a.CanDo == true); } }
-    
+
     //    int MaxVisibleLines(Rectangle gridRect) { return gridRect.Height / LineHeight; }
-    
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+      base.OnMouseDown(e);
+      this.SetFocus();
+    }
+
     void WidgetMidiList_Wheel(object sender, WheelArgs e)
     {
       if (!HasClientMouse) return;
       int mv = MaxVisibleRows;
-      
-      if (e.Flag==0x02) LineHeight = (LineHeight+e.Amount).Contain(8,100);
-      else if (e.Flag==0x01) LineOffset += e.Amount*12;
-      else LineOffset += e.Amount;
-      int x0=0,x1=0,x2=0;
-      
-      // (calculated) actual number of visible rows.
-      x0 = LineOffset < 0 ? (mv + LineOffset).Contain(0,mv) : (128 - LineOffset).Contain(0,mv);
-      x1 = (127-LineOffset);
-      //      x1 = x1 > 127 ? -1 : x1.Contain(-1,127);
-      int r1=0,r2=0,r3=0;
-      if (VisibleRowFirst==null || VisibleRowLast==null) {
-        r1=-1;
-        r2=-1;
-        r3 = 0;
-      }
-      else
+      switch (e.Flag)
       {
-        r1=VisibleRowFirst.RO;
-        r2=VisibleRowLast .RO;
-        r3 = r1-r2+1;
+        case 0x03: PixelsPerQuarterNote = (PixelsPerQuarterNote + e.Amount).Contain(1, 64); break;
+        case 0x02: LineHeight = (LineHeight + e.Amount).Contain(8, 100); break;
+        case 0x01: LineOffset += e.Amount * 12; break;
+        default: LineOffset += e.Amount; break;
       }
-      System.Diagnostics.Debug.Print("max={0}, offset={1}, first={2}:{6}, last={3}:{7}, visi={4}:{5}", mv, LineOffset, r1, /*03*/r2, r3,/*05*/x0,x1,x2);
+      LineOffset = LineOffset.Contain(5-MaxVisibleRows, 127);
+
       Parent.Invalidate();
     }
     
@@ -182,39 +190,42 @@ namespace mui_smf
       ParentWheel += WidgetMidiList_Wheel;
     }
 
+    bool HasGridMouse { get { return GridRect.Contains(ClientMouse); } }
+
     public override void Paint(PaintEventArgs arg)
     {
       var grid = GridRect;
-      using (var reg = new Region(/*rgrid*/Bounds)) {
-        
+      using (var reg = new Region(/*rgrid*/Bounds))
+      {
         // simplicity
         var g = arg.Graphics;
         g.Clip = reg;
-        
+
         // Maximum Visible Rows
-        using (var linePen=new Pen(Color.Blue,1)) foreach (var row in GetVLines(LineOffset))
-        {
-          var r = new FloatRect(this.Container.X+12, row.Top, WidthGutter, LineHeight );
-          if (row.CanDo)
+        using (var linePen = new Pen(Color.Blue, 1))
+          foreach (var row in GetVLines(LineOffset))
           {
-            var str = string.Format("{0:00#} {1,-3}", row.RO, MKeys[row.RO]);
-            var rc = new FloatRect(grid.Left, row.Top, grid.Width, LineHeight);
-            rc = rc.Shrink(1);
-            using (var sb = new SolidBrush(Color.FromArgb(64,row.IsIvory ? Color.White : Color.Black)))
+            var r = new FloatRect(this.Container.X + 12, row.Top, WidthGutter, LineHeight);
+            if (row.CanDo)
             {
-              g.FillRectangle(sb,rc);
+              var str = string.Format("{0:00#} {1,-3}", row.RO, MKeys[row.RO]);
+              var rc = new FloatRect(grid.Left, row.Top, grid.Width, LineHeight);
+              rc = rc.Shrink(1);
+              using (var sb = new SolidBrush(Color.FromArgb(64, row.IsIvory ? Color.White : Color.Black)))
+              {
+                g.FillRectangle(sb, rc);
+              }
+              g.DrawText(str, Color.White, this.Font, r, StringAlignment.Near);
             }
-            g.DrawText(str, Color.White, this.Font, r, StringAlignment.Near);
           }
-        }
         // 
-        using (var p0 = new Pen(Color.FromArgb(40,40,40)))
-          using (var p1 = new Pen(Color.FromArgb(130,130,130)))
-            using (var p2 = new Pen(Color.FromArgb(255,255,255)))
+        using (var p0 = new Pen(Color.FromArgb(40, 40, 40)))
+        using (var p1 = new Pen(Color.FromArgb(130, 130, 130)))
+        using (var p2 = new Pen(Color.FromArgb(255, 255, 255)))
         {
-          foreach (var i in GetHLines(4)) g.DrawLines(p0,new Point[]{ new FloatPoint(i.XO,grid.Top), new FloatPoint(i.XO,grid.Bottom) });
-          foreach (var i in GetHLines(Convert.ToInt32(Math.Pow(4,2)))) g.DrawLines(p1,new Point[]{ new FloatPoint(i.XO,grid.Top), new FloatPoint(i.XO,grid.Bottom) });
-          foreach (var i in GetHLines(Convert.ToInt32(Math.Pow(4,3)))) g.DrawLines(p2,new Point[]{ new FloatPoint(i.XO,grid.Top), new FloatPoint(i.XO,grid.Bottom) });
+          foreach (var i in GetHLines(4)) g.DrawLines(p0, new Point[] { new FloatPoint(i.XO, grid.Top), new FloatPoint(i.XO, grid.Bottom) });
+          foreach (var i in GetHLines(Convert.ToInt32(Math.Pow(4, 2)))) g.DrawLines(p1, new Point[] { new FloatPoint(i.XO, grid.Top), new FloatPoint(i.XO, grid.Bottom) });
+          foreach (var i in GetHLines(Convert.ToInt32(Math.Pow(4, 3)))) g.DrawLines(p2, new Point[] { new FloatPoint(i.XO, grid.Top), new FloatPoint(i.XO, grid.Bottom) });
         }
         // Grid-Box
         using (var pen = new Pen(Color.Green, 1))
@@ -226,9 +237,19 @@ namespace mui_smf
         // 
         using (var pen = new Pen(Color.White, 1)) g.DrawRectangle(pen, GridRect);
         //
-        g.DrawRectangle(Pens.Silver,Container.Bounds);
+
+        bool flag = false;
+        try { flag = HasFocus && grid.Contains(Parent.PointToClient(Parent.MouseD)); } catch { }
+
+        if (flag)
+        {
+          g.DrawSelectBox(this,grid);
+        }
+
+        g.DrawRectangle(Pens.Silver, Container.Bounds);
+
         arg.Graphics.ResetClip();
-        
+
       }
       
     }

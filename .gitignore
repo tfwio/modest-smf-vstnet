@@ -1,7 +1,6 @@
 bin
 obj
 .user
-.vs
 portaudiosharp\*
 *.suo
 /Source/ren_mbqt_layout/*.user

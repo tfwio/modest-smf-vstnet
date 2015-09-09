@@ -28,6 +28,33 @@ using NAudio.Wave;
 #endregion
 namespace modest100.Forms
 {
+  public enum ActionIds
+  {
+    PluginBrowse,
+    PluginReload,
+    PluginRemoveSelected,
+    PluginViewInfo,
+    RuntimeSave,
+    RuntimeLoad, //
+    VolumeSliderChanged,
+    HandlePlayerStart,
+    HandlerPlayerStop,
+    ImageToolstripMenuItemClick,
+    DirectSoundInitializeControls,
+    ComponentInitialize, // Standard Forms Designer
+    InitializeEnumerable, // ViewContainer initialization (Plugin)
+    KillThread, // ?
+    MidiTrackClear,
+    MidiFileGot,
+    FormLoad,
+    FormClosing,
+    ShowElement, // ?
+    ShowProgress,
+    StartLoad, // ?
+    TracksToListBox, // ?
+    TracksToToolStrip, //?
+    TracksToContext, //
+  }
   /// <summary>
   /// cater directly with interfaces as no control should generally cross interface boundary.
   /// </summary>
@@ -78,9 +105,9 @@ namespace modest100.Forms
     }
     #endregion
 		
-    void Event_BufferCycle(object sender, NAudioVSTCycleEventArgs e)
+    void Event_BufferCycle_to_Label2(object sender, NAudioVSTCycleEventArgs e)
     {
-      SampleClock s2 = vstContainer.VstPlayer.SampleTime.Clone<SampleClock>();
+      var s2 = vstContainer.VstPlayer.SampleTime.Clone<SampleClock>();
       label2.Text = string.Format(
         Strings.Format_LabelTimeInfo_Main,
         s2.Tempo,
@@ -570,8 +597,7 @@ namespace modest100.Forms
     }
     void Action_PlayerPlay()
     {
-      if (PluginManager.ActivePlugin == null)
-        return;
+      if (PluginManager.ActivePlugin == null) return;
       VstContainer.PlayerPlay(/*PluginManager.ActivePlugin*/);
       btnPlay.Checked = true;
       if (btnShowEditor.Checked)
@@ -868,10 +894,12 @@ namespace modest100.Forms
     {
       ofd_config.Filter = sfd_config.Filter = Strings.FileFilter_VstConfig;
       this.InitialiseDirectSoundControls();
+      
       // construct the master container
       this.vstContainer = new NAudioVstContainer(this);
-      this.vstContainer.VstPlayer.BufferCycle += Event_BufferCycle;
+      this.vstContainer.VstPlayer.BufferCycle += Event_BufferCycle_to_Label2;
       this.vstContainer.VstPlayer.DriverId = (this.comboBoxDirectSound.SelectedItem as DirectSoundDeviceInfo).Guid;
+      
       // initialize the views 
       this.InitializeEnumerable(tasks);
       MidiTree.InitializeTreeNodes(this.tree, this);
@@ -879,6 +907,7 @@ namespace modest100.Forms
       this.numTempo.ValueChanged += Event_PlayerUpDown2Tempo;
       this.numPpq.ValueChanged += this.Event_PlayerUpDown2Ppq;
       this.vstContainer.PluginManager.PluginListRefreshed += Event__PluginListReset;
+      
       // the following would be ListView.ItemSelectionChangedEventHandler
       // this.vstContainer.PluginManager.PluginListRefreshed += Event__Plugin;
       this.Event_ConfigOpenDefault(null, null);

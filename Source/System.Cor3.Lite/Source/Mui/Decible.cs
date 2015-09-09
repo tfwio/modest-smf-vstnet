@@ -24,6 +24,7 @@ using System.Drawing;
 namespace Mui
 {
   // Probably based on something from NAudio
+  // this does not belong here.
 	public struct Decible
 	{
 		static public string fmt_db = "{0:F2} dB";

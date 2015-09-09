@@ -81,7 +81,6 @@
     <Compile Include="Source\Mui.Widgets\WidgetButton.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetClock.cs" />
     <Compile Include="Source\Mui.Widgets\GridListWidget.cs" />
-    <Compile Include="Source\Mui.Widgets\WidgetMidiList.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetMouse.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetGroup.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetSlide.cs" />

@@ -3,9 +3,35 @@ using System.Drawing;
 using Mui.Widgets;
 namespace Mui
 {
+  static class Ex
+  {
+    static public float Smallest(this float input, params float[] inputs) { return input.Conditional<float>( (a, b) => a < b ? a : b, inputs); }
+    static public float Largest(this float input, params float[] inputs) { return input.Conditional<float>( (a, b) => a > b ? a : b, inputs); }
+    public static T Conditional<T>(this T input, Func<T, T, T> condition, params T[] inputs)
+    {
+      var result = input;
+      foreach (var i in inputs) result = condition(result, i);
+      return result;
+    }
+    static public FloatPoint Smallest(this FloatPoint input, params FloatPoint[] inputs)
+    {
+      return input.Conditional<FloatPoint>( (a, b) => a.Slope < b.Slope ? a : b, inputs);
+    }
+    static public FloatPoint Largest(this FloatPoint input, params FloatPoint[] inputs)
+    {
+      return input.Conditional<FloatPoint>( (a, b) => a.Slope > b.Slope ? a : b, inputs);
+    }
+    static public FloatPoint Limit(this FloatPoint input, FloatPoint min, FloatPoint max)
+    {
+      var result = input.Clone();
+      result.X = result.X.MinMax(min.X,max.X).ToSingle();
+      result.Y = result.Y.MinMax(min.Y, max.Y).ToSingle();
+      return result;
+    }
+  }
   static public class PainterHelper
   {
-    
+
     static public void DrawText(this Graphics graphics, string text, Color color, Font font, FloatRect rect, StringAlignment hAlign=StringAlignment.Center)
     {
       graphics.DrawString(
@@ -19,6 +45,45 @@ namespace Mui
           LineAlignment=StringAlignment.Center,
         }
        );
+    }
+    readonly static Color DefaultSelectBoxColour = Color.FromArgb(0, 127, 255);
+    // TODO: Needs 'DrawSelectBox(…)`
+    // We also need implementation strategy for drawing a select-box that can be applied to widgets universally.
+    static public void DrawSelectBox(this Graphics graphics, Widget widget, FloatRect lim=null, Color? colour=null)
+    {
+      if (widget.Parent.MouseM == null || widget.Parent.MouseD == null) return;
+      Func<Point, Point> p2c = widget.Parent.PointToClient;
+
+      var state = graphics.Save();
+      graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+      graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+
+      var c1 = colour ?? DefaultSelectBoxColour;
+      var c2 = Color.FromArgb(64, c1); // with alpha
+
+      // find the closest x
+      FloatPoint p0 = p2c(widget.Parent.MouseD.Nearest(widget.Parent.MouseM));
+      FloatPoint p1 = p2c(widget.Parent.MouseD.Furthest(widget.Parent.MouseM));
+
+      FloatPoint pA = p0.Smallest(p1);
+      FloatPoint pB = p0.Largest(p1);
+
+      if (lim!=null)
+      {
+        pA = pA.Limit(lim.Location,lim.BottomRight);
+        pB = pB.Limit(lim.Location,lim.BottomRight);
+        pB = pB-pA;
+      }
+      FloatRect rect = new FloatRect(pA, pB);
+
+      using (var p = new Pen(c1, 1))
+      using (var b = new SolidBrush(c2))
+      {
+        graphics.DrawRectangle(p, rect);
+        graphics.FillRectangle(b, rect);
+      }
+
+      graphics.Restore(state);
     }
   }
   public partial class Painter

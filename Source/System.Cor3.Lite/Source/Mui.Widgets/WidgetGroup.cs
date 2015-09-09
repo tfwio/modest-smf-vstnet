@@ -89,13 +89,13 @@ namespace Mui
       foreach (var widget in EnumerateWidgets()) widget.Container = this;
       DoLayout();
     }
-    
-    virtual public void Initialize(IMui parent)
+
+    public override void Initialize(IMui parent)
     {
       Parent = parent;
       Initialize();
     }
-		
+
   }
 }
 

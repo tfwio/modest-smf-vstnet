@@ -20,7 +20,7 @@ namespace mui_smf
 		{
 		  base.Initialize();
 		  
-		  if (Bounds==null) Bounds = new FloatRect(4,4,Parent.Size.Width,48);
+		  if (Bounds==null) Bounds = new FloatRect(4,4,Parent.Size.Width,32);
 			var DPadding = new Padding(4);
 			
 			Widgets = new Widget[]
@@ -40,8 +40,8 @@ namespace mui_smf
 				},
 				new WidgetButton(Parent) {
 					Padding = DPadding,
-			    Bounds = new FloatRect(0,0,48,Height),
-					Font=Parent.FontIndex["awesome",18f],
+			    Bounds = new FloatRect(0,0,Height,Height),
+					Font=Parent.FontIndex["awesome",16.0f],
 					Text=FontAwesome.Adjust
 				},
 				new WidgetButton(Parent) {

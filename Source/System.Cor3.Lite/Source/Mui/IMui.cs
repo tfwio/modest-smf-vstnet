@@ -10,9 +10,12 @@ namespace Mui
 	{
 	  int Width { get; set; }
 	  int Height { get; set; }
+
 	  Size Size { get; set; }
-	  
-	  System.Drawing.Text.FontIndex FontIndex { get; }
+    Point Location { get; set; }
+    Rectangle Bounds { get; set; }
+	  Rectangle ClientRectangle { get;  }
+    System.Drawing.Text.FontIndex FontIndex { get; }
 	  
 	  event EventHandler Tick;
 	  void AppTimer_Tick(object sender, EventArgs e);

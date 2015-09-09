@@ -7,12 +7,17 @@ namespace Mui.Widgets
 {
   public class WidgetButton : Widget
   {
-    
+    protected override void WidgetButton_ParentMouseMove(object sender, MouseEventArgs e)
+    {
+      base.WidgetButton_ParentMouseMove(sender, e);
+    }
+
     protected override void OnMouseDown(MouseEventArgs e)
     {
       base.OnMouseDown(e);
       this.SetFocus();
     }
+
     public WidgetButton(IMui parent) : base(parent)
     {
       this.ValueFormat = "{0}";

@@ -17,9 +17,9 @@ The single-most obvious (to me) issues that I have with the software as it stand
 
 ¡**YET EVEN MORESO OBVIOUS**!
 
-It had become quite evident to me that there are going to be issues loading vst-plugins some time back.  For this we need a plugin-loader.  Writing a plugin-tester has not been fun, but I'm working on it.
+It had become quite evident to me that there are going to be issues loading vst-plugins.
 
-The mechanics in place pertaining to plugin-management are not easily accessable to the user-interface.  If you are trying out a compiled version of this app, you will need to  manually edit the configuration file.
+For this we need a plugin-loader.  Writing a plugin-tester has not been fun, but I'm working on it.
 
 # Class Hierarchy
 
@@ -53,6 +53,10 @@ What's worth pointing out: we're missing the ability to loop a particular bar ru
 ### MIDI Processing
 
 As pointed out, we are missing calculations for **Tempo-Changes**.
+
+Our MIDI parser is dependant upon a few key classes.
+
+When the parser is parsing our data, it appends data to a main VstEvent dictionary via a specific delegate From within the MIDI Parser.  An Event is triggered upon the occurance of each Midi Message, entailing a little bit of information about each message.  We have defined methods which take care of parsing, however it would.
 
 - (**TimeConfiguration**) ModestForm.VstContainer.VstPlayer.Settings
 - **SampleClock**

@@ -60,6 +60,9 @@ namespace Mui.Widgets
     /// </summary>
     public bool Enabled { get; set; }
     
+    /// <summary>
+    /// In client coordinates.
+    /// </summary>
     public FloatPoint ClientMouse {
       get { return Parent.ClientMouse; }
     }
@@ -113,7 +116,7 @@ namespace Mui.Widgets
       if (handler != null)
         handler(this, e);
     }
-    protected event EventHandler Click;
+    public event EventHandler Click;
 
     protected virtual void OnClick(EventArgs e)
     {
@@ -122,7 +125,7 @@ namespace Mui.Widgets
         handler(this, e);
     }
 
-    protected event MouseEventHandler MouseDown;
+    public event MouseEventHandler MouseDown;
 
     protected virtual void OnMouseDown(MouseEventArgs e)
     {
@@ -131,7 +134,7 @@ namespace Mui.Widgets
         handler(this, e);
     }
 
-    protected event MouseEventHandler MouseUp;
+    public event MouseEventHandler MouseUp;
 
     protected virtual void OnMouseUp(MouseEventArgs e)
     {
@@ -140,7 +143,7 @@ namespace Mui.Widgets
         handler(this, e);
     }
 
-    protected event MouseEventHandler MouseMove;
+    public event MouseEventHandler MouseMove;
 
     protected virtual void OnMouseMove(MouseEventArgs e)
     {
@@ -221,6 +224,7 @@ namespace Mui.Widgets
       if (HasClientMouse || HasClientMouseDown)
       {
         OnMouseMove(e);
+        Parent.Invalidate(this.Bounds);
       }
       //      if (HasClientMouse)
       //      {
@@ -253,13 +257,17 @@ namespace Mui.Widgets
       this.Parent = parent;
       Initialize();
     }
-    
+
+    virtual public void Initialize(IMui parent)
+    {
+      Parent = parent;
+    }
     virtual public void Initialize()
     {
       this.ParentClick += WidgetButton_ParentClick;
       this.ParentMouseDown += WidgetButton_ParentMouseDown;
       this.ParentMouseUp += WidgetButton_ParentMouseUp;
-      this.ParentMouseMove += WidgetButton_ParentMouseMove;;
+      this.ParentMouseMove += WidgetButton_ParentMouseMove; ;
     }
 
 
