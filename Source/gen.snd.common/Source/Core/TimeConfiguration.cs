@@ -37,9 +37,9 @@ namespace gen.snd
 		{
 			Instance = new TimeConfiguration();
 			// Playback Device
-			Instance.Rate			     = 48000;//
+			Instance.Rate			     = 44100;//
 			Instance.Channels      = 2;
-			Instance.Latency	     = 100;
+			Instance.Latency	     = 5096;
 			// Midi Configuration
 			Instance.Division		   = 480;
 			Instance.Tempo		     = 120;
