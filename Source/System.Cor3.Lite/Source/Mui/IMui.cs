@@ -8,17 +8,25 @@ namespace Mui
 {
 	public interface IMui
 	{
+	  System.Collections.Generic.List<MuiAppService> Services { get; set; }
+	  
+	  string Text { get; set; }
+	  
 	  int Width { get; set; }
 	  int Height { get; set; }
 
 	  Size Size { get; set; }
     Point Location { get; set; }
+    
     Rectangle Bounds { get; set; }
-	  Rectangle ClientRectangle { get;  }
+	  Rectangle ClientRectangle { get; }
+	  
     System.Drawing.Text.FontIndex FontIndex { get; }
 	  
 	  event EventHandler Tick;
+	  
 	  void AppTimer_Tick(object sender, EventArgs e);
+	  
 	  IncrementUtil Incrementor { get; set; }
 	  
 	  Point PointToClient(Point point);

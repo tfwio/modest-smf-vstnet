@@ -11,6 +11,7 @@ namespace ren_mbqt_layout
   /// </summary>
   internal sealed class Program
   {
+    public static MuiForm AppForm;
     /// <summary>
     /// Program entry point.
     /// </summary>
@@ -19,7 +20,8 @@ namespace ren_mbqt_layout
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new MuiForm());
+      
+      Application.Run(AppForm = new MuiForm());
     }
     
   }

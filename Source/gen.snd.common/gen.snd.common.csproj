@@ -188,6 +188,7 @@
       <DependentUpon>SoundFont2.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\System.Sound\MidiHelper.cs" />
     <Compile Include="Source\Windowing\AbstractWave.cs" />
     <Compile Include="Source\Windowing\BasicWindow.cs" />
     <Compile Include="Source\Windowing\DataRead.cs" />
@@ -206,7 +207,6 @@
     <Compile Include="Source\Wave\SoundDevice.cs" />
     <Compile Include="Source\System.Sound\BpmCalculator.cs" />
     <Compile Include="Source\System.Sound\IOHelper.cs" />
-    <Compile Include="Source\System.Sound\MidiHelper.cs" />
     <Compile Include="Source\Wave\Int32WaveChannelBase.cs" />
   </ItemGroup>
   <ItemGroup />
@@ -265,5 +265,12 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'Win32' ">
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
 </Project>

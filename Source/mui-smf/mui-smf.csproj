@@ -17,6 +17,9 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -38,7 +41,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Win32' ">
     <BaseAddress>4194304</BaseAddress>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <FileAlignment>4096</FileAlignment>
@@ -64,11 +67,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\poop.cs" />
-    <Compile Include="Source\RowInfo.cs" />
-    <Compile Include="Source\TopMenuWidgetGroup.cs" />
+    <Compile Include="Source\AppService_MidiFile.cs" />
+    <Compile Include="Source\MidiListRenderer.cs" />
+    <Compile Include="Source\NoteRange.cs" />
+    <Compile Include="Source\Extensions.cs" />
     <Compile Include="Source\FontAwesome.cs" />
-    <Compile Include="Source\LeftMenuWidgetGroup.cs" />
     <Compile Include="Source\MuiForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,26 +79,31 @@
       <DependentUpon>MuiForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Program.cs" />
+    <Compile Include="Source\MuiService_MbtCaret.cs" />
+    <Compile Include="Source\MuiService_MidiGridMouse.cs" />
+    <Compile Include="Source\MuiService_Wheeler.cs" />
+    <Compile Include="Source\WidgetGroupLeftMenu.cs" />
     <Compile Include="Source\WidgetGroupMidiList.cs" />
+    <Compile Include="Source\WidgetGroupTopMenu.cs" />
     <Compile Include="Source\WidgetMidiList.cs" />
+    <Compile Include="Source\WidgetMidiList.Scaffold.cs" />
+    <Compile Include="Source\WidgetMidiList.Struct.cs" />
     <EmbeddedResource Include="Source\MuiForm.resx">
       <DependentUpon>MuiForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\AssemblyReferences\asset\adfx3.ttf">
+      <Link>asset\adfx3.ttf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\AssemblyReferences\asset\fontawesome-webfont.ttf">
+      <Link>asset\fontawesome-webfont.ttf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
-    <None Include="asset\adfx3.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="asset\fontawesome-webfont.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\gen.snd.common\gen.snd.common.csproj">
-      <Project>{669C9CD9-8B80-4D6D-B5D7-A39B1224A50E}</Project>
-      <Name>gen.snd.common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\gen.snd.midi\gen.snd.midi.csproj">
       <Project>{96A731DE-D50C-47D8-93FC-DC030D8E3C2E}</Project>
       <Name>gen.snd.midi</Name>

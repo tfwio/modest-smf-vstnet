@@ -78,14 +78,19 @@
     <Compile Include="Source\Internals\RenderStateType.cs" />
     <Compile Include="Source\Interop\FontIndex.cs" />
     <Compile Include="Source\Interop\FontResource.cs" />
+    <Compile Include="Source\Mui.Widgets\Widget.Design.cs" />
+    <Compile Include="Source\Mui.Widgets\Widget.Events.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetButton.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetClock.cs" />
     <Compile Include="Source\Mui.Widgets\GridListWidget.cs" />
-    <Compile Include="Source\Mui.Widgets\WidgetMouse.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetGroup.LayoutConstraint.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetLabel.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetGroup.cs" />
-    <Compile Include="Source\Mui.Widgets\WidgetSlide.cs" />
-    <Compile Include="Source\Mui.Widgets\Widget.cs" />
-    <Compile Include="Source\Mui.Widgets\WidgetBase.cs" />
+    <Compile Include="Source\Mui.Widgets\Widget.Mouse.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetMouse.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetPainter.cs" />
+    <Compile Include="Source\Mui.Widgets\WidgetSlideH.cs" />
+    <Compile Include="Source\Mui.Widgets\Widget.Client.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetLayout.cs" />
     <Compile Include="Source\Mui.Widgets\WidgetSlideV.cs" />
     <Compile Include="Source\Mui\AlignHorizontal.cs" />
@@ -95,6 +100,8 @@
     <Compile Include="Source\Mui\IMui.cs" />
     <Compile Include="Source\Mui\IncrementUtil.cs" />
     <Compile Include="Source\Mui\IState.cs" />
+    <Compile Include="Source\Mui\MuiAppService.cs" />
+    <Compile Include="Source\Mui\MuiService.cs" />
     <Compile Include="Source\Mui\MuiBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +110,7 @@
     </Compile>
     <Compile Include="Source\Mui\Painter.cs" />
     <Compile Include="Source\Mui\ScaledSliderValue.cs" />
+    <Compile Include="Source\Mui\UndoRedoAction.cs" />
     <Compile Include="Source\System\ControlUtil.cs" />
     <Compile Include="Source\System.Drawing\CORNERS.cs" />
     <Compile Include="Source\System.Drawing\DblUnit.cs" />
@@ -145,6 +153,5 @@
     </Compile>
     <Compile Include="Source\Interop\WinMM.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

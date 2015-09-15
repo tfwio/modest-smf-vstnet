@@ -37,12 +37,6 @@ namespace gen.snd.Midi
 			"Track: {0,3:000},  PPQ: {3}, Tempo: {4}\n" +
 			"TSig: {5}/{6} Clocks: {7}, {8} 32nds, KeySig: {9} {10}";
 		
-		public static readonly Color c0 = Color.FromArgb(235, 225, 225);
-		public static readonly Color c1 = Color.FromArgb(149, 109, 177);
-		public static readonly Color c2 = Color.FromArgb(109, 149, 177);
-		public static readonly Color c3 = Color.FromArgb(107, 180, 131);
-		public static readonly Color c4 = Color.FromArgb(225, 225, 235);
-		public static readonly Color cR = Color.FromArgb(255, 0, 0);
 
 		// 
 		// Color Helper (For WinForms)
@@ -69,6 +63,12 @@ namespace gen.snd.Midi
 				return MetaHelpers.Colors["rse3"];
 			return ListView.DefaultBackColor;
 		}
+		public static readonly Color c0 = Color.FromArgb(235, 225, 225);
+		public static readonly Color c1 = Color.FromArgb(149, 109, 177);
+		public static readonly Color c2 = Color.FromArgb(109, 149, 177);
+		public static readonly Color c3 = Color.FromArgb(107, 180, 131);
+		public static readonly Color c4 = Color.FromArgb(225, 225, 235);
+		public static readonly Color cR = Color.FromArgb(255, 0, 0);
 		/// <inheritdoc />
 		public Color GetEventColor(Color clr)
 		{

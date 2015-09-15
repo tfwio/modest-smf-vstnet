@@ -16,7 +16,7 @@ namespace gen.snd.Midi
 		/// #3
 		static int MthdBar { get { return MidiReader.DivBar; } }
 		/// #2
-		static int MthdNote { get { return MidiReader.DivNote; } }
+		static int MthdNote { get { return MidiReader.DivQuarter; } }
 		/// #1 (the most significant)
 		static int MthdDivision { get { return MidiReader.FileDivision; } }
 		#endregion
@@ -33,10 +33,10 @@ namespace gen.snd.Midi
 		public ulong Value {
 			get { return ValueUInt64; } set { ValueUInt64 = value; }
 		} ulong ValueUInt64;
-		#endregion
-		
-		#region Property: Measure, Bar, Ticks
-		public int Measure { get { return Convert.ToInt32(Math.Floor(DoubleValue / Division) + 1); } }
+    #endregion
+
+    #region Property {get}: Measure, Bar, Ticks
+    public int Measure { get { return Convert.ToInt32(Math.Floor(DoubleValue / Division) + 1); } }
 		public int Bar { get { return Convert.ToInt32((Math.Floor(DoubleValue / Division) % 4)+1); } }
 		public int Ticks { get { return Int32Value % Division; } }
 		#endregion
@@ -86,7 +86,7 @@ namespace gen.snd.Midi
 			int quarter = Convert.ToInt32(value) % MidiReader.FileDivision;
 			double part = (double)value / MidiReader.FileDivision;
 			double part1 = (Math.Floor((double)orig / MidiReader.FileDivision) % 4)+1;
-			double part2 = Math.Floor((double)orig / MidiReader.DivNote) + 1;
+			double part2 = Math.Floor((double)orig / MidiReader.DivQuarter) + 1;
 			return string.Format("{0:##,###,###,000}:{1:0#}:{2:00#}",  part2, part1, quarter);
 		}
 

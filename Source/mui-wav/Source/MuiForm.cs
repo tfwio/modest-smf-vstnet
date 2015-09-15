@@ -3,79 +3,71 @@
 using System;
 using System.Drawing;
 using System.Drawing.Text;
+using System.IO;
 using System.Windows.Forms;
 using Mui;
 using Mui.Widgets;
 
-namespace mui_smf
+namespace mui_wav
 {
-  
   /// <summary>
   /// Description of MainForm.
   /// </summary>
   public partial class MuiForm : MuiBase
   {
-    FloatRect myRect = new FloatRect(200, 100, 100, 100);
+    public gen.snd.Midi.MidiReader MidiReader { get; set; }
+
+    protected internal WidgetGroupTopMenu Facto { get; set; }
+    protected internal WidgetGroupLeftMenu WidgetMenu { get; set; }
     
-    WidgetGroup Facto = null;
-    WidgetGroup WidgetMenu = null;
-    
-    public MuiForm()
+    public MuiForm() : base()
     {
-      FontIndex = new FontIndex();
-      
-      System.IO.FileInfo file;
-      
-      file = System.Reflection.Assembly.GetExecutingAssembly().GetAppFile("asset/adfx3.ttf");
-      FontIndex.AddFamily(file, "adfx");
-      
-      file = System.Reflection.Assembly.GetExecutingAssembly().GetAppFile("asset/fontawesome-webfont.ttf");
-      FontIndex.AddFamily(file, "awesome");
       DoubleBuffered = true;
-      
-      MouseD = FloatPoint.Empty;
-      MouseU = FloatPoint.Empty;
-      MouseM = FloatPoint.Empty;
-      
       InitializeComponent();
+      InitializeWidgets();
       
-      Facto = new TopMenuWidgetGroup(){Parent=this};
-      WidgetMenu = new LeftMenuWidgetGroup(){Parent=this};
-      
-      MouseWheel += OnMouseWheel;
-      
-      AppTimer.Tick += AppTimer_Tick;
-      AppTimer.Start();
-      
-      var TopGridLoc = new FloatRect(10, 10, 100, 28);
-      var DPadding = new Padding(4);
-      
-      float i = TopGridLoc.X + TopGridLoc.Height;
-      var sliderrect = new FloatRect(460, 10, 200, 24);
-      
+      OnResize(null); // forces initial rendering
+      OnSizeChanged(null); // forces initial rendering on the midi control
+    }
+    
+    protected override void Design()
+    {
       Widgets = new Widget[] {
-        Facto,
-        WidgetMenu,
+        Facto = new WidgetGroupTopMenu(),
+        WidgetMenu = new WidgetGroupLeftMenu(),
       };
-      Facto.Initialize(this);
-      WidgetMenu.Initialize(this);
+    }
+    
+    ContextMenu TrackSelectionContextMenu = new ContextMenu();
+
+    public event EventHandler GotMidiFile;
+    protected internal virtual void OnGotMidiFile(EventArgs e)
+    {
+      var handler = GotMidiFile;
+      if (handler != null)
+        handler(this, e);
+    }
+    
+    protected override void OnGotFocus(EventArgs e)
+    {
+      base.OnGotFocus(e);
+      AppTimer.Enabled = true;
+    }
+    protected override void OnLostFocus(EventArgs e)
+    {
+      base.OnLostFocus(e);
+      AppTimer.Enabled = false;
+      Invalidate();
     }
     
     protected override void OnPaint(PaintEventArgs e)
     {
+      // TODO: find controls within clip-region for rendering.
+      // Needs z-index-like implementation in MuiBase.
       if (MouseM == null) return;
-      e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-      e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-      e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-      e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-      
-      e.Graphics.Clear(Painter.DictColour[ColourClass.Dark40]);
-//      using (var p = new Pen(Color.FromArgb(255, 0x99,0xff,0x00), 6))
-//        e.Graphics.DrawRectangle(p, new FloatRect(0,0,Width,Height));
-      
-//      WidgetMenu.Paint(e);
-//      Facto.Paint(e);
-        foreach (var widget in Widgets) widget.Paint(e);
+      var bgColor = Focused ? Painter.DictColour[ColourClass.Dark40] : SystemColors.WindowFrame;
+        e.Graphics.Clear(bgColor);
+      foreach (var widget in Widgets) widget.Paint(e);
     }
   }
   

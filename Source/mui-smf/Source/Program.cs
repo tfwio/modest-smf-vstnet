@@ -11,6 +11,7 @@ namespace mui_smf
   /// </summary>
   internal sealed class Program
   {
+    public static MuiForm AppForm;
     /// <summary>
     /// Program entry point.
     /// </summary>
@@ -19,7 +20,8 @@ namespace mui_smf
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new MuiForm());
+      
+      Application.Run(AppForm = new MuiForm());
     }
     
   }

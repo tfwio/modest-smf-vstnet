@@ -37,15 +37,18 @@ namespace System.Drawing
     {
       return point >= this.Location && point <= this.BottomRight;
     }
-    
-    public FloatRect Shrink(float amount, bool floor=true)
+    public FloatRect Move(float amount)
     {
-      var a2       = amount+amount;
       var rect     = Clone();
-      rect.Width  -= a2;
-      rect.Height -= a2;
       rect.Y      += amount;
       rect.X      += amount;
+      return rect;
+    }
+    public FloatRect Shrink(float amount/*, bool floor=true*/)
+    {
+      var rect     = Clone();
+      rect.Width  -= (amount);
+      rect.Height -= (amount);
       return rect;
     }
     

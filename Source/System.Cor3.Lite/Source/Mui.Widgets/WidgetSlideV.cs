@@ -73,7 +73,7 @@ namespace Mui.Widgets
 				var msize = this.Bounds.Clone();
 				msize.Width = Convert.ToSingle(Bounds.Width * this.SliderValue.Value);
 				arg.Graphics.FillRectangle(new SolidBrush(ColourFg), msize);
-				Painter.DrawText(arg.Graphics, this);
+				Painter.DrawText(arg.Graphics, this, false);
 				arg.Graphics.ResetClip();
 			}
 		}

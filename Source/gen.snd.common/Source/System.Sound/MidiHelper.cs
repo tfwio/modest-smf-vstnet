@@ -7,7 +7,7 @@ using System;
 
 namespace gen.snd
 {
-  static public class MidiHelper
+  static class MidiHelper
   {
     static public string[] OctaveMacro()
     {

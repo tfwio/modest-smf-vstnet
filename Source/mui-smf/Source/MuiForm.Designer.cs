@@ -37,7 +37,7 @@ namespace mui_smf
       this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(779, 433);
-      this.Font = new System.Drawing.Font("Roboto", 10.0F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.Font = new System.Drawing.Font("Roboto", 14.0F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
       this.Location = new System.Drawing.Point(0, 0);
       this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
       this.Name = "MuiForm";

@@ -14,6 +14,14 @@ namespace gen.snd
   /// </summary>
 	public class SampleClock : IClock
 	{
+    // We are missing tempo change locations here.
+    // Sample-accurate timing  should be stored perhaps in a stack, yet how are we to index the data?
+    // -----------------------------------------------
+    // 
+    // dictionary<long,ushort> or dictionary<ticks,division>
+    // 
+    // 
+
 		#region IAudioClock
 		public double Samples {
 			get { return samples; }

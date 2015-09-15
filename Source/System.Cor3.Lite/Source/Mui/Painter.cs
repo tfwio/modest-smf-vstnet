@@ -77,7 +77,7 @@ namespace Mui
       FloatRect rect = new FloatRect(pA, pB);
 
       using (var p = new Pen(c1, 1))
-      using (var b = new SolidBrush(c2))
+        using (var b = new SolidBrush(c2))
       {
         graphics.DrawRectangle(p, rect);
         graphics.FillRectangle(b, rect);
@@ -88,20 +88,30 @@ namespace Mui
   }
   public partial class Painter
   {
-    static public void DrawBorder(Graphics graphics, Widget widget, Pen pBorder=null, Brush bFill=null)
+    /// <summary>
+    /// You should supply a even value for pen width for proper calculation of padding, otherwise we end up with
+    /// rastarization 'bleeds'.
+    /// </summary>
+    /// <param name="graphics"></param>
+    /// <param name="widget"></param>
+    /// <param name="penWidth"></param>
+    /// <param name="pBorder"></param>
+    /// <param name="bFill"></param>
+    static public void DrawBorder(Graphics graphics, Widget widget, float penWidth = 4, Pen pBorder=null, Brush bFill=null)
     {
       if (widget.Bounds != null)
       {
         using (var rgn = new Region(widget.Bounds))
-          using (var pen1=GetPen(widget.ColourFg,3))
+          using (var pen1 = pBorder ?? GetPen(widget.ColourFg,penWidth) )
         {
-          graphics.Clip = rgn;
+          var newBounds = widget.Bounds.Clone();
           
           if (widget.Parent.FocusedControl==widget)
-            graphics.FillRectangle(bFill??DictBrush[ColourClass.Dark40],widget.Bounds);
-          graphics.DrawRectangle(pen1,widget.Bounds);
+            graphics.FillRectangle( bFill ?? DictBrush[ColourClass.Dark40], widget.Bounds);
           
-          graphics.ResetClip();
+          newBounds = newBounds.Shrink(penWidth).Move((penWidth / 2).Floor().ToInt32());
+          graphics.DrawRectangle(pen1,newBounds);
+          
         }
       }
     }
@@ -120,10 +130,10 @@ namespace Mui
         }
        );
     }
-    static public void DrawText(Graphics graphics, Widget widget)
+    static public void DrawText(Graphics graphics, Widget widget, bool usePath = false, StringFormat sf=null)
     {
       var str = string.IsNullOrEmpty(widget.Text) ? "..." : widget.Text;
-      graphics.DrawString(
+      if (!usePath) graphics.DrawString(
         str,
         widget.Font,
         DictBrush[ColourClass.White],
@@ -134,6 +144,13 @@ namespace Mui
           LineAlignment=StringAlignment.Center,
         }
        );
+      else
+        using (var path = new System.Drawing.Drawing2D.GraphicsPath())
+      {
+        path.AddString(str, widget.Font.FontFamily, (int)FontStyle.Regular, widget.Font.Size, widget.Bounds, sf ?? WidgetButton.PathStringFormat);
+        //using (var spen = new Pen(Color.Black, 2F))  g.DrawPath(spen, path);
+        graphics.FillPath(Brushes.White, path);
+      }
     }
     static public void RenderSlider(Graphics g, Widget widget, Color back, Decible decible, System.Windows.Forms.Control control)
     {

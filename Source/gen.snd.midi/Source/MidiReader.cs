@@ -13,6 +13,7 @@ using CliHandler = System.EventHandler;
 
 namespace gen.snd.Midi
 {
+  
 	/// <summary>
 	/// Internally, we load three text files from a subdirectory named ‘ext’.
 	/// Controller change values, drum kit names and instrument names.
@@ -94,17 +95,17 @@ namespace gen.snd.Midi
 			set { divMeasure = value; }
 		} static int divMeasure;
 		
-		/// <summary>Note x4</summary>
+		/// <summary>Quarter x4</summary>
 		public static int DivBar {
 			get { return divBar; }
 			set { divBar = value; }
 		} static int divBar;
 		
 		/// <summary>PPQ (division) x4</summary>
-		public static int DivNote {
-			get { return divNote; }
-			set { divNote = value; }
-		} static int divNote;
+		public static int DivQuarter {
+			get { return divQuarter; }
+			set { divQuarter = value; }
+		} static int divQuarter;
 		
 		/// <summary>Midi header-&gt;Division.</summary>
 		public static int FileDivision {
@@ -115,8 +116,8 @@ namespace gen.snd.Midi
 		public void GetDivision()
 		{
 			FileDivision = SmfFileHandle.Division;
-			DivNote = FileDivision * 4;
-			DivBar = DivNote * 4;
+      DivQuarter = FileDivision * 4;
+			DivBar = DivQuarter * 4;
 			DivMeasure = DivBar * 4;
 		}
 

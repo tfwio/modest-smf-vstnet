@@ -1,87 +1,71 @@
 ﻿/* oio * 8/3/2015 * Time: 6:39 AM */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Text;
-using System.Windows.Forms;
 using Mui;
 using Mui.Widgets;
 namespace mui_smf
 {
-	public class WidgetGroupMidiList : WidgetGroup
-	{
-		const int ApplyPaddingBottom = 32;
+  
+  public class WidgetGroupMidiList : WidgetGroup
+  {
+    const int ApplyPaddingBottom = 32;
+    const int ApplyPaddingRight = 32;
 
-		const int ApplyPaddingRight = 32;
+    public WidgetMidiList MidiList { get; set; }
+    
+    public WidgetButton Button_MbtAdd { get; set; }
+    public WidgetButton Button_MbtSubtract { get; set; }
+    
+    public WidgetLabel Label_MouseInfo { get; set; }
+    public WidgetLabel Label_CaretInfo { get; set; }
+    
+    MuiService_MbtCaret CaretManager { get; set; }
 
-		WidgetMidiList midilist { get; set; }
-		Widget Label1 { get; set; }
-
-    int FormRight, FormBottom;
-
-		public WidgetGroupMidiList(IMui parent)
-		{
-			this.Parent = parent;
-		}
-
-		public override void Initialize()
-		{
-			Widgets = new Widget[] {
-        Label1 = new WidgetButton(Parent) { Bounds = new FloatRect(Bounds.Left,Bounds.Top,200,32), Text="X = ?, Y = ?", Container=this },
-				midilist = new WidgetMidiList(Parent) {
-					Bounds = new FloatRect {
-						X = Bounds.X,
-						Y = Bounds.Y,
-						Width = 1,
-						Height = 1
-					},
-					Font = new Font(Font.FontFamily, 10.0f, FontStyle.Regular)
-				}
-			};
-      Parent.MouseMove += Event_MouseMove;
-			base.Initialize();
-		}
-    int PointToOffset(FloatPoint input)
+    public WidgetGroupMidiList(IMui parent)
     {
-      var pcl1 = (FloatPoint)Parent.PointToClient(input);
-      var pcl2 = pcl1 - midilist.GridRect.Location;
-      return Math.Floor(pcl2.Y / midilist.LineHeight).ToInt32();
+      this.Parent = parent;
     }
-    double PointToRow(FloatPoint input, int offset)
+    public override void DoLayout()
     {
-      return 127 - midilist.LineOffset - offset;
+      base.DoLayout();
+      LeftToRight((i) => Widgets[i] is WidgetButton || Widgets[i] is WidgetLabel );
     }
-    protected void Event_MouseMove(object sender, MouseEventArgs e)
+    public override void Design()
     {
-      var pcl1 = (FloatPoint)Parent.PointToClient(Parent.MouseM);
-
-      int offset = PointToOffset(Parent.MouseM);
-
-      var pcl2 = pcl1 - midilist.GridRect.Location;
-      var r0 = PointToRow(Parent.MouseM, offset);
-      var r1 = r0.MinMax(-1,128);
-      var r2 = r1.MinMax(0,127);
-
-      var str = string.Format("R={0}, Q={1}, N={2}, Q={3}, B={4}",
-        r1==r2 ? r1.ToString() : "?",
-        Math.Floor(pcl2.X / midilist.PixelsPerQuarterNote) + 1,
-        Math.Floor(pcl2.X / midilist.PixelsPerNote) + 1,
-        Math.Floor(pcl2.X / midilist.PixelsPerQuarter) + 1,
-        Math.Floor(pcl2.X / midilist.PixelsPerBar) + 1
-        );
-      str = midilist.GridRect.Contains(pcl1) ? str : "?";
-      Label1.Text = str;
+      Widgets = new Widget[] {
+        Label_MouseInfo = new WidgetLabel(Parent) { Bounds = new FloatRect(Bounds.Left,Bounds.Top,200,32), Text="X = ?, Y = ?", Container=this },
+        
+        Button_MbtAdd = new WidgetButton(Parent) { Bounds = new FloatRect(Bounds.Left,Bounds.Top,60,32), Text="-", Container=this },
+        Button_MbtSubtract = new WidgetButton(Parent) { Bounds = new FloatRect(Bounds.Left,Bounds.Top,60,32), Text="+", Container=this },
+        Label_CaretInfo = new WidgetLabel(Parent) { Bounds = new FloatRect(Bounds.Left,Bounds.Top,160,32), Text="1 / 8 Meas", Container=this },
+        
+        MidiList = new WidgetMidiList(Parent) {
+          Bounds = new FloatRect { X = Bounds.X, Y = Bounds.Y, Width = 1, Height = 1 },
+          Font = new Font("FreeMono", 10.0f, FontStyle.Regular)
+        }
+      };
+      
+      Services = new List<MuiService>(){
+        new MuiService_MidiGridMouse(),
+        new MuiService_MbtCaret(),
+        new MuiService_Wheeler(),
+      };
+    }
+    public override void Initialize(IMui app, Widget client)
+    {
+      base.Initialize(app,client);
     }
 
     public override void Parent_Resize(object sender, EventArgs e)
-		{
-			FormRight = Parent.Size.Width;
-			FormBottom = Parent.Size.Height;
-			Bounds.Width = FormRight - Bounds.Left - ApplyPaddingRight;
-			Bounds.Height = FormBottom - Bounds.Top - ApplyPaddingBottom - ApplyPaddingBottom;
-			base.Parent_Resize(sender, e);
-		}
-	}
+    {
+      Bounds.Width  = Parent.ClientRectangle.Width -  Bounds.Left - ApplyPaddingRight;
+      Bounds.Height = Parent.ClientRectangle.Height - Bounds.Top  - ApplyPaddingBottom - ApplyPaddingBottom;
+      
+      base.Parent_Resize(sender, e);
+    }
+  }
 }
 
 

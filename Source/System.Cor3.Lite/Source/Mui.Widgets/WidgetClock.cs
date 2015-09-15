@@ -8,6 +8,10 @@ namespace Mui.Widgets
   public class WidgetClock : Widget
   {
     FloatPoint PClock = new FloatPoint(40,150);
+    protected override void WidgetButton_ParentMouseMove(object sender, MouseEventArgs e)
+    {
+//      base.WidgetButton_ParentMouseMove(sender, e);
+    }
     
     readonly Brush BrushDefault = Painter.DictBrush[ColourClass.White];
     readonly Brush BrushHover = Painter.DictBrush[ColourClass.Default];
@@ -38,7 +42,7 @@ namespace Mui.Widgets
         var nloc = PaddedBounds.Clone();
         nloc.Location = nloc.Location + new FloatPoint(1,1);
         Text = DateTime.Now.ToString(ValueFormat);
-        Painter.DrawText(arg.Graphics,this);
+        Painter.DrawText(arg.Graphics,this,false);
 //        arg.Graphics.DrawString(
 //          ,
 //          this.Font,
