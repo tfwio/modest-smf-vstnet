@@ -10,6 +10,16 @@ namespace Mui.Widgets
     // disable once AccessToStaticMemberViaDerivedType
     protected internal FloatPoint Mouse { get { return Parent.PointToClient(Form.MousePosition); } }
     
+    
+    /// <summary>
+    /// Mouse is contained within the current control.
+    /// </summary>
+    virtual public bool HasClientMouse {
+      get { return HitTest(ClientMouse); }
+    }
+    
+    virtual public bool HasMouseDown { get; set; }
+    
     virtual public bool HasClientMouseDown {
       get { return HasClientMouse && Parent.MouseD != null; }
     }

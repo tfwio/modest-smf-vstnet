@@ -12,7 +12,6 @@ namespace mui_smf
 {
   public partial class WidgetMidiList : Widget
   {
-
     bool HasGridMouse { get { return GridRect.Contains(ClientMouse); } }
     
     PointF[] HeaderPoint { get { return new PointF[2] { new FloatPoint { X = Container.Bounds.Left, Y = Container.Bounds.Top + HeightHeader }, new FloatPoint { X = Container.Bounds.Right, Y = Container.Bounds.Top + HeightHeader }, }; } }
@@ -40,7 +39,16 @@ namespace mui_smf
       lineOffset = lineOffset.Contain(5 - MaxVisibleRows, 127);
     }
 
-
+    public override void Initialize(IMui parent, Widget client)
+    {
+      base.Initialize(parent, client);
+      Parent.SizeChanged += parent_Resize;
+    }
+    public override void Uninitialize(IMui parent, Widget client)
+    {
+      Parent.SizeChanged -= parent_Resize;
+      base.Uninitialize(parent, client);
+    }
     //    int MaxVisibleLines(Rectangle gridRect) { return gridRect.Height / LineHeight; }
     protected override void OnMouseDown(MouseEventArgs e)
     {
@@ -50,7 +58,7 @@ namespace mui_smf
     
     public WidgetMidiList(IMui parent) : base(parent)
     {
-      Parent.SizeChanged += parent_Resize;
+      //
       //      ParentWheel += WidgetMidiList_Wheel;
     }
 

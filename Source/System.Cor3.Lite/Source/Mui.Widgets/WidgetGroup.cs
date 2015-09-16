@@ -10,14 +10,14 @@ namespace Mui
   abstract public partial class WidgetGroup : Widget
   {
     protected internal void TopToBottom(params Action<Widget>[] widgetAction) {
-      foreach (var i in EnumerateWidgetIndex()) {
+      foreach (var i in WidgetsIndexed) {
         Widgets[i].Y = i == 0 ? Convert.ToInt32(Y) : Convert.ToInt32(Gap + Widgets[i - 1].Bounds.Bottom);
         if (widgetAction ==null) foreach (var act in widgetAction) act(Widgets[i]);
       }
     }
     protected internal void LeftToRight(Func<int,bool> filterAction, params Action<Widget>[] widgetAction)
     {
-      foreach (var i in EnumerateWidgetIndex())
+      foreach (var i in WidgetsIndexed)
       {
         if (!filterAction(i)) continue;
         Widgets[i].X = i == 0 ? Convert.ToInt32(X) : Convert.ToInt32(Gap + Widgets[i - 1].Bounds.Right);
@@ -26,7 +26,7 @@ namespace Mui
       }
     }
     protected internal void LeftToRight(params Action<Widget>[] widgetAction) {
-      foreach (var i in EnumerateWidgetIndex())
+      foreach (var i in WidgetsIndexed)
       {
         Widgets[i].X = i == 0 ? Convert.ToInt32(X) : Convert.ToInt32(Gap + Widgets[i - 1].Bounds.Right);
         if (widgetAction ==null) foreach (var act in widgetAction) act(Widgets[i]);
@@ -47,7 +47,7 @@ namespace Mui
     
     override public void Paint(PaintEventArgs arg)
     {
-      foreach (var i in EnumerateWidgetIndex()) Widgets[i].Paint(arg);
+      foreach (var i in WidgetsIndexed) Widgets[i].Paint(arg);
     }
 
     virtual public void Parent_Resize(object sender, EventArgs e) { DoLayout(); }
@@ -60,8 +60,6 @@ namespace Mui
       
       Parent.Resize    += Parent_Resize;
       Parent.ResizeEnd += Parent_Resize;
-      foreach (var widget in EnumerateWidgetIndex()) { Widgets[widget].Container = this; Widgets[widget].Parent = parent; }
-      foreach (var m in Services) { m.Initialize(this); m.Register(); }
       DoLayout();
     }
 

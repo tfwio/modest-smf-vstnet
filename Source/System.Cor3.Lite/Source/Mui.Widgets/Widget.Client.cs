@@ -1,5 +1,6 @@
 ﻿/* oio * 8/3/2015 * Time: 6:39 AM */
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -18,6 +19,9 @@ namespace Mui.Widgets
       set { services = value; }
     } List<MuiService> services = new List<MuiService>();
     
+    protected internal IEnumerable<int> ServicesIndexed {
+      get { for (int i = 0; i < Services.Count; i++) yield return i; }
+    }
     #region Value
     
     public object DoubleValue { get; set; }
@@ -38,28 +42,19 @@ namespace Mui.Widgets
     #endregion
     
     public Widget(IMui parent) {
-      this.Parent = parent;
-      Initialize(parent,null);
+      //this.Parent = parent;
+      //Initialize(parent,null);
     }
     public Widget() {
     }
     
-    protected IEnumerable<int> EnumerateWidgetIndex() { for (int i = 0; i < this.Widgets.Length; i++) yield return i; }
-    protected IEnumerable<Widget> EnumerateWidgets() { for (int i = 0; i < this.Widgets.Length; i++) yield return Widgets[i]; }
-    protected IEnumerable<System.Collections.Generic.KeyValuePair<int,Widget>> EnumerateWidgetsWithIndex() { for (int i = 0; i < this.Widgets.Length; i++) yield return new System.Collections.Generic.KeyValuePair<int,Widget>(i,Widgets[i]); }
+    protected IEnumerable<int> WidgetsIndexed { get { for (int i = 0; i < this.Widgets.Length; i++) yield return i; } }
+    protected IEnumerable<Widget> WidgetsEnumerated { get { for (int i = 0; i < this.Widgets.Length; i++) yield return Widgets[i]; } }
+    protected IEnumerable<KeyValuePair<int,Widget>> WidgetsDictionary { get { for (int i = 0; i < this.Widgets.Length; i++) yield return new KeyValuePair<int,Widget>(i,Widgets[i]); } }
     
     virtual public bool HasFocus {
       get { return Parent.FocusedControl == this; }
     }
-    
-    /// <summary>
-    /// Mouse is contained within the current control.
-    /// </summary>
-    virtual public bool HasClientMouse {
-      get { return HitTest(ClientMouse); }
-    }
-    
-    virtual public bool HasMouseDown { get; set; }
     
     /// <summary>
     /// Visible to rendering process.
@@ -95,6 +90,10 @@ namespace Mui.Widgets
     {
       Parent = parent;
       Container = client;
+      
+      if (IsInitialized)
+        System.Diagnostics.Debug.Print("{0}=>{1}", Container==null ? Parent.ToString() : Container.ToString(),this);
+      
       this.ParentClick += WidgetButton_ParentClick;
       this.ParentMouseDown += WidgetButton_ParentMouseDown;
       this.ParentMouseUp += WidgetButton_ParentMouseUp;
@@ -102,7 +101,16 @@ namespace Mui.Widgets
       
       Design();
       
+      foreach (var widget in WidgetsIndexed) {
+        Widgets[widget].Initialize(parent,this);
+      }
+      foreach (var sindex in ServicesIndexed) {
+        Services[sindex].Initialize(this);
+        Services[sindex].Register();
+      }
+      
       IsInitialized = true;
+    
     }
     virtual public void Uninitialize(IMui parent, Widget client)
     {
@@ -111,12 +119,17 @@ namespace Mui.Widgets
       this.ParentMouseUp   -= WidgetButton_ParentMouseUp;
       this.ParentMouseMove -= WidgetButton_ParentMouseMove;
       
-      foreach (var i in EnumerateWidgetIndex())
+      foreach (var sindex in ServicesIndexed)
+        Services[sindex].Unregister();
+      
+      foreach (var i in WidgetsIndexed)
       {
         Widgets[i].Uninitialize(parent,client);
         Widgets[i] = null;
       }
+      
       Widgets = null;
+      IsInitialized  = false;
     }
     
     public bool SetFocus()

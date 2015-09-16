@@ -1,6 +1,7 @@
 ﻿/* oio * 8/3/2015 * Time: 6:39 AM */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Mui.Widgets;
@@ -11,7 +12,8 @@ namespace Mui
     public System.Collections.Generic.List<MuiAppService> Services {
       get { return services; }
       set { services = value; }
-    } System.Collections.Generic.List<MuiAppService> services = new System.Collections.Generic.List<MuiAppService>();
+    }
+    System.Collections.Generic.List<MuiAppService> services = new System.Collections.Generic.List<MuiAppService>();
 
     public System.Drawing.Text.FontIndex FontIndex { get; protected set; }
     
@@ -21,11 +23,11 @@ namespace Mui
       Design();
       PostInitialize(serviso);
     }
-    public MuiBase() : base()
+    public MuiBase()
+      : base()
     {
-      
     }
-    protected internal void PreInitialize(int timerInterval=90)
+    protected internal void PreInitialize(int timerInterval = 90)
     {
       //
       // base settings
@@ -38,25 +40,49 @@ namespace Mui
 
       FontIndex = new System.Drawing.Text.FontIndex();
 
-      AddLocalFont("adfx","asset/adfx3.ttf");
-      AddLocalFont("awesome","asset/fontawesome-webfont.ttf");
+      AddLocalFont("adfx", "asset/adfx3.ttf");
+      AddLocalFont("awesome", "asset/fontawesome-webfont.ttf");
     }
     void PostInitialize(params MuiAppService[] serviso)
     {
-      foreach (var w in Widgets) w.Initialize(this,null);
+      foreach (var windex in WidgetsIndexed)
+        Widgets[windex].Initialize(this, null);
+      
       Services.AddRange(serviso);
       MuiAppService.RegisterAll(this);
       MouseWheel += OnMouseWheel;
       AppTimer.Tick += AppTimer_Tick;
       AppTimer.Start();
     }
-    virtual protected void Design() {}
+    virtual protected void Design()
+    {
+    }
     
+    protected IEnumerable<int> WidgetsIndexed {
+      get {
+        for (int i = 0; i < this.Widgets.Length; i++)
+          yield return i;
+      }
+    }
+    protected IEnumerable<Widget> WidgetsEnumerated {
+      get {
+        for (int i = 0; i < this.Widgets.Length; i++)
+          yield return Widgets[i];
+      }
+    }
+    protected IEnumerable<System.Collections.Generic.KeyValuePair<int,Widget>> WidgetsDictionay {
+      get {
+        for (int i = 0; i < this.Widgets.Length; i++)
+          yield return new System.Collections.Generic.KeyValuePair<int,Widget>(i, Widgets[i]);
+      }
+    }
+
     protected internal bool AddFont(string alias, string filePath, bool localToApp)
     {
       System.IO.FileInfo file;
       file = localToApp ? System.Reflection.Assembly.GetExecutingAssembly().GetAppFile(filePath) : new System.IO.FileInfo(filePath);
-      if (!file.Exists) return false;
+      if (!file.Exists)
+        return false;
       
       FontIndex.AddFamily(file, alias);
       
@@ -72,12 +98,14 @@ namespace Mui
     virtual public IncrementUtil Incrementor {
       get { return incrementor; }
       set { incrementor = value; }
-    } IncrementUtil incrementor = new IncrementUtil();
+    }
+    IncrementUtil incrementor = new IncrementUtil();
 
     public Timer AppTimer {
       get { return appTimer; }
       set { appTimer = value; }
-    } Timer appTimer = new Timer() { Interval = 30 };
+    }
+    Timer appTimer = new Timer() { Interval = 30 };
     
     public event EventHandler Tick {
       add { appTimer.Tick += value; }
@@ -110,17 +138,20 @@ namespace Mui
     public bool HasControlKey {
       get { return hasControlKey; }
       set { hasControlKey = value; }
-    } protected bool hasControlKey = false;
+    }
+    protected bool hasControlKey = false;
 
     public bool HasShiftKey {
       get { return hasShiftKey; }
       set { hasShiftKey = value; }
-    } protected bool hasShiftKey = false;
+    }
+    protected bool hasShiftKey = false;
 
     public bool HasAltKey {
       get { return hasAltKey; }
       set { hasAltKey = value; }
-    } protected bool hasAltKey = false;
+    }
+    protected bool hasAltKey = false;
 
     // we should have an undo-redo state-machine
     // even though were not using it yet.
@@ -152,7 +183,7 @@ namespace Mui
 
     protected void OnMouseWheel(object sender, MouseEventArgs e)
     {
-      int result=e.Delta > 0 ? 1 : -1;
+      int result = e.Delta > 0 ? 1 : -1;
       OnWheel(result);
     }
 

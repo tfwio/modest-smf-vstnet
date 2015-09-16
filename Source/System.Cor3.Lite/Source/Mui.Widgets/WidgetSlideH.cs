@@ -32,6 +32,7 @@ namespace Mui.Widgets
     
     public void UpdateBounds()
     {
+      if (!IsInitialized) return;
       SliderValue.Value = (Mouse.X-Bounds.Left)/Bounds.Width;
       Debug.Print( "Value: {0:n2}, {1}, {2}", SliderValue.Value, SliderValue.Minimum, SliderValue.Maximum );
       this.Text = string.Format( "{0:p2}", SliderValue.Value );
