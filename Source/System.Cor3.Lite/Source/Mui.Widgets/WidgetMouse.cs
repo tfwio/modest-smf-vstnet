@@ -21,7 +21,6 @@ namespace Mui.Widgets
 
 		public WidgetMouse(IMui parent) : base(parent)
 		{
-			this.ValueFormat = "{0}";
 		}
 
 		public override void Paint(PaintEventArgs arg)

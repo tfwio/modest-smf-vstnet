@@ -28,9 +28,12 @@ namespace Mui.Widgets
       base.Increment();
     }
 
-    public WidgetClock(IMui parent) : base(parent)
+    public override void Design()
     {
       this.ValueFormat = "hh:mm:ss.fff tt";
+    }
+    public WidgetClock(IMui parent) : base(parent)
+    {
     }
     
     public override void Paint(PaintEventArgs arg)

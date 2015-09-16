@@ -20,7 +20,6 @@ namespace Mui.Widgets
 
 		public WidgetLabel(IMui parent) : base(parent)
 		{
-			this.ValueFormat = "{0}";
 		}
 
 		internal static StringFormat PathStringFormat = new StringFormat() {

@@ -31,8 +31,7 @@ namespace Mui.Widgets
     public string ValueFormat {
       get { return valueFormat; }
       set { valueFormat = value; }
-    }
-    internal string valueFormat = "{0}";
+    } string valueFormat = "{0}";
 
     virtual public Widget[] Widgets {
       get { return widgets; }

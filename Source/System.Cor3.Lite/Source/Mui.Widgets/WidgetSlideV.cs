@@ -54,15 +54,19 @@ namespace Mui.Widgets
 			Debug.Print("Value: {0:n2}, {1}, {2}", SliderValue.Value, SliderValue.Minimum, SliderValue.Maximum);
 			this.Text = string.Format("{0:p2}", SliderValue.Value);
 		}
-
-		public WidgetSlideV(IMui parent) : base(parent)
-		{
+    
+    public override void Design()
+    {
 			ThumbWidth = 10;
 			SliderValue = new DoubleMinMax() {
 				Minimum = 0,
 				Maximum = 1,
 			};
 			ValueFormat = "{0}";
+    }
+		
+		public WidgetSlideV(IMui parent) : base(parent)
+		{
 		}
 
 		public override void Paint(PaintEventArgs arg)
