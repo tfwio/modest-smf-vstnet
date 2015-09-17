@@ -58,7 +58,7 @@ namespace System
 			using (var fs = new System.IO.FileStream(dllPath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 				using (var br = new System.IO.BinaryReader(fs)) {
 					MachineType machineType = MachineType.IMAGE_FILE_MACHINE_UNKNOWN;
-					bool isgood = false;
+//					bool isgood = false;
 					try {
 						fs.Seek(0x3c, System.IO.SeekOrigin.Begin);
 						Int32 peOffset = br.ReadInt32();
@@ -68,10 +68,10 @@ namespace System
 							// "PE\0\0", little-endian
 							throw new Exception("Can't find PE header");
 						machineType = (MachineType)br.ReadUInt16();
-						isgood = true;
+//						isgood = true;
 					}
 					catch {
-						isgood = false;
+//						isgood = false;
 					}
 					finally {
 						br.Close();

@@ -189,13 +189,13 @@ namespace gen.snd.Vst
       RaisePluginCalled("GetSampleRate()");
       return Convert.ToSingle(Parent.Settings.Rate);
     }
+    SampleClock MasterClock = new SampleClock();
     
     /// <inheritdoc />
     public Jacobi.Vst.Core.VstTimeInfo GetTimeInfo(Jacobi.Vst.Core.VstTimeInfoFlags filterFlags)
     {
       RaisePluginCalled("GetTimeInfo(" + filterFlags + ")");
       
-      SampleClock MasterClock = new SampleClock();
       
       // our sample calculator performs:
       // Create TimeInfo class

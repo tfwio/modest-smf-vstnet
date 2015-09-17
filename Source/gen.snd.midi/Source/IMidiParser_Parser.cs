@@ -34,8 +34,7 @@ namespace gen.snd.Midi
     /// <summary>
     /// Return a string value per meta-event or throw exception.
     /// </summary>
-    /// <param name="trk"></param>
-    /// <param name="pos"></param>
+    /// <param name="offset"></param>
     /// <returns></returns>		
 		string GetMetaSTR(int offset);
 		

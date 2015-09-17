@@ -23,6 +23,7 @@
     <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
     <DocumentationFile>bin\$(Platform)\$(Configuration)\gen.snd.midi.xml</DocumentationFile>
     <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
