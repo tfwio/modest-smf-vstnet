@@ -24,19 +24,43 @@ using System;
 
 namespace gen.snd
 {
-	
+	/// <summary>
+	/// For implementation under NAudioVST, INaudioVST in the containing Assembly.
+	/// </summary>
 	public interface IBufferInfo
 	{
+	  /// <summary>
+	  /// TODO: Document
+	  /// </summary>
 		SampleClock SampleTime { get; }
 		/// <summary>
+		/// <para>
 		/// Provided is the current number of samples processed.
-		/// Actual number of samples would result by dividing by
-		/// the number of channels processed (2).
+		/// Actual number of samples would result by dividing by the number of channels processed:
+		/// in most cases, 2 (stereo).
+		/// </para>
+		/// <para>
+		/// The number is a result of the buffer calculation which divides by the number of
+		/// channels.  Since we've already calculated as such, we're avoiding cpu cycles here.
+		/// </para>
 		/// </summary>
 		double SampleOffset { get;set; }
-		double BufferIncrement { get;set; }
+		
 		/// <summary>
+		/// This represents the current location of the audio buffer process.
+		/// It is reset to zero after each buffer cycle is processed and increments
+		/// throughout the process-replacing process.
+		/// </summary>
+		double BufferIncrement { get;set; }
+		
+		/// <summary>
+		/// <para>
 		/// Get the last sample length (provided per buffer cycle).
+		/// </para>
+		/// <para>
+		/// The number is a result of the buffer calculation which divides by the number of
+		/// channels.  Since we've already calculated as such, we're avoiding cpu cycles here.
+		/// </para>
 		/// </summary>
 		double CurrentSampleLength { get; }
 	}

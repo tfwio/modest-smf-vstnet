@@ -43,9 +43,20 @@ namespace gen.snd.Vst
 	public class NAudioVST : INaudioVST
 	{
 		
-		#region Timings
+		// 
+		// Fields
+		// ==========
+		
+		/// <summary>
+		/// (private) Audio Interface
+		/// </summary>
+		VSTStream32 CurrentChannel = null;
 
 		SampleClock clock = new SampleClock();
+		
+		// 
+		// Properties
+		// ==========
 		
 		public Loop One {
 			get
@@ -58,15 +69,6 @@ namespace gen.snd.Vst
 			}
 		} Loop o;
 		
-		/// Check sample position against loop region position in samples
-		public double FilterOffset(double value)
-		{
-			o = One;
-			if (value <= o.Begin) sampleOffset = o.Begin;
-			else if (value > o.End) sampleOffset = o.Begin;
-			else sampleOffset = value;
-			return sampleOffset ;
-		}
 		/// <summary></summary>
 		public NoteTransport BarSegment {
 			get { return barSegment; }
@@ -80,7 +82,10 @@ namespace gen.snd.Vst
 			get { return sampleTime.SolvePPQ(SampleOffset,Settings); }
 			private set { sampleTime = value; }
 		} SampleClock sampleTime = new SampleClock();
-		#endregion
+		
+		// 
+		// Events
+		// ==========
 		
 		/// <summary></summary>
 		public event EventHandler PlaybackStarted;
@@ -88,38 +93,33 @@ namespace gen.snd.Vst
 		/// <summary></summary>
 		public event EventHandler PlaybackStopped;
 		
-		#region Main Properties
-		/// <summary></summary>
+		//
+		// Main Properties
+		// ==========
+		
+		/// <inheritdoc/>
 		public Guid DriverId { get { return driverId; } set { driverId = value; } } Guid driverId = Guid.Empty;
 		
-		/// <summary></summary>
+		/// <summary>TODO: Document</summary>
 		public float Volume {
 			get { return volume; }
 			set { volume = value; if (CurrentChannel!=null) CurrentChannel.Volume = volume; }
 		} float volume = 1;
 		
-		/// <summary>
-		/// (private) Audio Interface
-		/// </summary>
-		VSTStream32 CurrentChannel = null;
-		
 		/// <summary></summary>
 		public INaudioVstContainer Parent { get { return parent; } } INaudioVstContainer parent;
 		
-		/// <summary>
-		/// Main timing and audio buffer configuration.
-		/// </summary>
+		/// <inheritdoc/> 
 		public ITimeConfiguration Settings { get { return TimeConfiguration.Instance; } }
 		
-		/// <summary>
-		/// Host's main control point—interfaced by VST plugins and instruments.
-		/// </summary>
+		/// <inheritdoc/>
 		public HostCommandStub VstHostCommandStub {
 			get { return vstHostCommandStub; }
 		} HostCommandStub vstHostCommandStub;
 		
-
-		#endregion
+		// 
+		// Not interfaced 
+		// ==================
 		
 		/// <summary>
 		/// GET;  When referenced, <see cref="SampleTime" /> is re-calculated using settings from
@@ -129,45 +129,38 @@ namespace gen.snd.Vst
 			get { return SampleTime.SolvePPQ( sampleOffset,Settings.Rate,Settings.Tempo,Settings.Division,true ).MeasureString; }
 		}
 		
-		#region Time Conversion
+		//
+		// Time Conversion
+		// ==========
 		
-		/// <summary>
-		/// The number is a result of the buffer calculation which divides by the number of
-		/// channels.  Since we've already calculated as such, we're avoiding cpu cycles here.
-		/// </summary>
+		/// <inheritdoc/>
 		public double SampleOffset {
 			get { return sampleOffset; } set { sampleOffset = value; }
 		} double sampleOffset = 0;
 		
-		/// <summary>
-		/// This represents the current location of the audio buffer process.
-		/// It is reset to zero after each buffer cycle is processed and increments
-		/// throughout the process-replacing process.
-		/// </summary>
+		/// <inheritdoc/>
 		public double BufferIncrement {
 			get { return bufferIncrement; } set { bufferIncrement = value; }
 		} double bufferIncrement = 0;
 
-		/// <summary>
-		/// The number is a result of the buffer calculation which divides by the number of
-		/// channels.  Since we've already calculated as such, we're avoiding cpu cycles here.
-		/// </summary>
+		/// <inheritdoc/>
 		public double CurrentSampleLength {
 			get { return currentSampleLength; } set { currentSampleLength = value; }
 		} double currentSampleLength = 0;
 		
-		#endregion
+		//
+		// NAudio
+		// ==========
 		
-		#region NAudio
+    /// <summary>
+    /// The wave-format requested by NAudio drivers.
+    /// </summary>
+    public NAudio.Wave.WaveFormat Format { get; set; } 
 		
-		/// <summary>
-		/// The wave-format requested by NAudio drivers.
-		/// </summary>
-		public NAudio.Wave.WaveFormat Format {
-			get { return format; } set { format = value; }
-		} NAudio.Wave.WaveFormat format;
+		// 
+		// (Non-interfaced) NAudio Device Enumeration
+		// ==========
 		
-		#region NAudio Device Enum
 		/// <summary>
 		/// NAudio WaveOut device types.
 		/// <para>Notably, a minimal amount of attention has been given to NAudio implementation
@@ -199,9 +192,8 @@ namespace gen.snd.Vst
 			/// </summary>
 			Wave
 		}
-		#endregion
 		
-        /// <summary>
+    /// <summary>
 		/// The default driver used by the VST Host.
 		/// </summary>
 		public NAudioVST.Driver AudioDriver {
@@ -259,9 +251,20 @@ namespace gen.snd.Vst
 			if (PlaybackStarted != null) PlaybackStarted(this,EventArgs.Empty);
 		}
 		
-		#endregion
+		/// Check sample position against loop region position in samples
+		public double FilterOffset(double value)
+		{
+			o = One;
+			if (value <= o.Begin) sampleOffset = o.Begin;
+			else if (value > o.End) sampleOffset = o.Begin;
+			else sampleOffset = value;
+			return sampleOffset ;
+		}
 		
-		#region EventHandler BufferCycle
+		//
+		// EventHandler BufferCycle
+		// ========================
+		
 		/// <summary>
 		/// This event is triggered each iteration through the audio buffer
 		/// so that the host application can take advantage of timing calculations
@@ -286,7 +289,9 @@ namespace gen.snd.Vst
 			}
 		}
 		
-		#endregion
+		//
+		// .ctor
+		// ==========
 		
 		/// <summary>
 		/// Initiailzes a new HostCommandStub, SampleTime info and assigns a default handler to
@@ -298,7 +303,9 @@ namespace gen.snd.Vst
 			this.vstHostCommandStub = new HostCommandStub(this);
 		}
 		
-		#region Play Stop Etc
+		//
+		// Play Stop Etc
+		// =============
 		
 		public void ResetBufferToZero()
 		{
@@ -367,15 +374,15 @@ namespace gen.snd.Vst
 			ResetBufferToZero();
 		}
 		
-		#endregion
-		
-		#region MIDI VstEvent, MidiMessage
+		// 
+		// MIDI VstEvent, MidiMessage
+		// ==========================
 		
 		readonly object locker = new object();
 		
 		IMidiParser Parser { get { return Parent.Parent.MidiParser; } }
 		
-		bool IsContained(MidiMessage msg, SampleClock c, double min, double max)
+		bool IsContained(MidiMessage msg, IClock c, double min, double max)
 		{
 			Loop b = One;
 			double samplePos = c.SolveSamples(msg.DeltaTime).Samples32;
@@ -386,8 +393,6 @@ namespace gen.snd.Vst
 			get { return midiBuffer; }
 			internal set { midiBuffer = value; }
 		} List<VstEvent> midiBuffer = new List<VstEvent>();
-		
-		#endregion
 		
 	}
 

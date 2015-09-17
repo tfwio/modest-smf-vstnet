@@ -31,15 +31,33 @@ namespace gen.snd.Vst
 	/// </remarks>
 	public interface INaudioVST: IBufferInfo
 	{
+	  /// <summary>
+    /// TODO: Document
+	  /// </summary>
 		NoteTransport BarSegment { get; set; }
-
+    /// <summary>
+    /// TODO: Document
+    /// </summary>
 		void Play();
+		/// <summary>
+    /// TODO: Document
+		/// </summary>
 		void Stop();
+		/// <summary>
+    /// TODO: Document
+		/// </summary>
 		void Pause();
-		
+		/// <summary>
+    /// TODO: Document
+		/// </summary>
 		bool IsPaused { get; }
+		/// <summary>
+    /// TODO: Document
+		/// </summary>
 		bool IsRunning { get; }
-		
+		/// <summary>
+    /// TODO: Document
+		/// </summary>
 		Guid DriverId { get;set; }
 		/// <summary>
 		/// The HostCommandStub is our VstHost implementation.
@@ -49,9 +67,8 @@ namespace gen.snd.Vst
 		/// in addition to something helpful to a VstEvent Queue.
 		/// </remarks>
 		HostCommandStub VstHostCommandStub { get; }
-		
 		/// <summary>
-		/// Rate, Channels, Latency settings.
+		/// Main timing and audio buffer configuration: Rate, Channels, Latency settings.
 		/// </summary>
 		ITimeConfiguration Settings { get; }
 		/// <summary>
@@ -62,6 +79,9 @@ namespace gen.snd.Vst
 		/// Used to attach controls to the audio process such as volume, etc...
 		/// </summary>
 		event EventHandler PlaybackStarted;
+		/// <summary>
+    /// TODO: Document
+		/// </summary>
 		event EventHandler PlaybackStopped;
 	}
 
