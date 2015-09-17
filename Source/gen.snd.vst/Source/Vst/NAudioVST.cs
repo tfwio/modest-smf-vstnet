@@ -61,10 +61,9 @@ namespace gen.snd.Vst
 		public Loop One {
 			get
 			{
-			  var multiplier=Settings.BarStart*Settings.Division;
-				return new Loop {
-					Begin = clock.SolveSamples(multiplier * Settings.BarStartPulses, Settings).Samples32,
-					Length= clock.SolveSamples(multiplier * Settings.BarLengthPulses, Settings).Samples32
+				return new Loop(){
+					Begin = clock.SolveSamples(Settings.BarStart*Settings.Division*Settings.BarStartPulses,Settings).Samples32,
+					Length= clock.SolveSamples(Settings.BarLength*Settings.Division*Settings.BarLengthPulses,Settings).Samples32
 				};
 			}
 		} Loop o;
@@ -212,22 +211,14 @@ namespace gen.snd.Vst
 		/// </summary>
 		void DriverInit()
 		{
-      switch (audioDriver) {
-        case Driver.Wasapi:
-          xAudio = new WasapiOut(AudioClientShareMode.Shared, TimeConfiguration.Instance.Latency);
-          break;
-        case Driver.Wave:
-          xAudio = new WaveOut();
-          break;
-        case Driver.DirectSound:
-          xAudio = DriverId != Guid.Empty ?
-            new DirectSoundOut(DriverId, TimeConfiguration.Instance.Latency) :
-            new DirectSoundOut(TimeConfiguration.Instance.Latency);
-          break;
-        case Driver.ASIO:
-          xAudio = new AsioOut(1);
-          break;
-      }
+			if (audioDriver==Driver.Wasapi) xAudio = new WasapiOut(AudioClientShareMode.Shared,TimeConfiguration.Instance.Latency);
+			else if (audioDriver==Driver.Wave) xAudio = new WaveOut();
+			else if (audioDriver==Driver.DirectSound)
+			{
+				if (DriverId!=Guid.Empty) xAudio = new DirectSoundOut(DriverId, TimeConfiguration.Instance.Latency);
+				else xAudio = new DirectSoundOut(TimeConfiguration.Instance.Latency);
+			}
+			else if (audioDriver==Driver.ASIO) xAudio = new AsioOut(1);
 
       if (CurrentChannel!=null) { CurrentChannel.Dispose(); CurrentChannel = null; }
 
