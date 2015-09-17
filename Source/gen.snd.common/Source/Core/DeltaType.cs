@@ -14,30 +14,17 @@ namespace gen.snd
 	[Flags]
 	public enum DeltaType
 	{
-		[XmlEnum("dbl")]
-		None = 0,
-		/// <summary>
-		/// A logrithmic value
-		/// </summary>
-		[XmlEnum("dB")]
-		Decibels,
-		[XmlEnum("ms")]
-		Milliseconds,
-		[XmlEnum("q")]
-		/// Same as Pulses
-		Quarters,
-		[XmlEnum("s")]
-		Samples,
-		/// <summary>
-		/// 1 * 4 = Note * 4 = Bar * 4 = Measure.
-		/// </summary>
-		[XmlEnum("p")]
-		Pulses,
-		/// <summary>
-		/// ticks per pulse (int TPQ, PPQ) given a divisor such as MTRK.DIVISION, tempo and time-signature.
-		/// </summary>
-		[XmlEnum("t")]
-		Ticks,
+		[XmlEnum("dbl")] None = 0,
+		/// <summary>A logrithmic value</summary>
+		[XmlEnum("dB")] Decibels,
+		[XmlEnum("ms")] Milliseconds,
+		/// <summary>Same as Pulses</summary>
+		[XmlEnum("q")] Quarters,
+		[XmlEnum("s")] Samples,
+		/// <summary>1 * 4 = Note * 4 = Bar * 4 = Measure.</summary>
+		[XmlEnum("p")] Pulses,
+		/// <summary>ticks per pulse (int TPQ, PPQ) given a divisor such as MTRK.DIVISION, tempo and time-signature.</summary>
+		[XmlEnum("t")] Ticks,
 	}
 }
 

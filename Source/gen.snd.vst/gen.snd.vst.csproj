@@ -21,6 +21,7 @@
     <NoWin32Manifest>False</NoWin32Manifest>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <vstnet_bin>..\..\AssemblyReferences\vst.net-1.0-local\CLR2\Win32_Release</vstnet_bin>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -77,10 +78,10 @@
   </ItemGroup>-->
   <ItemGroup>
     <Reference Include="Jacobi.Vst.Core">
-      <HintPath>..\..\AssemblyReferences\vstnet\Win32_Release\Jacobi.Vst.Core.dll</HintPath>
+      <HintPath>$(vstnet_bin)\Jacobi.Vst.Core.dll</HintPath>
     </Reference>
     <Reference Include="Jacobi.Vst.Interop">
-      <HintPath>..\..\AssemblyReferences\vstnet\Win32_Release\Jacobi.Vst.Interop.dll</HintPath>
+      <HintPath>$(vstnet_bin)\Jacobi.Vst.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>

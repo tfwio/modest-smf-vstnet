@@ -11,8 +11,11 @@ namespace gen.snd
 	public class PulseValue
 	{
 		#region STATIC
+		
 		const string typenames = "dbl,double|Decebels,dB|tick,t|pulses,p|quarters,q|ms|smp|s";
+		
 		static string alltypes { get { return string.Join("|",typenames.Split(',')); } }
+		
 		static readonly Regex RegexParser = new Regex(
 			@"(?<unit>([0-9.]+))\s*(?<type>({typenames}))".Replace("{typenames}",alltypes),
 			RegexOptions.CultureInvariant|
@@ -21,6 +24,7 @@ namespace gen.snd
 		readonly static DeltaType DefaultAutomationType = DeltaType.Ticks;
 		
 		static public implicit operator string(PulseValue unit) { return unit.ValueString; }
+		
 		static public implicit operator PulseValue(string unit) { return new PulseValue(unit); }
 		
 		/// <summary>
@@ -29,6 +33,7 @@ namespace gen.snd
 		/// <param name="unit"></param>
 		/// <returns></returns>
 		static public implicit operator PulseValue(double unit) { return new PulseValue(unit,DefaultAutomationType); }
+		
 		#endregion
 		
 		public double Value { get;set; }

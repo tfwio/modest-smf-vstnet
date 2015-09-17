@@ -10,11 +10,11 @@ using Mui.Widgets;
 
 namespace mui_smf
 {
-  /// <summary>
-  /// Description of MainForm.
-  /// </summary>
+  /// <summary>Description of MainForm.</summary>
   public partial class MuiForm : MuiBase
   {
+    ContextMenu TrackSelectionContextMenu = new ContextMenu();
+
     public gen.snd.Midi.MidiReader MidiReader { get; set; }
 
     protected internal WidgetGroupTopMenu Facto { get; set; }
@@ -33,7 +33,8 @@ namespace mui_smf
     
     protected override void Design()
     {
-      Widgets = new Widget[] {
+      Widgets = new Widget[]
+      {
         Facto = new WidgetGroupTopMenu(),
         WidgetMenu = new WidgetGroupLeftMenu(),
         MidiList = new WidgetGroupMidiList(this)
@@ -43,8 +44,6 @@ namespace mui_smf
         }
       };
     }
-    
-    ContextMenu TrackSelectionContextMenu = new ContextMenu();
 
     public event EventHandler GotMidiFile;
     protected internal virtual void OnGotMidiFile(EventArgs e)
@@ -52,18 +51,6 @@ namespace mui_smf
       var handler = GotMidiFile;
       if (handler != null)
         handler(this, e);
-    }
-    
-    protected override void OnGotFocus(EventArgs e)
-    {
-      base.OnGotFocus(e);
-      AppTimer.Enabled = true;
-    }
-    protected override void OnLostFocus(EventArgs e)
-    {
-      base.OnLostFocus(e);
-      AppTimer.Enabled = false;
-      Invalidate();
     }
     
     protected override void OnPaint(PaintEventArgs e)

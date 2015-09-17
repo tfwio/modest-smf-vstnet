@@ -1,5 +1,4 @@
 ﻿/* oio * 8/3/2015 * Time: 6:39 AM */
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,24 +8,15 @@ namespace Mui
 {
   public class MuiBase : Form, IMui
   {
-    public System.Collections.Generic.List<MuiAppService> Services {
+    public List<MuiAppService> Services {
       get { return services; }
       set { services = value; }
-    }
-    System.Collections.Generic.List<MuiAppService> services = new System.Collections.Generic.List<MuiAppService>();
+    } List<MuiAppService> services = new List<MuiAppService>();
 
     public System.Drawing.Text.FontIndex FontIndex { get; protected set; }
-    
-    protected internal void InitializeWidgets(params MuiAppService[] serviso)
-    {
-      PreInitialize();
-      Design();
-      PostInitialize(serviso);
-    }
-    public MuiBase()
-      : base()
-    {
-    }
+
+    public MuiBase() : base() {}
+
     protected internal void PreInitialize(int timerInterval = 90)
     {
       //
@@ -40,7 +30,7 @@ namespace Mui
 
       FontIndex = new System.Drawing.Text.FontIndex();
 
-      AddLocalFont("adfx", "asset/adfx3.ttf");
+      AddLocalFont("adfx",    "asset/adfx3.ttf");
       AddLocalFont("awesome", "asset/fontawesome-webfont.ttf");
     }
     void PostInitialize(params MuiAppService[] serviso)
@@ -54,10 +44,29 @@ namespace Mui
       AppTimer.Tick += AppTimer_Tick;
       AppTimer.Start();
     }
+    protected internal void InitializeWidgets(params MuiAppService[] serviso)
+    {
+      PreInitialize();
+      Design();
+      PostInitialize(serviso);
+    }
+
     virtual protected void Design()
     {
     }
-    
+
+    protected override void OnGotFocus(EventArgs e)
+    {
+      base.OnGotFocus(e);
+      AppTimer.Enabled = true;
+    }
+    protected override void OnLostFocus(EventArgs e)
+    {
+      base.OnLostFocus(e);
+      AppTimer.Enabled = false;
+      Invalidate();
+    }
+
     protected IEnumerable<int> WidgetsIndexed {
       get {
         for (int i = 0; i < this.Widgets.Length; i++)
@@ -70,10 +79,10 @@ namespace Mui
           yield return Widgets[i];
       }
     }
-    protected IEnumerable<System.Collections.Generic.KeyValuePair<int,Widget>> WidgetsDictionay {
+    protected IEnumerable<KeyValuePair<int,Widget>> WidgetsDictionay {
       get {
         for (int i = 0; i < this.Widgets.Length; i++)
-          yield return new System.Collections.Generic.KeyValuePair<int,Widget>(i, Widgets[i]);
+          yield return new KeyValuePair<int,Widget>(i, Widgets[i]);
       }
     }
 
@@ -81,6 +90,7 @@ namespace Mui
     {
       System.IO.FileInfo file;
       file = localToApp ? System.Reflection.Assembly.GetExecutingAssembly().GetAppFile(filePath) : new System.IO.FileInfo(filePath);
+      
       if (!file.Exists)
         return false;
       
@@ -126,13 +136,10 @@ namespace Mui
     #endregion
     
     public Widget[] Widgets { get; set; }
-
     public Widget FocusedControl { get; set; }
 
     public FloatPoint MouseD { get; set; }
-
     public FloatPoint MouseU { get; set; }
-
     public FloatPoint MouseM { get; set; }
 
     public bool HasControlKey {
@@ -158,7 +165,7 @@ namespace Mui
     // Rather than using 'object' as our state, we should be using
     // a derived type on IStateObject or such which will provide a
     // name of the action, oldvalue and newvalue.
-    public System.Collections.Generic.Stack<object> StateMachine { get; set; }
+    public Stack<object> StateMachine { get; set; }
 
     public FloatPoint ClientMouse {
       get { return new FloatPoint(PointToClient(MousePosition)) - new FloatPoint(Padding.Left, Padding.Top); }
@@ -169,8 +176,9 @@ namespace Mui
       base.OnClientSizeChanged(e);
       Invalidate();
     }
-    
+
     #region Wheel Event
+
     public event EventHandler<WheelArgs> Wheel;
 
     protected virtual void OnWheel(int val)
@@ -189,6 +197,7 @@ namespace Mui
 
     #endregion
     #region Mouse Overrides
+
     protected override void OnMouseDown(MouseEventArgs e)
     {
       MouseD = MousePosition;
@@ -210,6 +219,7 @@ namespace Mui
 
     #endregion
     #region Key Overrides
+
     protected override void OnKeyDown(KeyEventArgs e)
     {
       base.OnKeyDown(e);
@@ -225,6 +235,7 @@ namespace Mui
       hasControlKey = e.Control;
       hasAltKey = e.Alt;
     }
+    
     #endregion
   }
 }

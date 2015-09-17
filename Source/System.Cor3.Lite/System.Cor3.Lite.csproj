@@ -64,6 +64,7 @@
     <Compile Include="Source\Drawing\GraphicsPens.cs" />
     <Compile Include="Source\Extensions\DllExtension.cs" />
     <Compile Include="Source\Extensions\FileInfoExtension.cs" />
+    <Compile Include="Source\Extensions\ListHelper.cs" />
     <Compile Include="Source\Extensions\MachineType.cs">
       <DependentUpon>DllExtension.cs</DependentUpon>
     </Compile>

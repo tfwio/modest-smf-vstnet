@@ -42,6 +42,10 @@ namespace gen.snd.Midi
 		{
 			return MBT.GetString(Convert.ToUInt64(Len),division);
 		}
+		public string GetMbtLen2(int division)
+		{
+			return MBT.GetString(Convert.ToUInt64(Len),division,false);
+		}
 		public string KeySharp { get { return MidiReader.SmfStringFormatter.GetKeySharp(K); } }
 		public string KeyFlat  { get { return MidiReader.SmfStringFormatter.GetKeyFlat(K); } }
 		public int		Octave	 { get { return MidiReader.SmfStringFormatter.GetOctave(K); } }

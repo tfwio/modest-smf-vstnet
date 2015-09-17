@@ -60,32 +60,65 @@ namespace gen.snd.Vst
 		{
 			
 		}
-		#region PARENT
+		
+		// ============================
+		// Public Fields and Properties
+		// ============================
+		
+		/// <summary>NumSamplesToProcess / Parent.Settings.Channels</summary>
+		public int NumSamplesPerChannel { get { return NumSamplesToProcess / Parent.Settings.Channels; } }
+		
 		public NAudioVST Parent {
 			get { return parent; }
 			set { parent = value; }
 		} NAudioVST parent;
 		
-		IMidiParser MidiParser { get { return parent.Parent.Parent.MidiParser; } }
+		public override WaveFormat WaveFormat { get { return waveFormat; } }
 		
-		VstPluginManager PluginManager { get { return parent.Parent.PluginManager; } }
+		/// <summary>Probably reflected in Read(float[] buffer, int offset, int sampleCount) as sampleCount.</summary>
+		public override long Length { get { return long.MaxValue; } }
 		
-		#endregion
-		#region VST PLUGIN
-		VstPlugin module_instrument { get { return parent.Parent.PluginManager.MasterPluginInstrument; } }
-		VstPlugin module_effect { get { return parent.Parent.PluginManager.MasterPluginEffect; } }
-		#endregion
+		/// <summary>Probably reflected in Read(float[] buffer, int offset, int sampleCount) as offset.</summary>
+		public override long Position { get { return 0; } set { long x = value; } }
 		
-		#region Volume
-		
+		public int NumSamplesToProcess {
+			get { return numSamplesToProcess; }
+			set { numSamplesToProcess = value; }
+		} int numSamplesToProcess = 0;
+    
 		public float Volume {
 			get { return volume; }
 			set { volume = value; }
 		} float volume = 1;
 		
-		#endregion
-		#region BUFFER OFFSET FLOOR
-//		double nextoffset(int sampleCount) { return parent.SampleOffset+sampleCount; }
+		// =============================
+		// Private Fields and Properties
+		// =============================
+		
+		IMidiParser MidiParser { get { return parent.Parent.Parent.MidiParser; } }
+		
+		VstPluginManager PluginManager { get { return parent.Parent.PluginManager; } }
+		
+		VstPlugin module_instrument { get { return parent.Parent.PluginManager.MasterPluginInstrument; } }
+		VstPlugin module_effect { get { return parent.Parent.PluginManager.MasterPluginEffect; } }
+		
+		int BlockSize = 0;
+		
+		float[] actualOutput;
+		
+		VstAudioBuffer[] actualBuffer;
+		
+		AudioModule InputManager = null, OutputManager = null;
+		
+		IOModule mod;
+		
+		WaveFormat waveFormat;
+		
+		// ==============
+		// Helper Methods
+		// ==============
+		
+    //double nextoffset(int sampleCount) { return parent.SampleOffset+sampleCount; }
 		
 		int GetSamplesWithinLoop(int sampleCount, int nch)
 		{
@@ -94,21 +127,24 @@ namespace gen.snd.Vst
 			
 			Loop o = parent.One;
 			
-			if ((parent.SampleOffset+actualSamples) > o.End) {
+			if ((parent.SampleOffset+actualSamples) > o.End)
+			{
 				newsamplecount = (o.End - (parent.SampleOffset)).ToInt32() * nch;
 				actualSamples = (newsamplecount.FloorMinimum(0).ToInt32() / nch);
 			}
 			// this might be incorrect
-			if (actualSamples==0) {
+			if (actualSamples==0)
+			{
 				parent.SampleOffset = o.Begin;
 				newsamplecount = sampleCount;
 			}
 			
 			return newsamplecount.FloorMinimum(0).ToInt32();
-			
 		}
-		#endregion
-		#region BUFFER FLUSH
+		
+		// ==============
+		// Methods
+		// ==============
 		
 		float[] ProcessToMixer(VstPlugin plugin, VstAudioBuffer[] buffer)
 		{
@@ -127,21 +163,14 @@ namespace gen.snd.Vst
 					actualOutput[indexOutput]   = FloatMathExtension.Combine(volume, buffer[0][j], buffer[2][j] );
 					actualOutput[indexOutput+1] = FloatMathExtension.Combine(volume, buffer[1][j], buffer[3][j] );
 				}
+				
 				indexOutput += 2;
+				
 				parent.BufferIncrement++;
 			}
+			
 			return actualOutput;
 		}
-		
-		#endregion
-		
-		#region AUDIO PROCESS
-		
-		int BlockSize = 0;
-		float[] actualOutput;
-		VstAudioBuffer[] actualBuffer;
-		AudioModule InputManager = null, OutputManager = null;
-		IOModule mod;
 		
 		private float[] ProcessReplace(int blockSize)
 		{
@@ -170,70 +199,41 @@ namespace gen.snd.Vst
 			return actualOutput;
 		}
 		
-		#endregion
-
-		#region WAVE
-		
-		private WaveFormat waveFormat;
-		
-		public override WaveFormat WaveFormat { get { return waveFormat; } }
-		/// <summary>
-		/// Probably reflected in Read(float[] buffer, int offset, int sampleCount) as sampleCount.
-		/// </summary>
-		public override long Length { get { return long.MaxValue; } }
-		/// <summary>
-		/// Probably reflected in Read(float[] buffer, int offset, int sampleCount) as offset.
-		/// </summary>
-		public override long Position { get { return 0; } set { long x = value; } }
-		
-		public int NumSamplesToProcess {
-			get { return numSamplesToProcess; }
-			set { numSamplesToProcess = value; }
-		} int numSamplesToProcess = 0;
-		
-		/// <summary>
-		/// NumSamplesToProcess / Parent.Settings.Channels
-		/// </summary>
-		public int NumSamplesPerChannel { get { return NumSamplesToProcess / Parent.Settings.Channels; } }
-		
-		#endregion
+		public void SetWaveFormat(int sampleRate, int channels)
+		{
+			this.waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels);
+		}
 		
 		public int Read(float[] buffer, int offset, int sampleCount)
 		{
 			numSamplesToProcess = GetSamplesWithinLoop(sampleCount,Parent.Settings.Channels);
 			
 			int numSamplesPerChannel = NumSamplesPerChannel;
+			
 			float[] tempBuffer = ProcessReplace( numSamplesPerChannel );
-			for (int i = 0; i < numSamplesToProcess; i++) buffer[i + offset] = tempBuffer[i];
+			
+			for (int i = 0; i < numSamplesToProcess; i++)
+			  buffer[i + offset] = tempBuffer[i];
 			
 			Parent.OnBufferCycle( numSamplesPerChannel );
+			
 			return numSamplesToProcess;
 		}
-		
-		public void SetWaveFormat(int sampleRate, int channels)
-		{
-			this.waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels);
-		}
 
-		#region Read(byte[] buffer, int offset, int count)
-		
-		/// <summary>
-		/// </summary>
-		/// <param name="buffer"></param>
+		/// <param name="buffer">You know</param>
 		/// <param name="offset">always Zero. (see Position)</param>
 		/// <param name="count">always Length</param>
-		/// <returns></returns>
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			WaveBuffer waveBuffer = new WaveBuffer(buffer);
+			
 			int samplesRequired = count / 4;
+			
 			int samplesRead = Read(waveBuffer.FloatBuffer, offset / 4, samplesRequired);
+			
 			return samplesRead * 4;
 		}
 		
-		#endregion
-		
 	}
-
 
 }

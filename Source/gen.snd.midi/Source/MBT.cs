@@ -80,13 +80,13 @@ namespace gen.snd.Midi
 		static public float GetTicksF(int value) { return GetTicksF(value,MthdDivision); }
 		#endregion
 		#region Static: GetString(ulong value, int division)
-		static public string GetString(ulong value, int division)
+		static public string GetString(ulong value, int division, bool plusOne=true)
 		{
-			int orig = Convert.ToInt32(value);
+		  double orig = Convert.ToDouble(value).Floor();
 			int quarter = Convert.ToInt32(value) % MidiReader.FileDivision;
-			double part = (double)value / MidiReader.FileDivision;
-			double part1 = (Math.Floor((double)orig / MidiReader.FileDivision) % 4)+1;
-			double part2 = Math.Floor((double)orig / MidiReader.DivQuarter) + 1;
+			//double part = (double)value / MidiReader.FileDivision;
+			double part1 = (orig / MidiReader.FileDivision).Floor() % 4 + (plusOne ? 1 : 0);
+			double part2 = (orig / MidiReader.DivQuarter).Floor() + (plusOne ? 1 : 0);
 			return string.Format("{0:##,###,###,000}:{1:0#}:{2:00#}",  part2, part1, quarter);
 		}
 

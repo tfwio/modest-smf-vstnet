@@ -41,7 +41,7 @@ namespace Mui.Widgets
     public override void Design()
     {
       ThumbWidth = 10;
-      SliderValue = new DoubleMinMax(){ Minimum=0, Maximum=1, };
+      SliderValue = new DoubleMinMax(){ Minimum=0, Maximum=1, Value=0.5 };
       ValueFormat = "{0}";
     }
     

@@ -24,6 +24,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <SourceAnalysisOverrideSettingsFile>C:\Users\oio\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <DocumentationFile>bin\$(Platform)\$(Configuration)\gen.snd.common.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,6 +87,31 @@
     <Compile Include="Source\Core\MidiChannelSet.cs" />
     <Compile Include="Source\Core\PianoCalculator.cs" />
     <Compile Include="Source\Core\SampleValue.cs" />
+    <Compile Include="Source\Demo.Forms\BpmCalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Demo.Forms\BpmCalculatorForm.Designer.cs">
+      <DependentUpon>BpmCalculatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Demo.Forms\FrequencyTestControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Source\Demo.Forms\FrequencyTestControl.Designer.cs">
+      <DependentUpon>FrequencyTestControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Demo.Forms\FrequencyTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Demo.Forms\FrequencyTestForm.Designer.cs">
+      <DependentUpon>FrequencyTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Demo.Forms\ImpulseTrackerInstrumentDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Source\Demo.Forms\ItiRenderer.cs" />
+    <Compile Include="Source\Demo.Forms\KnobImageTool.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Source\Effects\Class1.cs" />
     <Compile Include="Source\Effects\PitchShifter.cs" />
     <Compile Include="Source\Formats\IffForm\CHUNK.cs" />
@@ -108,43 +134,23 @@
     </Compile>
     <Compile Include="Source\Formats\ImpulseTrackerInstrument.cs" />
     <Compile Include="Source\Formats\SoundFont2.cs" />
-    <Compile Include="Source\Forms\BpmCalculatorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Source\Forms\BpmCalculatorForm.Designer.cs">
-      <DependentUpon>BpmCalculatorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Source\Forms\DirectSoundDevice.cs">
+    <Compile Include="Source\Forms %28controls%29\DirectSoundDevice.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Source\Forms\FrequencyTestControl.cs">
+    <Compile Include="Source\Forms %28controls%29\WavePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Source\Forms\FrequencyTestControl.Designer.cs">
-      <DependentUpon>FrequencyTestControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Source\Forms\FrequencyTestForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Source\Forms\FrequencyTestForm.Designer.cs">
-      <DependentUpon>FrequencyTestForm.cs</DependentUpon>
+    <Compile Include="Source\Forms %28controls%29\WavePanel.Designer.cs">
+      <DependentUpon>WavePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Forms\IKnobSetting.cs" />
-    <Compile Include="Source\Forms\ImpulseTrackerInstrumentDemoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Source\Forms\ItiRenderer.cs" />
     <Compile Include="Source\Forms\Knob.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Source\Forms\KnobImageTool.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Source\Forms\KnobTwo.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Source\Forms\KnobType.cs" />
-    <Compile Include="Source\Forms\ListHelper.cs" />
     <Compile Include="Source\Forms\Midi.DeviceSelector.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,12 +169,6 @@
     </Compile>
     <Compile Include="Source\Forms\WaveOutTestForm.Designer.cs">
       <DependentUpon>WaveOutTestForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Source\Forms\WavePanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Source\Forms\WavePanel.Designer.cs">
-      <DependentUpon>WavePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Generators\IGenerator.cs" />
     <Compile Include="Source\Interop\ds2cs_dll_import.cs" />
@@ -209,7 +209,10 @@
     <Compile Include="Source\System.Sound\IOHelper.cs" />
     <Compile Include="Source\Wave\Int32WaveChannelBase.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Source\Forms %28controls%29" />
+    <Folder Include="Source\Demo.Forms" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Win32-DLL\DrumSynth2Wave\ds2wav.dll">
       <Link>ds2wav.dll</Link>
@@ -219,23 +222,23 @@
     <None Include="Documents\ms_riff.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Source\Forms\BpmCalculatorForm.resx">
+    <EmbeddedResource Include="Source\Demo.Forms\BpmCalculatorForm.resx">
       <DependentUpon>BpmCalculatorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\Forms\DirectSoundDevice.resx">
-      <DependentUpon>DirectSoundDevice.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Source\Forms\FrequencyTestControl.resx">
+    <EmbeddedResource Include="Source\Demo.Forms\FrequencyTestControl.resx">
       <DependentUpon>FrequencyTestControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\Forms\FrequencyTestForm.resx">
+    <EmbeddedResource Include="Source\Demo.Forms\FrequencyTestForm.resx">
       <DependentUpon>FrequencyTestForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\Forms\ImpulseTrackerInstrumentDemoForm.resx">
+    <EmbeddedResource Include="Source\Demo.Forms\ImpulseTrackerInstrumentDemoForm.resx">
       <DependentUpon>ImpulseTrackerInstrumentDemoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Source\Forms\KnobImageTool.resx">
+    <EmbeddedResource Include="Source\Demo.Forms\KnobImageTool.resx">
       <DependentUpon>KnobImageTool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Source\Forms %28controls%29\DirectSoundDevice.resx">
+      <DependentUpon>DirectSoundDevice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Source\Forms\Midi.DeviceSelector.resx">
       <DependentUpon>Midi.DeviceSelector.cs</DependentUpon>

@@ -32,16 +32,20 @@ namespace gen.snd.Vst
 	public class AudioModule : IDisposable
 	{
 		float rate;
+		
 		public int BlockSize;
+		
 		/// <summary>
 		/// 0 for input, 1 for output
 		/// </summary>
 		public VstAudioBufferManager this[int BufferIndex] {
 			get { return (BufferIndex==0) ? Inputs : Outputs ; }
 		}
+		
 		public VstAudioBufferManager Inputs, Outputs;
 		
 		public int InputsCount { get;set; }
+		
 		public int OutputsCount { get;set; }
 		
 		/// <summary>
@@ -51,7 +55,7 @@ namespace gen.snd.Vst
 		/// <param name="outs"></param>
 		public void SetBuffers(ref VstAudioBuffer[] ins, ref VstAudioBuffer[] outs)
 		{
-			ins = Inputs.ToArray();
+			ins =  Inputs.ToArray();
 			outs = Outputs.ToArray();
 		}
 		

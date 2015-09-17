@@ -3,7 +3,7 @@ using System;
 using System.Xml.Serialization;
 namespace System
 {
-	// TODO: delete or re-appropriate if there are no dependencies.
+	// TODO: delete or re-appropriate if no dependencies.
 	public class Divisor
 	{
 		[XmlAttribute("n")]

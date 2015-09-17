@@ -10,7 +10,8 @@ namespace gen.snd.Midi
 	public interface IMidiParser_Notes
 	{
 		/// <summary>
-		/// This should perhaps be externalized as a parser extension.
+		/// This should perhaps be externalized as a parser extension.<br />
+		/// See CloseNote, GetNote and all the other methods in IMidiParer_Notes of course...
 		/// </summary>
 		/// <param name="type">Currently supported types are NoteOn and NoteOff</param>
 		/// <param name="ppq">The PPQ/Time Position in the class.</param>

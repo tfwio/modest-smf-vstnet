@@ -79,9 +79,15 @@
       <DependentUpon>MuiForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Program.cs" />
-    <Compile Include="Source\MuiService_MbtCaret.cs" />
-    <Compile Include="Source\MuiService_MidiGridMouse.cs" />
-    <Compile Include="Source\MuiService_Wheeler.cs" />
+    <Compile Include="Source\WidgetGroupMidiList.MbtCaret.cs">
+      <DependentUpon>WidgetGroupMidiList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\WidgetGroupMidiList.MidiGridMouse.cs">
+      <DependentUpon>WidgetGroupMidiList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\WidgetGroupMidiList.Wheeler.cs">
+      <DependentUpon>WidgetGroupMidiList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\WidgetGroupLeftMenu.cs" />
     <Compile Include="Source\WidgetGroupMidiList.cs" />
     <Compile Include="Source\WidgetGroupTopMenu.cs" />

@@ -1,5 +1,5 @@
 ﻿#region User/License
-// oio * 7/31/2012 * 11:12 PM
+// oio * 11/1/2012 * 1:15 AM
 
 // Permission is hereby granted, free of charge, to any person obtaining a
 // copy of this software and associated documentation files (the "Software"),
@@ -19,41 +19,12 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 #endregion
-
 using System;
-using gen.snd.Midi;
 
-namespace gen.snd
+namespace ititoo
 {
-	public interface IAudioConfig
+	static class ItiRenderer
 	{
-		int Rate { get;set; }
-		float RateF { get; }
-		int Channels { get;set; }
-		int Latency { get;set; }
-	}
-	public interface IMidiConfig
-	{
-		int Division { get;set; }
-		
-		double Tempo    { get;set; }
-		
-		MidiTimeSignature TimeSignature { get;set; }
-		
-		MidiKeySignature KeySignature { get;set; }
-		
-		bool IsSingleZeroChannel { get;set; }
-		
-		double BarStart { get;set; }
-		
-		double BarStartPulses { get;set; }
-		
-		double BarLength { get;set; }
-		
-		double BarLengthPulses { get;set; }
-	}
 	
-	public interface ITimeConfiguration : IMidiConfig, IAudioConfig {
-		void FromMidi(IMidiParser parser);
 	}
 }

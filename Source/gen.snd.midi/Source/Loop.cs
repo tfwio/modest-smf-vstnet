@@ -36,18 +36,18 @@ namespace gen.snd
 	/// SAMPLE region
 	/// </summary>
 	public class Loop {
+	  
 		public double Begin { get ; set ; }
+		
 		public double Length { get ; set ; }
+		
 		/// <summary>
 		/// set length in stead.
 		/// </summary>
 		[System.Xml.Serialization.XmlIgnore]
 		public double End { get { return Begin+Length; } set { Length = value-Begin; } }
-		/// <summary>
-		/// can not be modified.
-		/// </summary>
-		public static Loop Empty {
-			get { return empty; }
-		} static readonly Loop empty = new Loop(){ Begin=0, End=0 };
+		
+		/// <summary>can not be modified.</summary>
+		static public readonly Loop Empty = new Loop(){ Begin=0, End=0 };
 	}
 }

@@ -12,24 +12,31 @@ namespace gen.snd.Midi
 {
 	public interface IMidiParser_Parser
 	{
-		#region TIME ( … ) GetMBT, GetMbtString
 		
-		/// <summary>
-		/// Gets a string value.
-		/// </summary>
-		/// <param name="offset"></param>
-		/// <returns>UTF8 Decoded</returns>
-		string GetMetaString(int offset);
+		// =============================
+		// TIME
+		// =============================
 
 		/// <summary>Measure:Bar:Ticks</summary>
 		/// <param name="value">Pulses</param>
 		/// <returns>Measure:Bar:Quarters:Ticks +/- Quarters</returns>
 		string GetMbtString(ulong value);
 		
-		#endregion
+		// =============================
+		// META
+		// =============================
 		
-		#region META
-		
+		/// <summary>Gets a string value.</summary>
+		/// <param name="offset"></param>
+		/// <returns>UTF8 Decoded</returns>
+		string GetMetaString(int offset);
+    
+    /// <summary>
+    /// Return a string value per meta-event or throw exception.
+    /// </summary>
+    /// <param name="trk"></param>
+    /// <param name="pos"></param>
+    /// <returns></returns>		
 		string GetMetaSTR(int offset);
 		
 		/// <summary>
@@ -48,17 +55,27 @@ namespace gen.snd.Midi
 		/// <returns></returns>
 		int GetMetaLen(int offset, int plus);
 		
+		/// <summary>Documentation needed</summary>
+		/// <param name="offset"></param>
+		/// <returns></returns>
 		byte[] GetMetaValue(int offset);
 		
+		/// <summary>Documentation needed</summary>
+		/// <param name="offset"></param>
+		/// <returns></returns>
 		byte[] GetMetaData(int offset);
 		
+		/// <summary>Documentation needed</summary>
+		/// <param name="offset"></param>
+		/// <returns></returns>
 		byte[] GetMetaBString(int offset);
 		
 //		byte[] GetMetaStringValue(int offset);
 //		byte[] GetMetaValue(int offset);
-		#endregion
 		
-		#region CH (string)
+		// =================================
+		// CH (string)
+		// =================================
 		
 		/// <summary>
 		/// Parse runningstatus channel bit (for messages that support this); Non-RSE
@@ -84,46 +101,60 @@ namespace gen.snd.Midi
 		/// </remarks>
 		string ch { get; }
 		
-		#endregion
+		// =================================
+		// NEXT.POS
+		// =================================
 		
-		#region NEXT.POS
-		
+    /// <summary>Next Position (rse)</summary>
 		int GetNextRsePosition(int offset);
 		
+    /// <summary>Next Position (rse)</summary>
 		int GetNextPosition(int offset);
 		
-		#endregion
+		// =================================
+		// VALUE.LEN
+		// =================================
 		
-		#region VALUE.LEN
-		
+		/// <summary>Documentation needed</summary>
 		int GetRseEventLength(int offset);
 		
+		/// <summary>Documentation needed</summary>
 		int GetEventLength(int offset);
 		
-		#endregion
+		// /// <summary>Documentation needed</summary>
+		// int GetEventLength(int offset, int plus);
 		
-		#region VALUE.EVENT
+		// =================================
+		// VALUE.EVENT
+		// =================================
 		
+		/// <summary>Documentation needed</summary>
 		byte[] GetRseEventValue(int offset);
 		
+		/// <summary>Documentation needed</summary>
 		byte[] GetEventValue(int offset);
 		
-		#endregion
+		// =================================
+		// VALUE.EVENT-STRING
+		// =================================
 		
-		#region VALUE.EVENT-STRING
-		
+		/// <summary>Documentation needed</summary>
 		string GetRseEventString(int offset);
 		
+		/// <summary>Documentation needed</summary>
 		string GetEventString(int offset);
 		
-		#endregion
+		// =================================
+		// VALUE-STRING
+		// =================================
 		
-		#region VALUE-STRING
-		
+    /// <summary> RSE </summary>
 		string GetRseEventValueString(int offset);
 		
+		/// <summary>Documentation needed</summary>
 		string GetEventValueString(int offset);
 		
-		#endregion
+		// /// <summary>Documentation needed</summary>
+		// string GetEventValueString(int offset, int plus);
 	}
 }

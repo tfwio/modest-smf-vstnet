@@ -38,10 +38,8 @@ namespace gen.snd.Vst
 		const double billion = 1000000000;
 		const double billionth = 1 / billion; // 0.000000001
 		
-		/// <summary>
-		/// Main timing calculator.
-		/// </summary>
-		SampleClock st = new SampleClock();
+		/// <summary>Main timing calculator.</summary>
+		SampleClock HostClock = new SampleClock();
 		
 		// track this to the timeinfo function
 		static readonly Jacobi.Vst.Core.VstSmpteFrameRate smpte_rate = VstSmpteFrameRate.Smpte30fps;
@@ -54,6 +52,11 @@ namespace gen.snd.Vst
 		}
 		
 		#region (Static CTOR and) File Dialogs
+		
+		static System.Windows.Forms.OpenFileDialog ofd;
+		static System.Windows.Forms.SaveFileDialog sfd;
+		static System.Windows.Forms.FolderBrowserDialog fbd;
+		
 		/// <summary>
 		/// Initialize common dialogs.  I'm not quite sure how to implement these if if they should even be.
 		/// </summary>
@@ -64,9 +67,6 @@ namespace gen.snd.Vst
 			fbd = new System.Windows.Forms.FolderBrowserDialog();
 		}
 		
-		static System.Windows.Forms.OpenFileDialog ofd;
-		static System.Windows.Forms.SaveFileDialog sfd;
-		static System.Windows.Forms.FolderBrowserDialog fbd;
 		#endregion
 		
 		#region PluginCalledEventArgs/Handler
@@ -76,11 +76,12 @@ namespace gen.snd.Vst
 		/// </summary>
 		public event EventHandler<PluginCalledEventArgs> PluginCalled;
 		
-		private void RaisePluginCalled(string message)
+		void RaisePluginCalled(string message)
 		{
 			RaisePluginCalled(message,null);
 		}
-		private void RaisePluginCalled(string message, object data)
+		
+		void RaisePluginCalled(string message, object data)
 		{
 			EventHandler<PluginCalledEventArgs> handler = PluginCalled;
 			if(handler != null)
@@ -195,7 +196,7 @@ namespace gen.snd.Vst
 		public string GetProductString()
 		{
 			RaisePluginCalled("GetProductString()");
-			return "VST.NET\0";
+			return "Jacobi.VstNet\0";
 		}
 		
 		/// <inheritdoc />
@@ -212,6 +213,7 @@ namespace gen.snd.Vst
 			// our sample calculator performs:
 			// Create TimeInfo class
 			VstTimeInfo vstTimeInfo = new VstTimeInfo();
+			
 			// most common settings
 			vstTimeInfo.SamplePosition				= Parent.SampleOffset + Parent.BufferIncrement;
 			vstTimeInfo.SampleRate						= Parent.Settings.Rate;
@@ -219,11 +221,10 @@ namespace gen.snd.Vst
 			filterFlags |= VstTimeInfoFlags.ClockValid;
 			if (filterFlags.HasFlag(VstTimeInfoFlags.ClockValid))
 			{
-				int cp = Convert.ToInt32(
-					st.SolvePPQ( Parent.SampleOffset, Parent.Settings ).ClocksAtPosition
-				);
-				vstTimeInfo.SamplesToNearestClock = st
-					.SolveSamples( cp * 24 , Parent.Settings ).Samples32Floor;
+			  // should we floor this?
+			  int cp = HostClock.SolvePPQ( Parent.SampleOffset, Parent.Settings ).ClocksAtPosition.ToInt32();
+			  
+				vstTimeInfo.SamplesToNearestClock = HostClock.SolveSamples( cp * 24 , Parent.Settings ).Samples32Floor;
 			}
 			// NanoSecondsValid
 			filterFlags |= VstTimeInfoFlags.NanoSecondsValid;
@@ -241,13 +242,13 @@ namespace gen.snd.Vst
 			filterFlags |= VstTimeInfoFlags.PpqPositionValid;
 			if (filterFlags.HasFlag(VstTimeInfoFlags.PpqPositionValid))
 			{
-				vstTimeInfo.PpqPosition	= st.SolvePPQ( vstTimeInfo.SamplePosition, Parent.Settings).Frame;
+				vstTimeInfo.PpqPosition	= HostClock.SolvePPQ( vstTimeInfo.SamplePosition, Parent.Settings).Frame;
 			}
 			// BarStartPositionValid
 			filterFlags |= VstTimeInfoFlags.BarStartPositionValid;
 			if (filterFlags.HasFlag(VstTimeInfoFlags.BarStartPositionValid))
 			{
-				vstTimeInfo.BarStartPosition = st.SolvePPQ(vstTimeInfo.SamplePosition, Parent.Settings).Pulses; // * st.SamplesPerQuarter
+				vstTimeInfo.BarStartPosition = HostClock.SolvePPQ(vstTimeInfo.SamplePosition, Parent.Settings).Pulses; // * st.SamplesPerQuarter
 			}
 			// CyclePositionValid
 			filterFlags |= VstTimeInfoFlags.CyclePositionValid;

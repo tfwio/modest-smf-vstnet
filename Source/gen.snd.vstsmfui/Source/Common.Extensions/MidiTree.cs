@@ -39,8 +39,9 @@ namespace modest100.Forms
 		{
 			NodeMidi.Nodes.Clear();
 			if (ui.MidiParser==null) return;
-			else if (ui.MidiParser.SmfFileHandle==null) return;
-			else if (ui.MidiParser.SmfFileHandle.NumberOfTracks==0) return;
+			if (ui.MidiParser.SmfFileHandle==null) return;
+			if (ui.MidiParser.SmfFileHandle.NumberOfTracks==0) return;
+			
 			for (int i = 0; i < ui.MidiParser.SmfFileHandle.NumberOfTracks; i++)
 			{
 				TreeNode tn = new TreeNode(string.Format("{0}",/*Strings.Filter_MidiTrack*/ i )); //Event_MidiChangeTrack_MenuItemSelected

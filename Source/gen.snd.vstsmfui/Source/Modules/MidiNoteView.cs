@@ -136,10 +136,10 @@ namespace modest100.Forms
     {
       base.AfterTrackLoaded(sender, e);
 
-      // We cloar our note-list
+      // clear note-list
       this.listNotes.Items.Clear();
-      // Since all notes have been collected by the midi parser,
-      // we can now filter them.
+      // notes have been collected by the midi parser,
+      // filter them.
       foreach (MidiNote n in UserInterface.MidiParser.Notes)
       {
         timing.SolveSamples(
@@ -148,7 +148,6 @@ namespace modest100.Forms
           this.UserInterface.MidiParser.MidiTimeInfo.Tempo,
           MidiReader.FileDivision,
           true);
-
         if (!(n is MidiNote)) continue;
         // s, n, o, l, off
         listNotes.AddItem(
@@ -165,7 +164,7 @@ namespace modest100.Forms
           // NOTE ON VELOCITY
           n.V1.ToString(),
           // NOTE LENGTH
-          n.GetMbtLen(MidiReader.FileDivision),
+          n.GetMbtLen2(MidiReader.FileDivision),
           // NOTE OFF VELOCITY
           n.V2.ToString()
          );

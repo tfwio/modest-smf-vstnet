@@ -34,7 +34,6 @@ using NAudio.Wave;
 namespace gen.snd.Vst
 {
 
-	// www.publicbroadcasting.org
 	/// <summary>
 	/// This is the old VST Host Core.  The core (which contains this class)
 	/// has moved over to NAudioVstContainer.  In this class are the various
@@ -47,15 +46,18 @@ namespace gen.snd.Vst
 		#region Timings
 
 		SampleClock clock = new SampleClock();
+		
 		public Loop One {
 			get
 			{
-				return new Loop(){
-					Begin = clock.SolveSamples(Settings.BarStart*Settings.Division*Settings.BarStartPulses,Settings).Samples32,
-					Length= clock.SolveSamples(Settings.BarLength*Settings.Division*Settings.BarLengthPulses,Settings).Samples32
+			  var multiplier=Settings.BarStart*Settings.Division;
+				return new Loop {
+					Begin = clock.SolveSamples(multiplier * Settings.BarStartPulses, Settings).Samples32,
+					Length= clock.SolveSamples(multiplier * Settings.BarLengthPulses, Settings).Samples32
 				};
 			}
 		} Loop o;
+		
 		/// Check sample position against loop region position in samples
 		public double FilterOffset(double value)
 		{
@@ -218,14 +220,22 @@ namespace gen.snd.Vst
 		/// </summary>
 		void DriverInit()
 		{
-			if (audioDriver==Driver.Wasapi) xAudio = new WasapiOut(AudioClientShareMode.Shared,TimeConfiguration.Instance.Latency);
-			else if (audioDriver==Driver.Wave) xAudio = new WaveOut();
-			else if (audioDriver==Driver.DirectSound)
-			{
-				if (DriverId!=Guid.Empty) xAudio = new DirectSoundOut(DriverId, TimeConfiguration.Instance.Latency);
-				else xAudio = new DirectSoundOut(TimeConfiguration.Instance.Latency);
-			}
-			else if (audioDriver==Driver.ASIO) xAudio = new AsioOut(1);
+      switch (audioDriver) {
+        case Driver.Wasapi:
+          xAudio = new WasapiOut(AudioClientShareMode.Shared, TimeConfiguration.Instance.Latency);
+          break;
+        case Driver.Wave:
+          xAudio = new WaveOut();
+          break;
+        case Driver.DirectSound:
+          xAudio = DriverId != Guid.Empty ?
+            new DirectSoundOut(DriverId, TimeConfiguration.Instance.Latency) :
+            new DirectSoundOut(TimeConfiguration.Instance.Latency);
+          break;
+        case Driver.ASIO:
+          xAudio = new AsioOut(1);
+          break;
+      }
 
       if (CurrentChannel!=null) { CurrentChannel.Dispose(); CurrentChannel = null; }
 

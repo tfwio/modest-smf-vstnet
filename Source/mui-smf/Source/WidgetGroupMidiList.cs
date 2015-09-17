@@ -10,8 +10,7 @@ namespace mui_smf
   
   public class WidgetGroupMidiList : WidgetGroup
   {
-    const int ApplyPaddingBottom = 32;
-    const int ApplyPaddingRight = 32;
+    const int ApplyPaddingBottom = 32, ApplyPaddingRight = 32;
 
     public WidgetMidiList MidiList { get; set; }
     
@@ -27,6 +26,7 @@ namespace mui_smf
     {
       this.Parent = parent;
     }
+
     public override void DoLayout()
     {
       base.DoLayout();
@@ -62,7 +62,6 @@ namespace mui_smf
     {
       Bounds.Width  = Parent.ClientRectangle.Width -  Bounds.Left - ApplyPaddingRight;
       Bounds.Height = Parent.ClientRectangle.Height - Bounds.Top  - ApplyPaddingBottom - ApplyPaddingBottom;
-      
       base.Parent_Resize(sender, e);
     }
   }

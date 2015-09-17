@@ -1,7 +1,4 @@
-﻿/*
- * Date: 11/12/2005
- * Time: 4:19 PM
- */
+﻿/* Date: 11/12/2005 - Time: 4:19 PM */
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -123,11 +120,6 @@ namespace gen.snd.Midi
 
 		#endregion
 		#region TIME ( … ) GetMBT, GetMbtString
-		/// <inheritdoc/>
-		public string GetMbtString(ulong value)
-		{
-			return GetMbtString(value, FileDivision);
-		}
 		public static string GetMbtString(ulong value, int division)
 		{
 			return MBT.GetString(value, division);
@@ -446,11 +438,13 @@ namespace gen.snd.Midi
 		}
 		#endregion
 		#region MESSAGE methods
+		
 		/// MESSAGE methods
 		void DispatchHandlers(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse)
 		{
 			foreach (MidiEventDelegate method in MessageHandlers) method(t, track, offset, imsg, bmsg, ppq, rse, isrse);
 		}
+		
 		/// MESSAGE methods
 		/// <inheritdoc/>
 		public void OnMidiMessage(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse)
@@ -458,18 +452,23 @@ namespace gen.snd.Midi
 			if (ProcessMidiMessage != null) ProcessMidiMessage(this, new MidiMessageEvent(t, track, offset, imsg, bmsg, ppq, rse, isrse));
 			if (MessageHandlers.Count>0) DispatchHandlers(t, track, offset, imsg, bmsg, ppq, rse, isrse);
 		}
+		
 		#endregion
 		#region MESSAGE properties/events
+		
 		/// MESSAGE properties/events
 		public MidiReaderLoadTrackDelegate LoadTrack {
 			get { return loadTrack; } set { loadTrack = value; }
 		} MidiReaderLoadTrackDelegate loadTrack = null;
+		
 		/// MESSAGE properties/events
 		public List<MidiEventDelegate> MessageHandlers {
 			get { return messageHandlers; }
 		} List<MidiEventDelegate> messageHandlers = new List<MidiEventDelegate>();
+		
 		/// MESSAGE properties/events
 		public MidiEventDelegate MessageHandler = null;
+		
 		/// MESSAGE properties/events
 		public event EventHandler<MidiMessageEvent> ProcessMidiMessage;
 		#endregion
