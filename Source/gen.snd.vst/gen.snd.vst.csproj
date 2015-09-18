@@ -143,7 +143,7 @@
     <Compile Include="Source\Vst\INaudioVST.cs" />
     <Compile Include="Source\Vst\INaudioVstWin.cs" />
     <Compile Include="Source\Vst\AudioModule.cs" />
-    <None Include="Source\Vst\NAudioVST.cs" />
+    <Compile Include="Source\Vst\NAudioVST.cs" />
     <Compile Include="Source\Vst\NAudioVstContainer.cs" />
     <Compile Include="Source\Vst\NAudioVSTCycleEventArgs.cs" />
     <Compile Include="Source\Vst\AutomationParam.cs" />

@@ -230,7 +230,6 @@ namespace gen.snd.Vst
 		/// <summary>
 		/// Main NAudio WaveOut initialization call.
 		/// </summary>
-		/// <param name="context"></param>
 		public void Prepare(/*params IVstPluginContext[] context*/)
 		{
 			DriverInit();
@@ -263,6 +262,7 @@ namespace gen.snd.Vst
 		/// </summary>
 		/// <remarks>Note that this event is triggered AFTER the buffer has processed and transmitted audio.</remarks>
 		public event EventHandler<NAudioVSTCycleEventArgs> BufferCycle;
+		
 		/// <summary>
 		/// triggers the <see cref="BufferCycle" /> event.
 		/// </summary>
@@ -308,6 +308,7 @@ namespace gen.snd.Vst
 		}
 		
 		VstPlugin instrument { get {  return parent.PluginManager.MasterPluginInstrument; } }
+		
 		VstPlugin effect { get {  return parent.PluginManager.MasterPluginEffect; } }
 		
 		public bool IsRunning { get { return isRunning; } } bool isRunning;
