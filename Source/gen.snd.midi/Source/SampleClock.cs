@@ -83,6 +83,7 @@ namespace gen.snd
     /// <inheritdoc/>
     public double SPQN { get { return 60.0 / Tempo; } }
     
+    /// <inheritdoc/>
     public TimeSpan Time {
       get { return TimeSpan.FromSeconds(Samples / Rate); }
     }
@@ -103,9 +104,7 @@ namespace gen.snd
     }
     
     /// <inheritdoc/>
-    public double SamplesPerQuarter {
-      get { return SPQN * Rate; }
-    }
+    public double SamplesPerQuarter { get { return SPQN * Rate; } }
 
     /// <inheritdoc/>
     public double QuarterHelper {

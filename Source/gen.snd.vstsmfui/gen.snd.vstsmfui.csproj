@@ -129,8 +129,6 @@
     </Compile>
     <Compile Include="Source\Common.Extensions\MidiEditorAction.cs" />
     <Compile Include="Source\Models\MidiEditType.cs" />
-    <Compile Include="Source\Common.Extensions\MidiEnumerator.cs" />
-    <Compile Include="Source\Common.Extensions\MidiMessager.cs" />
     <Compile Include="Source\Common.Extensions\RpnMessager.cs" />
     <Compile Include="Source\Models\setting32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -27,96 +27,80 @@ using System.Linq;
 using gen.snd.Midi;
 using gen.snd.Vst;
 using gen.snd.Vst.Module;
-using Jacobi.Vst.Core;
+
 
 namespace gen.snd.Vst
 {
+  // global::VstEvent struct (defined in cpp)
+  // was conflicting with the abstract Jacobi.Vst.Core.VstEvent
+  using NVstEvent=Jacobi.Vst.Core.VstEvent;
+  
   static public class VstMidiEnumerator
   {
-    readonly static MidiChannelComparer ChannelComparer = new MidiChannelComparer();
+    class MidiChannelComparer : IEqualityComparer<MidiMessage>
+    {
+      public bool Equals(MidiMessage x, MidiMessage y) { return x.ChannelBit == y.ChannelBit; }
+      public int GetHashCode(MidiMessage obj) { return base.GetHashCode(); }
+    } readonly static MidiChannelComparer ChannelComparer = new MidiChannelComparer();
 
     static public IEnumerable<VstPlugin> GetInstruments(IMidiParserUI ui)
     {
       foreach (VstPlugin plugin in ui.VstContainer.PluginManager.VstInstruments)
-          yield return plugin;
+        yield return plugin;
     }
 
     static public IEnumerable<VstPlugin> GetEffects(IMidiParserUI ui)
     {
       foreach (VstPlugin plugin in ui.VstContainer.PluginManager.VstEffects)
-          yield return plugin;
+        yield return plugin;
     }
 
-    static public IEnumerable<KeyValuePair<int,VstPlugin>> GetInstrumentMapping(IMidiParserUI ui)
-    {
-      foreach (VstPlugin plugin in GetInstruments(ui))
-        for (int i=0; i<plugin.PluginCommandStub.GetNumberOfMidiInputChannels(); i++)
-          yield return new KeyValuePair<int,VstPlugin>(i,plugin);
-    }
+    // static public IEnumerable<KeyValuePair<int,VstPlugin>> GetInstrumentMapping(IMidiParserUI ui)
+    // {
+    //   foreach (VstPlugin plugin in GetInstruments(ui))
+    //     for (int i=0; i<plugin.PluginCommandStub.GetNumberOfMidiInputChannels(); i++)
+    //       yield return new KeyValuePair<int,VstPlugin>(i,plugin);
+    // }
     
-    class MidiChannelComparer : IEqualityComparer<MidiMessage>
-    {
-      public bool Equals(MidiMessage x, MidiMessage y) { return x.ChannelBit == y.ChannelBit; }
-      public int GetHashCode(MidiMessage obj) { return base.GetHashCode(); }
-    }
-    
-    #region MIDI compliant
-    
-    static public IEnumerable<int> GetTrackIndex(IMidiParser parser)
+    static IEnumerable<int> EnumerateTrackIndex(this IMidiParser parser)
     {
       for (int i = 0; i < parser.SmfFileHandle.NumberOfTracks; i++)
-      {
         yield return i;
-      }
     }
-    static public IEnumerable<KeyValuePair<int,string>> GetMidiTrackNamesByIndex(IMidiParser parser)
+    
+    static public IEnumerable<KeyValuePair<int,string>> GetMidiTrackNameDictionary(this IMidiParser parser)
     {
-      foreach (int i in GetTrackIndex(parser))
+      foreach (int i in parser.EnumerateTrackIndex())
       {
         string trackname = string.Format(Strings.Filter_MidiTrack, i + 1 );
         yield return new KeyValuePair<int,string>(i,trackname);
       }
     }
-    static public IEnumerable<MidiMessage> MidiTrackDistinctChannels(int trackid, IMidiParser parser)
+    static public IEnumerable<MidiMessage> MidiTrackDistinctChannels(this IMidiParser parser, int trackid)
     {
       return parser.MidiDataList[trackid].Distinct(ChannelComparer);
     }
     
-    #endregion
-    
-    #region MIDI compliant (hasmidiparser)
-    
-    // not used, just uncommented and left here.
-    /// <summary>
-    /// returns true if a parser is present
-    /// </summary>
-    /// <param name="ui"></param>
-    /// <returns></returns>
-    static bool HasMidiParser(IMidiParserUI ui)
-    {
-      if (
-        ui.MidiParser != null &&
-        ui.MidiParser.MidiDataList.Count > 0 &&
-        ui.MidiParser.SmfFileHandle != null
-      ) return false;
-      return true;
-    }
-    
-    #endregion
-    
-    #region VST complient
+    #region VST
     
     static public void SendMidi2Plugin(VstPlugin vstMidiPlugin, IMidiParserUI ui, int blockSize)
     {
       if (vstMidiPlugin==null) return ;
-      List<VstEvent> EventR = new List<VstEvent>(GetSampleOffsetBlock(ui, vstMidiPlugin.IgnoreMidiProgramChange,blockSize));
-      VstEvent[] range = EventR.ToArray();
+      
+      var EventR = new List<NVstEvent>(
+        GetSampleOffsetBlock(ui, vstMidiPlugin.IgnoreMidiProgramChange,blockSize)
+       );
+      
+      NVstEvent[] range = EventR.ToArray();
       EventR.Clear();
+      EventR = null;
+      
       if (range!=null && range.Length > 0)
         vstMidiPlugin.PluginCommandStub.ProcessEvents(range);
+      
     }
     
-    static VstEvent[] GetSampleOffsetBlock(IMidiParserUI ui, bool ignoreMidiPgm, int blockSize)
+    static NVstEvent[] GetSampleOffsetBlock(IMidiParserUI ui, bool ignoreMidiPgm, int blockSize)
     {
       return VstEvent_Range(ui, ignoreMidiPgm, ui.VstContainer.VstPlayer.SampleOffset, blockSize).ToArray();
     }
@@ -126,24 +110,34 @@ namespace gen.snd.Vst
     /// look at channel-message parsing for channel message types (or look into this).
     /// Sort the elements by timing.
     /// </summary>
-    /// <param name="Parser">core</param>
-    /// <param name="start">Begin in samples</param>
-    /// <param name="len">Length from begin in samples</param>
+    /// <param name="ui"></param>
+    /// <param name="ignoreMidiPgm"></param>
+    /// <param name="start"></param>
+    /// <param name="len"></param>
     /// <returns>Filtered Events</returns>
-    static public IEnumerable<VstEvent> VstEvent_Range(IMidiParserUI ui, bool ignoreMidiPgm, double start, int len)
+    static public IEnumerable<NVstEvent>
+      VstEvent_Range(IMidiParserUI ui, bool ignoreMidiPgm, double start, int len)
     {
-      List<VstEvent> list = new List<VstEvent>();
+      var list = new List<NVstEvent>();
+      SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
+      
+      foreach (MidiMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
       {
-        SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
-        foreach (MidiMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
-        {
-          if (item.MessageBit==0xC0 && ignoreMidiPgm) continue;
-          if (item is MidiChannelMessage) list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
-          else if (item is MidiSysexMessage) list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
-        }
-        c = null;
-      } list.Sort(SortAlgo);
-      foreach (VstEvent vstevent in list) yield return vstevent;
+        if (item.MessageBit==0xC0 && ignoreMidiPgm) continue;
+        
+        if (item is MidiChannelMessage)
+          list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
+        
+        else if (item is MidiSysexMessage)
+          list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
+        
+      }
+      
+      c = null;
+      
+      list.Sort(SortAlgo);
+      
+      foreach (NVstEvent vstevent in list) yield return vstevent;
     }
 
     /// <summary>
@@ -164,7 +158,7 @@ namespace gen.snd.Vst
 
       c = null;
     }
-    static int SortAlgo( VstEvent a, VstEvent b )
+    static int SortAlgo( NVstEvent a, NVstEvent b )
     {
       return a.DeltaFrames.CompareTo(b.DeltaFrames);
     }
@@ -174,17 +168,6 @@ namespace gen.snd.Vst
     #region Midi Enumerations
     
     /// <summary>
-    /// Seems not to be used.
-    /// </summary>
-    /// <param name="ui"></param>
-    /// <param name="loop"></param>
-    /// <returns></returns>
-    static VstEvent[] EnumerateMidiData(IMidiParserUI ui,Loop loop)
-    {
-      return FilterSampleRange(ui, loop.Begin, loop.Length.FloorMinimum(0).ToInt32() );
-    }
-    
-    /// <summary>
     /// Process messages looking for Channel and Sysex messages.
     /// look at channel-message parsing for channel message types (or look into this).
     /// </summary>
@@ -192,20 +175,20 @@ namespace gen.snd.Vst
     /// <param name="start">Begin in samples</param>
     /// <param name="len">Length from begin in samples</param>
     /// <returns>Filtered Events</returns>
-    static VstEvent[] FilterSampleRange(IMidiParserUI ui, double start, int len)
+    static NVstEvent[] FilterSampleRange(IMidiParserUI ui, double start, int len)
     {
       if (HasParserErrors(ui)) return null;
-      List<VstEvent> list = new List<VstEvent>();
+      
+      var list = new List<NVstEvent>();
+      SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
+      
+      foreach (MidiMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
       {
-        SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
-        
-        foreach (MidiMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
-        {
-          if (item is MidiChannelMessage) list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
-          else if (item is MidiSysexMessage) list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
-        }
-        c = null;
+        if (item is MidiChannelMessage) list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
+        else if (item is MidiSysexMessage) list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
       }
+      c = null;
+      
       list.Sort(SortAlgo);
       return list.ToArray();
     }

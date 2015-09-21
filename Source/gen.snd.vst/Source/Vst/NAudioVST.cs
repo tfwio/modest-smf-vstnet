@@ -62,21 +62,25 @@ namespace gen.snd.Vst
 			get
 			{
 				return new Loop(){
-					Begin = clock.SolveSamples(Settings.BarStart*Settings.Division*Settings.BarStartPulses,Settings).Samples32,
+					Begin = clock.SolveSamples(Settings.BarStart *Settings.Division*Settings.BarStartPulses,Settings).Samples32,
 					Length= clock.SolveSamples(Settings.BarLength*Settings.Division*Settings.BarLengthPulses,Settings).Samples32
 				};
 			}
-		} Loop o;
-		
-		/// <summary></summary>
-		public NoteTransport BarSegment {
-			get { return barSegment; }
-			set { barSegment = value; /*Notify("BarPosition");*/ }
-		} NoteTransport barSegment;
+		}
+
+    /// <remarks>
+    /// This property appears to be experimental, in attempt to facilitate
+    /// the first PianoView which did not come to fruition.     
+    /// </remarks>
+    /// <summary>
+    /// Notify("BarPosition") is disabled due to auto-property usage.
+    /// </summary>
+    public NoteTransport BarSegment { get; set; } 
 
 		/// <summary>
 		/// This is a reference point for timing configuration used in VstHostCommandStub.GetTimeInfo(…).
 		/// </summary>
+		/// <seealso cref="IBufferInfo"/>
 		public SampleClock SampleTime {
 			get { return sampleTime.SolvePPQ(SampleOffset,Settings); }
 			private set { sampleTime = value; }
@@ -99,7 +103,7 @@ namespace gen.snd.Vst
 		/// <inheritdoc/>
 		public Guid DriverId { get { return driverId; } set { driverId = value; } } Guid driverId = Guid.Empty;
 		
-		/// <summary>TODO: Document</summary>
+		/// <summary>Hmmm, I wonder what this is for...</summary>
 		public float Volume {
 			get { return volume; }
 			set { volume = value; if (CurrentChannel!=null) CurrentChannel.Volume = volume; }
@@ -125,7 +129,7 @@ namespace gen.snd.Vst
 		/// <see cref="Settings" /> stored in <see cref="Config" />.
 		/// </summary>
 		public string MeasureString {
-			get { return SampleTime.SolvePPQ( sampleOffset,Settings.Rate,Settings.Tempo,Settings.Division,true ).MeasureString; }
+			get { return SampleTime.SolvePPQ( SampleOffset,Settings.Rate,Settings.Tempo,Settings.Division,true ).MeasureString; }
 		}
 		
 		//
@@ -134,12 +138,14 @@ namespace gen.snd.Vst
 		
 		/// <inheritdoc/>
 		public double SampleOffset {
-			get { return sampleOffset; } set { sampleOffset = value; }
+			get { return sampleOffset; }
+			set { sampleOffset = value; }
 		} double sampleOffset = 0;
 		
 		/// <inheritdoc/>
 		public double BufferIncrement {
-			get { return bufferIncrement; } set { bufferIncrement = value; }
+			get { return bufferIncrement; }
+			set { bufferIncrement = value; }
 		} double bufferIncrement = 0;
 
 		/// <inheritdoc/>
@@ -154,7 +160,7 @@ namespace gen.snd.Vst
     /// <summary>
     /// The wave-format requested by NAudio drivers.
     /// </summary>
-    public NAudio.Wave.WaveFormat Format { get; set; } 
+    //public NAudio.Wave.WaveFormat Format { get; set; } 
 		
 		// 
 		// (Non-interfaced) NAudio Device Enumeration
@@ -211,12 +217,12 @@ namespace gen.snd.Vst
 		/// </summary>
 		void DriverInit()
 		{
-			if (audioDriver==Driver.Wasapi) xAudio = new WasapiOut(AudioClientShareMode.Shared,TimeConfiguration.Instance.Latency);
+			if (audioDriver==Driver.Wasapi) xAudio = new WasapiOut(AudioClientShareMode.Shared,Settings.Latency);
 			else if (audioDriver==Driver.Wave) xAudio = new WaveOut();
 			else if (audioDriver==Driver.DirectSound)
 			{
-				if (DriverId!=Guid.Empty) xAudio = new DirectSoundOut(DriverId, TimeConfiguration.Instance.Latency);
-				else xAudio = new DirectSoundOut(TimeConfiguration.Instance.Latency);
+				if (DriverId!=Guid.Empty) xAudio = new DirectSoundOut(DriverId, Settings.Latency);
+				else xAudio = new DirectSoundOut(Settings.Latency);
 			}
 			else if (audioDriver==Driver.ASIO) xAudio = new AsioOut(1);
 
@@ -241,15 +247,15 @@ namespace gen.snd.Vst
 			if (PlaybackStarted != null) PlaybackStarted(this,EventArgs.Empty);
 		}
 		
-		/// Check sample position against loop region position in samples
-		public double FilterOffset(double value)
-		{
-			o = One;
-			if (value <= o.Begin) sampleOffset = o.Begin;
-			else if (value > o.End) sampleOffset = o.Begin;
-			else sampleOffset = value;
-			return sampleOffset ;
-		}
+		// Check sample position against loop region position in samples
+		//public double FilterOffset(double value)
+		//{
+		//	o = One;
+		//	if (value <= o.Begin) SampleOffset = o.Begin;
+		//	else if (value > o.End) SampleOffset = o.Begin;
+		//	else SampleOffset = value;
+		//	return SampleOffset ;
+		//}
 		
 		//
 		// EventHandler BufferCycle
@@ -260,22 +266,35 @@ namespace gen.snd.Vst
 		/// so that the host application can take advantage of timing calculations
 		/// and the host can use timing calculations to align midi events.
 		/// </summary>
-		/// <remarks>Note that this event is triggered AFTER the buffer has processed and transmitted audio.</remarks>
+		/// <remarks>
+		/// Note that this event is triggered AFTER the buffer has processed and transmitted audio.
+		/// The funny thing is, this is redundant.
+		/// It was set in 
+		/// </remarks>
 		public event EventHandler<NAudioVSTCycleEventArgs> BufferCycle;
 		
 		/// <summary>
-		/// triggers the <see cref="BufferCycle" /> event.
+		/// Triggers <see cref="BufferCycle" /> event.
 		/// </summary>
-		/// <param name="cycle">The length of the current audio buffer that has been processed.</param>
-		/// <remarks>Note that this event is triggered AFTER the buffer has processed and transmitted audio.</remarks>
+		/// <param name="cycle">
+		/// The length of the current audio buffer that has been processed.
+		/// </param>
+		/// <remarks>
+		/// Note that this event is triggered AFTER the buffer has processed and transmitted audio.
+		/// </remarks>
 		public void OnBufferCycle(int cycle)
 		{
-			if (BufferCycle != null) {
+			if (BufferCycle != null)
+			{
 				Loop o = this.One;
+				
 				CurrentSampleLength = cycle;
-				sampleOffset += CurrentSampleLength;
-				Console.WriteLine("L: {0,7:N0}, End: {1,11:N0}, len:{2,11:N0}",sampleOffset, o.End, cycle);
+				SampleOffset += CurrentSampleLength;
+				
+				// Console.WriteLine("L: {0,7:N0}, End: {1,11:N0}, len:{2,11:N0}", SampleOffset, o.End, cycle);
+				
 				BufferIncrement = 0;
+				
 				BufferCycle(this, new NAudioVSTCycleEventArgs(cycle));
 			}
 		}
@@ -370,21 +389,21 @@ namespace gen.snd.Vst
 		// MIDI VstEvent, MidiMessage
 		// ==========================
 		
-		readonly object locker = new object();
+		//readonly object locker = new object();
 		
-		IMidiParser Parser { get { return Parent.Parent.MidiParser; } }
+		//IMidiParser Parser { get { return Parent.Parent.MidiParser; } }
 		
-		bool IsContained(MidiMessage msg, IClock c, double min, double max)
-		{
-			Loop b = One;
-			double samplePos = c.SolveSamples(msg.DeltaTime).Samples32;
-			return samplePos >= min && samplePos < max && samplePos < b.End;
-		}
+		//bool IsContained(MidiMessage msg, IClock c, double min, double max)
+		//{
+		//	Loop b = One;
+		//	double samplePos = c.SolveSamples(msg.DeltaTime).Samples32;
+		//	return samplePos >= min && samplePos < max && samplePos < b.End;
+		//}
 		
-		public List<VstEvent> MidiBuffer {
-			get { return midiBuffer; }
-			internal set { midiBuffer = value; }
-		} List<VstEvent> midiBuffer = new List<VstEvent>();
+		//public List<VstEvent> MidiBuffer {
+		//	get { return midiBuffer; }
+		//	internal set { midiBuffer = value; }
+		//} List<VstEvent> midiBuffer = new List<VstEvent>();
 		
 	}
 

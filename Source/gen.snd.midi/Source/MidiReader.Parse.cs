@@ -44,7 +44,7 @@ namespace gen.snd.Midi
     /// <inheritdoc/>
     public string GetMbtString(ulong value)
     {
-      return GetMbtString(value, FileDivision);
+			return MBT.GetString(value, FileDivision);
     }
 
     //
@@ -114,7 +114,7 @@ namespace gen.snd.Midi
           return SmfFileHandle[SelectedTrackNumber, offset, Convert.ToInt32(result1) + 4].StringifyHex();
         default:
           // check for a channel message
-          if (runningStatus32==0xF0)
+          if (RunningStatus32==0xF0)
           {
             long ro = 0;
             int no = GetIntVar(offset + 1, out ro) - offset;

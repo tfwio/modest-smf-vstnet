@@ -47,7 +47,10 @@ namespace gen.snd
 		double BarStart { get;set; }
 		
 		double BarStartPulses { get;set; }
-		
+		/// <summary>
+		/// This is used in <see cref="Loop"/>.<see cref="Loop.Length"/>.
+		/// ...As well as a particular instance within NAudioVST.One(Loop).
+		/// </summary>
 		double BarLength { get;set; }
 		
 		double BarLengthPulses { get;set; }

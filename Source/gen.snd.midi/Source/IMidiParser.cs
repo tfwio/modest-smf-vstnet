@@ -109,6 +109,10 @@ namespace gen.snd.Midi
 		
 		long ParseTrack();
 		
+		/// <summary>
+		/// Get default META-data information such as ITimeConfiguration.
+		/// </summary>
+		/// <param name="trackNo"></param>
 		void ParseTrackMeta(int trackNo);
 		
 		int GetTrackMessage(int position, int delta);

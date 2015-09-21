@@ -121,11 +121,20 @@ namespace modest100.Forms
         s2.Pulses
       );
     }
-		
+    /// <summary>
+    /// It appears that this is a method to reset the playback position manually.
+    /// One of two things may have occured.
+    /// <list>
+    /// <item>Tempo—Not handled here.</item>
+    /// <item>Start position</item>
+    /// <item>Length of loop</item>
+    /// </list>
+    /// </summary>
     void Event_PlayerSetLoopBegin(object sender, EventArgs e)
     {
       if (sender == numBarStart)
         vstContainer.VstPlayer.Settings.BarStart = (double)numBarStart.Value;
+      
       if (sender == numBarLen)
         vstContainer.VstPlayer.Settings.BarLength = (double)numBarLen.Value;
       vstContainer.VstPlayer.SampleOffset = vstContainer.VstPlayer.SampleOffset;
@@ -213,19 +222,21 @@ namespace modest100.Forms
     {
       listBoxContextMenuStrip.Items.Clear();
       List<int> channels = new List<int>();
-      foreach (KeyValuePair<int,string> track in VstMidiEnumerator.GetMidiTrackNamesByIndex(midiFile)) {
+      foreach (KeyValuePair<int,string> track in midiFile.GetMidiTrackNameDictionary())
+      {
         channels.Clear();
         ToolStripMenuItem tn = new ToolStripMenuItem(track.Value);
         tn.Tag = track.Key;
         listBoxContextMenuStrip.Items.Add(tn);
 				
-				
-        foreach (MidiMessage i in VstMidiEnumerator.MidiTrackDistinctChannels(track.Key,midiFile))
+        foreach (MidiMessage i in midiFile.MidiTrackDistinctChannels(track.Key))
           if (i is MidiChannelMessage)
             channels.Add(i.ChannelBit);
+        
         foreach (int i in channels) {
           tn.DropDownItems.Add(i.ToString(), null, Event_ListBoxContextMenuItem)
 						.Tag = new KeyValuePair<int,int>(track.Key, i);
+          
         }
         if (channels.Count > 0)
           tn.DropDownItems.Insert(0, new ToolStripSeparator());
@@ -364,8 +375,8 @@ namespace modest100.Forms
     #region MIDI ListBox (TracksToListBox,TracksToToolStripMenu)
     void TracksToToolStripMenu()
     {
-      foreach (KeyValuePair<int,string> track in VstMidiEnumerator.GetMidiTrackNamesByIndex(midiFile)) {
-        ToolStripMenuItem tn = new ToolStripMenuItem(track.Value, null, Event_MidiChangeTrack_MenuItemSelected);
+      foreach (KeyValuePair<int,string> track in midiFile.GetMidiTrackNameDictionary()) {
+        var tn = new ToolStripMenuItem(track.Value, null, Event_MidiChangeTrack_MenuItemSelected);
         tn.Tag = track.Key;
         btn_pick_track.DropDownItems.Add(tn);
       }

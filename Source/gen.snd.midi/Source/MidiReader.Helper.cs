@@ -51,7 +51,7 @@ namespace gen.snd.Midi
     /// Contains several utility functions to convert binary data
     /// to a human readable format.
     /// </summary>
-    public class SmfStringFormatter
+    static public class SmfStringFormatter
     {
       #region Sysex Helpers
       static public byte[] Sysex_GM_On           = new byte[]{ 0xF0,0x05,0x7E,0x7F,0x09,0x01,0xF7 };
@@ -65,7 +65,7 @@ namespace gen.snd.Midi
       static public byte[] Sysex_XG_Transpose    = new byte[]{ 0xF0,0x08,0x43,0x10,0x4C,0x00,0x00,0x06,0x40,0xF7 };
       static public byte[] Sysex_XG_DrumsReset   = new byte[]{ 0xF0,0x08,0x43,0x10,0x4C,0x00,0x00,0x7D,0x00,0xF7 };
       static public byte[] Sysex_XG_Reset        = new byte[]{ 0xF0,0x08,0x43,0x10,0x4C,0x00,0x00,0x7E,0x00,0xF7 }; // sys on
-      //www.ufocon2012.com|www.ufoqanda.com
+      //
       static public byte[] Sysex_Master_Volume   = new byte[]{ 0xF0,0x07,0x7F,0x7F,0x04,0x01,0x00,0xFF,0xF7 };
       //static public byte[] Sysex_Master_Volume  = new byte[]{ 0xF0,0x07,0x7F,0x7F,0x04,0x01,0x00,nnnn,0xF7 };
       #endregion
@@ -92,16 +92,6 @@ namespace gen.snd.Midi
       
       static public int GetOctave(int value) { return (int)Math.Floor((double)value / 12); }
       #endregion
-      
-      /// <summary>converts a byte array to a string</summary>
-      /// <remarks>The method is particularly used to print HEX Strings out in a human readable form.</remarks>
-      static public string byteToString(byte[] inb)
-      {
-        if (inb==null) return string.Empty;
-        string bish = "",tmp="";
-        foreach (byte c in inb) { bish += c.ToString("X2").PadLeft(2,'0')+" "; }
-        return bish.TrimEnd();
-      }
       
     }
     

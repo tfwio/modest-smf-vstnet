@@ -79,6 +79,10 @@ namespace gen.snd
     /// </summary>
     /// <seealso cref="Samples32"/>
     /// <seealso cref="Samples32Floor"/>
+    /// <remarks>
+    /// When setting samples, we immediately use it so solve
+    /// <pre>pulses = samples / (60 / Tempo * Rate) * Division;</pre>
+    /// </remarks>
     double Samples { get; set; }
 		
     /// <summary>Convert.ToInt32; Why don't we Floor the samples here.</summary>

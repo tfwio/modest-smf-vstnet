@@ -70,6 +70,12 @@ namespace gen.snd.Vst
 		/// <summary>
 		/// Main timing and audio buffer configuration: Rate, Channels, Latency settings.
 		/// </summary>
+		/// <remarks>
+		/// Currently our (only) app hosts a static copy of this particular Property.
+		/// —Perhaps to underline its significance.
+		/// </remarks>
+		/// <seealso cref="TimeConfiguration"/>
+		/// <seealso cref="TimeConfiguration.Instance"/>- TimeConfiguration.Instance
 		ITimeConfiguration Settings { get; }
 		/// <summary>
 		/// This process is called each buffer-process to update a TIMER!

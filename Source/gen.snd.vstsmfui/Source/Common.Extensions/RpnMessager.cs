@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using gen.snd;
-using gen.snd.Midi;
-using gen.snd.Vst;
-using gen.snd.Vst.Module;
-using Jacobi.Vst.Core;
 
 namespace modest100.Forms
 {
-	/// <remarks>
-	/// Cater NRPN and RPN messages.  Specifically though Control messages.
-	/// </remarks>
+  using NVstEvent=Jacobi.Vst.Core.VstEvent;
+  using VstMidiEvent=Jacobi.Vst.Core.VstMidiEvent;
+  
 	/// <summary>
 	/// I pulled this guy together to construct and send midi data
 	/// to the hosted process such as NRPN and RPN messages.
 	/// Generally, these messages might follow instrument patch setup.
 	/// </summary>
+	/// <remarks>
+	/// Cater NRPN and RPN messages.  Specifically though Control messages.
+	/// </remarks>
 	class RpnNrpn
 	{
 		public byte lsb,msb,lsbd,msbd;
-
-		#region Const
+		
+		// 
+		// Constants
+		// ===============================
 		
 		// -------------------------
 		// message format other one
 		// -------------------------
+		
 		/// 0x63
 		const byte nrpm_lsb = 0x63;  // 99
 		/// 0x62
@@ -33,14 +34,18 @@ namespace modest100.Forms
 		const byte nrpn_lsb_d = 0x08; // 
 		/// 0x24
 		const byte nrpn_msb_d = 0x24;  // 36
+		
 		// -------------------------
 		// note off message?
 		// -------------------------
+		
 		/// 0xB0
 		const byte midi_msg = 0xB0;  // 
+		
 		// -------------------------
 		// message format one
 		// -------------------------
+		
 		/// 0x65
 		const byte rpn_lsb = 0x65;
 		/// 0x64
@@ -49,12 +54,11 @@ namespace modest100.Forms
 		const byte lsb_data = 0x06;  //
 		/// 0x26
 		const byte msb_data = 0x26;  //
-		#endregion
 		
-		VstEvent q(byte b1, byte b2) { return new VstMidiEvent(0,0,0,new byte[]{ midi_msg, b1, b2, 0 },0,0); }
-		VstEvent q(byte[] b) { return new VstMidiEvent(0,0,0,b,0,0); }
+		// 
+		// NRPN byte[]
+		// ===============================
 		
-		#region NRPN
 		/// 0xB0 0x63 [nn] 0x00
 		byte[] NrpnLsb { get { return new byte[]{ midi_msg, nrpm_lsb, lsb, 0 }; } }
 		/// 0xB0 0x62 [nn] 0x00
@@ -63,19 +67,11 @@ namespace modest100.Forms
 		byte[] NrpnLsbData { get { return new byte[]{ midi_msg, nrpn_lsb_d, lsbd, 0 }; } }
 		/// 0xB0 0x08 [nn] 0x00
 		byte[] NrpnMsbData { get { return new byte[]{ midi_msg, nrpn_msb_d, msbd, 0 }; } }
-		#endregion
-		#region NRPN STRING
-		/// 0xB0 0x63 [nn] 0x00
-		public string StrNrpnLsb { get { return MidiReader.SmfStringFormatter.byteToString(NrpnLsb); } }
-		/// 0xB0 0x62 [nn] 0x00
-		public string StrNrpmMsb { get { return MidiReader.SmfStringFormatter.byteToString(NrpnMsb); } }
-		/// 0xB0 0x08 [nn] 0x00
-		public string StrNrpnLsbData { get { return MidiReader.SmfStringFormatter.byteToString(NrpnLsbData); } }
-		/// 0xB0 0x24 [nn] 0x00
-		public string StrNrpnMsbData { get { return MidiReader.SmfStringFormatter.byteToString(NrpnMsbData); } }
-		#endregion
 		
-		#region RPN
+		// 
+		// RPN byte[]
+		// ===============================
+		
 		/// 0xB0 0x65 [nn] 0x00
 		byte[] RpnLsb { get { return new byte[]{ midi_msg, rpn_lsb, lsb, 0 }; } }
 		/// 0xB0 0x64 [nn] 0x00
@@ -84,24 +80,41 @@ namespace modest100.Forms
 		byte[] RpnLsbData { get { return new byte[]{ midi_msg, lsb_data, lsbd, 0 }; } }
 		/// 0xB0 0x26 [nn] 0x00
 		byte[] RpnMsbData { get { return new byte[]{ midi_msg, msb_data, msbd, 0 }; } }
-		#endregion
-		#region RPN STRING
-		/// 0xB0 0x65 [nn] 0x00
-		public string StrRpnLsb { get { return MidiReader.SmfStringFormatter.byteToString(RpnLsb); } }
-		/// 0xB0 0x64 [nn] 0x00
-		public string StrRpnMsb { get { return MidiReader.SmfStringFormatter.byteToString(RpnMsb); } }
-		/// 0xB0 0x06 [nn] 0x00
-		public string StrRpnLsbData { get { return MidiReader.SmfStringFormatter.byteToString(RpnLsbData); } }
-		/// 0xB0 0x26 [nn] 0x00
-		public string StrRpnMsbData { get { return MidiReader.SmfStringFormatter.byteToString(RpnMsbData); } }
-		#endregion
 		
-		#region EVENTS
+		// 
+		// NRPN STRING
+		// ===============================
+		
+		/// 0xB0 0x63 [nn] 0x00
+		public string StrNrpnLsb { get { return NrpnLsb.ToHexString(); } }
+		/// 0xB0 0x62 [nn] 0x00
+		public string StrNrpmMsb { get { return NrpnMsb.ToHexString(); } }
+		/// 0xB0 0x08 [nn] 0x00
+		public string StrNrpnLsbData { get { return NrpnLsbData.ToHexString(); } }
+		/// 0xB0 0x24 [nn] 0x00
+		public string StrNrpnMsbData { get { return NrpnMsbData.ToHexString(); } }
+		
+		// 
+		// RPN STRING
+		// ===============================
+		
+		/// 0xB0 0x65 [nn] 0x00
+		public string StrRpnLsb { get { return RpnLsb.ToHexString(); } }
+		/// 0xB0 0x64 [nn] 0x00
+		public string StrRpnMsb { get { return RpnMsb.ToHexString(); } }
+		/// 0xB0 0x06 [nn] 0x00
+		public string StrRpnLsbData { get { return RpnLsbData.ToHexString(); } }
+		/// 0xB0 0x26 [nn] 0x00
+		public string StrRpnMsbData { get { return RpnMsbData.ToHexString(); } }
+		
+		// 
+		// EVENTS
+		// ===============================
 
-		public VstEvent[] GetRpnEvents()
+		public NVstEvent[] GetRpnEvents()
 		{
 			//			msg.str_rpn_lsb,msg.str_rpn_msb,msg.LsbData,msg.MsbData
-			List<VstEvent> list = new List<VstEvent>();
+			var list = new List<NVstEvent>();
 			//			if (nm!=0)
 			list.Add(q(NrpnLsb));// 0x65
 			list.Add(q(NrpnMsb));// 0x64
@@ -110,9 +123,10 @@ namespace modest100.Forms
 			list.Add(q(NrpnMsbData)); //x06
 			return list.ToArray();
 		}
-		public VstEvent[] GetNrpnEvents()
+		
+		public NVstEvent[] GetNrpnEvents()
 		{
-			List<VstEvent> list = new List<VstEvent>();
+			var list = new List<NVstEvent>();
 			//			if (nm!=0)
 			list.Add(q(NrpnLsb)); // 0x63
 			list.Add(q(NrpnMsb)); // 0x62
@@ -121,12 +135,21 @@ namespace modest100.Forms
 			list.Add(q(NrpnMsbData)); // 0x06
 			return list.ToArray();
 		}
-
-		#endregion
+		
+		// 
+		// To VstEvent
+		// ===============================
+		
+		NVstEvent q(byte b1, byte b2) { return new VstMidiEvent(0,0,0,new byte[]{ midi_msg, b1, b2, 0 },0,0); }
+		NVstEvent q(byte[] b) { return new VstMidiEvent(0,0,0,b,0,0); }
+		
+		// 
+		// Util
+		// ===============================
 		
 		static public RpnNrpn FromInt(int a, int b)
 		{
-			RpnNrpn msg = new RpnNrpn();
+			var msg = new RpnNrpn();
 			msg.lsb = a.Div(128);
 			msg.msb = a.Mod(128);
 			msg.lsbd = b.Div(128);

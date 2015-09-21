@@ -30,11 +30,6 @@ namespace modest100
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			
-			// Customize Time Configuration
-			gen.snd.TimeConfiguration.Instance.Latency = 5096;
-			gen.snd.TimeConfiguration.Instance.Rate = 44100;
-			
-			
 			ViewMaster<MasterViewContainer,MidiControlBase> Viewer = new ViewMaster<MasterViewContainer,MidiControlBase>(Assembly.GetExecutingAssembly());
 			
 //			ViewCollection = ViewPoint.EnumerateViewTypes<MasterViewContainer>(System.Reflection.Assembly.GetExecutingAssembly());

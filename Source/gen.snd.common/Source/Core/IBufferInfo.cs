@@ -34,22 +34,21 @@ namespace gen.snd
 	  /// </summary>
 		SampleClock SampleTime { get; }
 		/// <summary>
+		/// Current number of samples processed divide by number of channels.
 		/// <para>
-		/// Provided is the current number of samples processed.
-		/// Actual number of samples would result by dividing by the number of channels processed:
-		/// in most cases, 2 (stereo).
-		/// </para>
-		/// <para>
-		/// The number is a result of the buffer calculation which divides by the number of
-		/// channels.  Since we've already calculated as such, we're avoiding cpu cycles here.
+		/// In NAudioVST, we actually set this via an event-handler triggered
+		/// by way of an event named OnBufferCycle.
 		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// This property is VERY IMPORTANT to our audio process!
+		/// </remarks>
 		double SampleOffset { get;set; }
 		
 		/// <summary>
 		/// This represents the current location of the audio buffer process.
 		/// It is reset to zero after each buffer cycle is processed and increments
-		/// throughout the process-replacing process.
+		/// throughout the process-replacing mechanism.
 		/// </summary>
 		double BufferIncrement { get;set; }
 		

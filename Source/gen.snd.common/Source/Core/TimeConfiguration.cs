@@ -31,23 +31,18 @@ namespace gen.snd
 		/// <summary>
 		/// to be marked as internal
 		/// </summary>
-		public static TimeConfiguration Instance;
-		
-		static TimeConfiguration()
-		{
-			Instance = new TimeConfiguration();
-			// Playback Device
-			Instance.Rate			     = 44100;//
-			Instance.Channels      = 2;
-			Instance.Latency	     = 5096;
-			// Midi Configuration
-			Instance.Division		   = 480;
-			Instance.Tempo		     = 120;
-			Instance.TimeSignature = new MidiTimeSignature(4,4,24,4);
-			Instance.KeySignature  = new MidiKeySignature(KeySignatureType.C,true);
-			// Midi Parser
-			Instance.IsSingleZeroChannel = false;
-		}
+		public static readonly TimeConfiguration Instance = new TimeConfiguration(){
+	    // AUDIO
+	    Rate                = 44100,
+	    Channels            = 2,
+	    Latency             = 8096,
+	    // MIDI
+	    Division            = 480,
+	    Tempo               = 120,
+	    TimeSignature       = new MidiTimeSignature(4,4,24,4),
+	    KeySignature        = new MidiKeySignature(KeySignatureType.C,true),
+	    IsSingleZeroChannel = false
+	  };
 		
 		public void FromMidi(IMidiParser parser)
 		{

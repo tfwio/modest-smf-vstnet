@@ -39,7 +39,7 @@ namespace gen.snd.Vst.Module
 		void OnPropertyChanged(string key)
 		{
 			if (PropertyChanged!=null) PropertyChanged(this,new PropertyChangedEventArgs(key));
-			if (key=="AddPlugin") OnPluginListRefreshed();
+			if (key=="AddPlugin")    OnPluginListRefreshed();
 			if (key=="RemovePlugin") OnPluginListRefreshed();
 		}
 

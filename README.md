@@ -37,6 +37,12 @@ This is a quick overview of the implementation's class-hierarchy.
             - MasterPluginInstrument --- only one instrument is supported mapped to the following effect.
             - MasterPluginEffects
 
+**OTHER SIGNIFICANT BITS**
+
+- NAudioVST
+- VstStream32
+- IOModule
+
 ## During Playback
 
 What's worth pointing out: we're missing the ability to loop a particular bar running the clock.  Conversely, there are a few issues causing this, but thats why we're writing documentation and source-code.  There are actually two major issues that we are intent upon resolving, and a few more things that can use some attention such as providing a much more adequate audio-processing library implementation (NAudio is fine, just---not my first implementation as written here).  The biggest issue I had with the audio-implementation has been fixed, however I would like to see more audio-driver support---the big issue of (prior) consern caused a unavoidable crash every time the application was closed and has since been fixed.

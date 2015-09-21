@@ -48,10 +48,7 @@ namespace gen.snd.Midi
 		
 		#region POSITION
 
-		public int RunningStatus32 {
-			get { return runningStatus32; }
-			set { runningStatus32 = value; }
-		} internal int runningStatus32;
+    public int RunningStatus32 { get; set; } 
 
 		public ulong TicksPerQuarterNote {
 			get { return ticksPerQuarterNote; }
@@ -119,25 +116,15 @@ namespace gen.snd.Midi
 		}
 
 		#endregion
-		#region TIME ( … ) GetMBT, GetMbtString
-		public static string GetMbtString(ulong value, int division)
-		{
-			return MBT.GetString(value, division);
-		}
-		public static MBT GetMbt(ulong value, int division)
-		{
-			return new MBT(value, division);
-		}
+		
 		public virtual void ResetTiming()
 		{
 			RunningStatus32 = -1;
 			ticksPerQuarterNote = 0;
 //			Notify("Timing");
 		}
-		#endregion
 		
 		#region FILE read, getmem
-		// see parsertrackmeta()
 		
 		/// <inheritdoc/>
 		public void Read()
@@ -156,6 +143,8 @@ namespace gen.snd.Midi
 			Parse(0);
 		}
 		
+		/// <param name="metaTrackId"></param>
+		/// <seealso cref="ParseTrackMeta(int)"/>
 		void Parse(int metaTrackId)
 		{
 			ParseTrackMeta(metaTrackId);
@@ -561,11 +550,13 @@ namespace gen.snd.Midi
 		{
 			return GetIntVar(SelectedTrackNumber,offset,out result);
 		}
+		
 		/// <summary>
 		/// Use offset - result to get your length.
 		/// </summary>
+		/// <param name="ntrack"></param>
 		/// <param name="offset"></param>
-		/// <param name="valueresult"></param>
+		/// <param name="result"></param>
 		/// <returns>the int position after reading data.</returns>
 		int GetIntVar(int ntrack, int offset, out long result)
 		{
@@ -579,24 +570,27 @@ namespace gen.snd.Midi
 			}
 			return i;
 		}
-
+    
 		#endregion
 		#region READ META TRACK
-
+    
 		/// <inheritdoc/>
 		public void ParseTrackMeta(int tk)
 		{
 			long delta;
 			int i = 0;
 			selectedTrackNumber = tk;
-			while (i < SmfFileHandle.Tracks[selectedTrackNumber].track.Length) {
+			while (i < SmfFileHandle.Tracks[selectedTrackNumber].track.Length)
+			{
 				i = GetIntVar(i, out delta);
 				TicksPerQuarterNote += Convert.ToUInt64(delta);
 				i = GetTrackTiming(selectedTrackNumber,i, Convert.ToInt32(delta));
 			}
 		}
+		
 		#endregion
 		#region READ 1   TRACK
+		
 		/// <summary>
 		/// Parse the selected track
 		/// </summary>

@@ -82,11 +82,7 @@ namespace gen.snd.Vst
     }
     
     /// <inheritdoc />
-    public IVstPluginContext PluginContext {
-      get { return pluginContext; }
-      set { pluginContext = value; }
-    }
-    IVstPluginContext pluginContext;
+    public IVstPluginContext PluginContext { get; set; }
     
     /// <inheritdoc />
     public bool BeginEdit(int index)

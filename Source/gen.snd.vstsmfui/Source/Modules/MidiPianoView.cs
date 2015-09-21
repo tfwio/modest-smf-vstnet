@@ -41,7 +41,7 @@ namespace modest100.Forms
     
     Point ClientMouse { get { return new FloatPoint(PointToClient(MousePosition)) - new FloatPoint(Gutter.Left,Gutter.Top); } }
     
-    NoteTransport noteSegment {
+    NoteTransport NoteSegment {
       get
       {
         FloatPoint m = ClientMouse;
@@ -97,7 +97,7 @@ namespace modest100.Forms
     /// </summary>
     void GetOurNotesAgain()
     {
-      Player.BarSegment = noteSegment;
+      Player.BarSegment = NoteSegment;
       
       try {
         SetOfNotes = new List<MidiMessage>(
@@ -467,7 +467,7 @@ namespace modest100.Forms
     void drawdot(Graphics g, FloatRect clientrect, int wedge)
     {
       float line1 = GetLineHeight(g,big,1);
-      NoteTransport s = noteSegment;
+      NoteTransport s = NoteSegment;
       FloatPoint f = s.ClientInput;
       f += clientrect.Location;
       f.Y -= line1;

@@ -49,29 +49,39 @@ namespace gen.snd.Vst
 	 * Currently, we're using a loop-region which calculates in samples the
 	 * end of our buffer loop so we can trim our buffer
 	 */
-	// Copied from the microDRUM project
-	// https://github.com/microDRUM
-	// I think it is created by massimo.bernava@gmail.com
-	// Modified by perivar@nerseth.com to support processing audio files
-	// Then modified again by tfwroble@gmail.com
-	public class VSTStream32 : WaveStream, IDisposable
+	
+	// At the time this file was implemented, it had been cloned from:
+	// 
+	// - microDRUM project
+	//   https://github.com/microDRUM by massimo.bernava@gmail.com
+	// - Modified by perivar@nerseth.com to support processing audio files
+	// - Then customized or perhaps re-written again, here.
+	//   https://github.com/tfwio
+	//
+	// It appears this file is most-likely irrecognisable at this point.
+	
+	public class VSTStream32 : WaveStream //, IDisposable
 	{
-		public void Dispose()
-		{
-			
-		}
+	  /// <summary>
+	  /// Globally 
+	  /// </summary>
+    public NAudioVST Parent { get; set; }
+    
+		//public void Dispose()
+		//{
+		//	
+		//}
 		
 		// ============================
 		// Public Fields and Properties
 		// ============================
 		
-		/// <summary>NumSamplesToProcess / Parent.Settings.Channels</summary>
+		/// <summary>
+		/// NumSamplesToProcess / Parent.Settings.Channels.
+		/// Depends on NumSamplesToProcess: Eg: <pre><code>NumSamplesToProcess / Parent.Settings.Channels</code></pre>
+		/// </summary>
+		/// <seealso cref="NumSamplesToProcess" />
 		public int NumSamplesPerChannel { get { return NumSamplesToProcess / Parent.Settings.Channels; } }
-		
-		public NAudioVST Parent {
-			get { return parent; }
-			set { parent = value; }
-		} NAudioVST parent;
 		
 		public override WaveFormat WaveFormat { get { return waveFormat; } }
 		
@@ -81,6 +91,10 @@ namespace gen.snd.Vst
 		/// <summary>Probably reflected in Read(float[] buffer, int offset, int sampleCount) as offset.</summary>
 		public override long Position { get { return 0; } set { long x = value; } }
 		
+		/// <summary>
+		/// </summary>
+		/// <seealso cref="Read(float[],int,int)"/>
+		/// <seealso cref="NumSamplesPerChannel"/>
 		public int NumSamplesToProcess {
 			get { return numSamplesToProcess; }
 			set { numSamplesToProcess = value; }
@@ -95,12 +109,12 @@ namespace gen.snd.Vst
 		// Private Fields and Properties
 		// =============================
 		
-		IMidiParser MidiParser { get { return parent.Parent.Parent.MidiParser; } }
+		//IMidiParser MidiParser { get { return Parent.Parent.Parent.MidiParser; } }
 		
-		VstPluginManager PluginManager { get { return parent.Parent.PluginManager; } }
+		//VstPluginManager PluginManager { get { return Parent.Parent.PluginManager; } }
 		
-		VstPlugin module_instrument { get { return parent.Parent.PluginManager.MasterPluginInstrument; } }
-		VstPlugin module_effect { get { return parent.Parent.PluginManager.MasterPluginEffect; } }
+		VstPlugin module_instrument { get { return Parent.Parent.PluginManager.MasterPluginInstrument; } }
+		VstPlugin module_effect { get { return Parent.Parent.PluginManager.MasterPluginEffect; } }
 		
 		int BlockSize = 0;
 		
@@ -119,23 +133,28 @@ namespace gen.snd.Vst
 		// ==============
 		
     //double nextoffset(int sampleCount) { return parent.SampleOffset+sampleCount; }
-		
-		int GetSamplesWithinLoop(int sampleCount, int nch)
+		/// <summary>
+		/// Step 3 / N or ( 2.1 / N )
+		/// </summary>
+		/// <param name="sampleCount"></param>
+		/// <param name="nch"></param>
+		/// <returns></returns>
+		int GetNumSamplesWithinLoop(int sampleCount, int nch)
 		{
 			double newsamplecount = sampleCount;
 			int actualSamples = newsamplecount.FloorMinimum(0).ToInt32() / nch;
 			
-			Loop o = parent.One;
+			Loop o = Parent.One;
 			
-			if ((parent.SampleOffset+actualSamples) > o.End)
+			if ((Parent.SampleOffset+actualSamples) > o.End)
 			{
-				newsamplecount = (o.End - (parent.SampleOffset)).ToInt32() * nch;
-				actualSamples = (newsamplecount.FloorMinimum(0).ToInt32() / nch);
+				newsamplecount = (o.End - (Parent.SampleOffset)).ToInt32() * nch;
+				actualSamples = newsamplecount.FloorMinimum(0).ToInt32() / nch;
 			}
 			// this might be incorrect
 			if (actualSamples==0)
 			{
-				parent.SampleOffset = o.Begin;
+				Parent.SampleOffset = o.Begin;
 				newsamplecount = sampleCount;
 			}
 			
@@ -145,7 +164,12 @@ namespace gen.snd.Vst
 		// ==============
 		// Methods
 		// ==============
-		
+		/// <summary>
+		/// Step 5 / N
+		/// </summary>
+		/// <param name="plugin"></param>
+		/// <param name="buffer"></param>
+		/// <returns></returns>
 		float[] ProcessToMixer(VstPlugin plugin, VstAudioBuffer[] buffer)
 		{
 			int indexOutput = 0;
@@ -166,19 +190,20 @@ namespace gen.snd.Vst
 				
 				indexOutput += 2;
 				
-				parent.BufferIncrement++;
+				Parent.BufferIncrement++;
 			}
 			
 			return actualOutput;
 		}
-		
+		/// Step 4 (2.2) of N
+		/// <seealso cref="ProcessToMixer(VstPlugin,VstAudioBuffer[])"/>
 		private float[] ProcessReplace(int blockSize)
 		{
-			lock (this)
+			//lock (this)
 			{
 				if (blockSize != BlockSize)
 				{
-					BlockSize = blockSize;
+					BlockSize = blockSize;// phase doesn't match?
 					actualOutput = new float[WaveFormat.Channels * blockSize];
 				}
 				try
@@ -188,10 +213,13 @@ namespace gen.snd.Vst
 					mod.Reset(blockSize,module_instrument,module_effect);
 					mod.GeneralProcess(module_instrument,module_effect);
 					
-					actualBuffer = module_effect==null ? mod.Inputs.Outputs.ToArray() : mod.Outputs.Outputs.ToArray();
+					actualBuffer = module_effect==null ?
+					  mod.Inputs.Outputs.ToArray() :
+					  mod.Outputs.Outputs.ToArray();
+					
 				}
 				catch (Exception ex) {
-					parent.Stop();
+					Parent.Stop();
 					System.Windows.Forms.MessageBox.Show(ex.ToString());
 				}
 				ProcessToMixer(module_effect??module_instrument,actualBuffer);
@@ -204,25 +232,42 @@ namespace gen.snd.Vst
 			this.waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels);
 		}
 		
+		/// <summary>
+		/// Starting point (2 / N).
+		/// </summary>
+		/// <param name="buffer">You know</param>
+		/// <param name="offset">always Zero. (see Position)</param>
+		/// <param name="sampleCount">always Length</param>
+		/// <returns></returns>
+		/// <seealso cref="GetSamplesWithinLoop(int,int)"/>
+		/// <seealso cref="ProcessReplace(int)"/>
+		/// <seealso cref="NAudioVST.OnBufferCycle(int)"/>
 		public int Read(float[] buffer, int offset, int sampleCount)
 		{
-			numSamplesToProcess = GetSamplesWithinLoop(sampleCount,Parent.Settings.Channels);
+			NumSamplesToProcess = GetNumSamplesWithinLoop(sampleCount,Parent.Settings.Channels);
 			
-			int numSamplesPerChannel = NumSamplesPerChannel;
+			// used in ProcessReplace; re-used in OnBufferCycle.
+			int nSmpPCh = NumSamplesPerChannel;
 			
-			float[] tempBuffer = ProcessReplace( numSamplesPerChannel );
+			float[] tempBuffer = ProcessReplace( nSmpPCh );
 			
-			for (int i = 0; i < numSamplesToProcess; i++)
+			for (int i = 0; i < NumSamplesToProcess; i++)
+			  
 			  buffer[i + offset] = tempBuffer[i];
 			
-			Parent.OnBufferCycle( numSamplesPerChannel );
+			Parent.OnBufferCycle( nSmpPCh );
 			
-			return numSamplesToProcess;
+			return NumSamplesToProcess;
 		}
 
+		/// <summary>
+		/// Starting point (1 / N).
+		/// </summary>
 		/// <param name="buffer">You know</param>
 		/// <param name="offset">always Zero. (see Position)</param>
 		/// <param name="count">always Length</param>
+		/// <returns>samples processed.</returns>
+		/// <seealso cref="Read(float[],int,int)" title="float[],int,int" />
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			WaveBuffer waveBuffer = new WaveBuffer(buffer);

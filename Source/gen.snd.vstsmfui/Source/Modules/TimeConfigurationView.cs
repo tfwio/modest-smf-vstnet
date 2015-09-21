@@ -56,7 +56,7 @@ namespace modest100.Views
 		void Event_ValueChanged(object sender, EventArgs e)
 		{
 			bool wasPlaying = false;
-			if (SampleRate != gen.snd.TimeConfiguration.Instance.Rate)
+			if (SampleRate.ToInt32() != UserInterface.VstContainer.VstPlayer.Settings.Rate)
 			{
 				
 				if (this.UserInterface.VstContainer.VstPlayer.IsRunning) {
@@ -65,8 +65,8 @@ namespace modest100.Views
 				}
 			}
 			
-			gen.snd.TimeConfiguration.Instance.Rate = Convert.ToInt32(SampleRate);
-			gen.snd.TimeConfiguration.Instance.Latency = Convert.ToInt32(setting.LatencyInMilliseconds);
+			UserInterface.VstContainer.VstPlayer.Settings.Rate = Convert.ToInt32(SampleRate);
+			UserInterface.VstContainer.VstPlayer.Settings.Latency = Convert.ToInt32(setting.LatencyInMilliseconds);
 			
 			setting.ResetValue(int.Parse(comboSampleRate.Text),Convert.ToInt32(numSamples.Value));
 			labelMs.Text = string.Format("{0:N} ms",setting.LatencyInMilliseconds);

@@ -9,7 +9,7 @@ namespace System
 	/// This has been written particularly to replace a ‘mop’ function
 	/// from the ‘STR’ class (my old string lib)
 	/// </para>
-	public class StringHelper
+	static public class StringHelper
 	{
 		static public string GetAnsiChars(params char[] chars)
 		{
@@ -42,5 +42,14 @@ namespace System
 			return Enc.GetBytes(inpoo);
 		}
 		#endregion
+		
+		static public string ToHexString(this byte[] inb)
+      {
+        if (inb==null) return string.Empty;
+        string bish = "",tmp="";
+        foreach (byte c in inb) { bish += c.ToString("X2").PadLeft(2,'0')+" "; }
+        return bish.TrimEnd();
+      }
+		
 	}
 }
