@@ -21,24 +21,26 @@
 #endregion
 
 using System;
-using System.Linq;
-
-using gen.snd.Midi;
 
 namespace gen.snd.Midi
 {
+  using VstMidiEvent=Jacobi.Vst.Core.VstMidiEvent;
+  using VstMidiSysExEvent=Jacobi.Vst.Core.VstMidiSysExEvent;
+  
 	static public class VstMidiSystem
 	{
-		static public Jacobi.Vst.Core.VstMidiEvent ToVstMidiEvent(this MidiMessage item, int offset, ITimeConfiguration config, SampleClock c)
+		static public VstMidiEvent ToVstMidiEvent(this MidiMessage item, int offset, ITimeConfiguration config, SampleClock clock)
 		{
-	   // byte b0 = (config.IsSingleZeroChannel) ? (byte)item.MessageBit : item.Data[0];
-			int samples = c.SolveSamples(item.DeltaTime).Samples32Floor - offset;
-			return new Jacobi.Vst.Core.VstMidiEvent(samples, 0, 0, new byte[4]{ item.Data[0], item.Data[1], item.Data[2], 0 }, 0 , 0 );
+	    // byte b0 = (config.IsSingleZeroChannel) ? (byte)item.MessageBit : item.Data[0];
+	    // samples is otherwise known as deltaFrames to the vstMidiEvent.
+	    //"The number of frame from the start of the current cycle."
+			int samples = clock.SolveSamples(item.DeltaTime).Samples32Floor - offset;
+			return new VstMidiEvent(samples, 0, 0, new byte[4]{ item.Data[0], item.Data[1], item.Data[2], 0 }, 0 , 0 );
 		}
-		static public Jacobi.Vst.Core.VstMidiSysExEvent ToVstMidiSysex(this MidiMessage item, int offset, ITimeConfiguration config, SampleClock c)
+		static public VstMidiSysExEvent ToVstMidiSysex(this MidiMessage item, int offset, ITimeConfiguration config, SampleClock c)
 		{
 			int samples = c.SolveSamples(item.DeltaTime).Samples32Floor-offset;
-			return new Jacobi.Vst.Core.VstMidiSysExEvent(samples,(item as MidiSysexMessage).SystemData);
+			return new VstMidiSysExEvent(samples,(item as MidiSysexMessage).SystemData);
 		}
 	}
 }

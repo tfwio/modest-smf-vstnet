@@ -68,7 +68,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\AppService_MidiFile.cs" />
-    <Compile Include="Source\MidiListRenderer.cs" />
     <Compile Include="Source\NoteRange.cs" />
     <Compile Include="Source\Extensions.cs" />
     <Compile Include="Source\FontAwesome.cs" />
@@ -79,21 +78,26 @@
       <DependentUpon>MuiForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Source\Program.cs" />
-    <Compile Include="Source\WidgetGroupMidiList.MbtCaret.cs">
+    <Compile Include="Source\View\MidiListRenderer.cs" />
+    <Compile Include="Source\View\WidgetGroupLeftMenu.cs" />
+    <Compile Include="Source\View\WidgetGroupMidiList.cs" />
+    <Compile Include="Source\View\WidgetGroupMidiList.MbtCaret.cs">
       <DependentUpon>WidgetGroupMidiList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Source\WidgetGroupMidiList.MidiGridMouse.cs">
+    <Compile Include="Source\View\WidgetGroupMidiList.MidiGridMouse.cs">
       <DependentUpon>WidgetGroupMidiList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Source\WidgetGroupMidiList.Wheeler.cs">
+    <Compile Include="Source\View\WidgetGroupMidiList.Wheeler.cs">
       <DependentUpon>WidgetGroupMidiList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Source\WidgetGroupLeftMenu.cs" />
-    <Compile Include="Source\WidgetGroupMidiList.cs" />
-    <Compile Include="Source\WidgetGroupTopMenu.cs" />
-    <Compile Include="Source\WidgetMidiList.cs" />
-    <Compile Include="Source\WidgetMidiList.Scaffold.cs" />
-    <Compile Include="Source\WidgetMidiList.Struct.cs" />
+    <Compile Include="Source\View\WidgetGroupTopMenu.cs" />
+    <Compile Include="Source\View\WidgetMidiList.cs" />
+    <Compile Include="Source\View\WidgetMidiList.Scaffold.cs">
+      <DependentUpon>WidgetMidiList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Source\View\WidgetMidiList.Struct.cs">
+      <DependentUpon>WidgetMidiList.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Source\MuiForm.resx">
       <DependentUpon>MuiForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -125,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="asset" />
+    <Folder Include="Source\View" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -23,10 +23,12 @@
 using System;
 using System.Linq;
 using gen.snd.Vst.Module;
-using Jacobi.Vst.Core;
 
 namespace gen.snd.Vst
 {
+  using IVstPluginContext=Jacobi.Vst.Core.Host.IVstPluginContext;
+  using VstAudioBuffer=Jacobi.Vst.Core.VstAudioBuffer;
+  
   public class IOModule : IDisposable
   {
     int BlockSize = 0;
@@ -59,13 +61,6 @@ namespace gen.snd.Vst
       return module.Reset(blockSize,vstI,vstO);
     }
     
-    public bool CheckSize(int size)
-    {
-      return size==BlockSize;
-    }
-    
-    
-    
     public IOModule Reset(int blockSize, VstPlugin vstI, VstPlugin vstO)
     {
       BlockSize = blockSize;
@@ -73,75 +68,126 @@ namespace gen.snd.Vst
       return this;
     }
     
-    void PluginResetBuffers(VstPlugin input, VstPlugin output, int blockSize)
+    // Can this in fact be a bit redundant?
+    /// AudioProcess Step 2 (1.1) / N.
+    void PluginResetBuffers(VstPlugin instrument, VstPlugin effect, int blockSize)
     {
-      if (Inputs!=null) { if (Inputs.BlockSize!=blockSize && input!=null) Inputs = PluginResetBuffer(input,blockSize); }
-      else if (input!=null) Inputs = PluginResetBuffer(input,blockSize);
+      if (Inputs!=null)
+      {
+        if (Inputs.BlockSize!=blockSize && instrument!=null)
+          Inputs = PluginResetBuffer(instrument,blockSize);
+      }
+      else if (instrument!=null)
+        Inputs = PluginResetBuffer(instrument,blockSize);
       
-      if (Outputs!=null) { if (Outputs.BlockSize!=blockSize && output!=null) Outputs = PluginResetBuffer(output,blockSize); }
-      else if (output!=null) Outputs = PluginResetBuffer(output,blockSize);
+      if (Outputs!=null)
+      {
+        if (Outputs.BlockSize!=blockSize && effect!=null)
+          Outputs = PluginResetBuffer(effect,blockSize);
+      }
+      else if (effect!=null)
+        Outputs = PluginResetBuffer(effect,blockSize);
     }
     
+    /// AudioProcess Step 2.1 (1.1.1) / N.
     AudioModule PluginResetBuffer(VstPlugin plugin, int blockSize)
     {
-      if (plugin!=null) return new AudioModule(plugin,blockSize,plugin.Host.VstPlayer.Settings.Rate);
-      return null;
+      return plugin != null ? new AudioModule(
+        plugin,
+        blockSize,
+        plugin.Host.VstPlayer.Settings.Rate
+       ) : null;
     }
     
+    // 
+    // Plugin
+    // ===================================
     
-    
-    #region PLUGIN
-    
-    public VstAudioBuffer[] GeneralProcess(VstPlugin vstInput, VstPlugin vstOutput)
+    /// <summary>
+    /// <para>
+    /// AudioProcess STARTING POINT as called within <see cref="VSTStream32"/>.ProcessReplace(int).
+    /// </para>
+    /// </summary>
+    /// <remarks>Internally, this is our starting point from.</remarks>
+    /// <param name="instrument"></param>
+    /// <param name="effect"></param>
+    /// <returns></returns>
+    public VstAudioBuffer[] GeneralProcess(VstPlugin instrument, VstPlugin effect)
     {
-      if (Inputs==null || Inputs.BlockSize!=BlockSize) PluginResetBuffers(vstInput,vstOutput,BlockSize);
-      PluginPreProcess1(vstInput,BlockSize,Inputs[0].ToArray(),Inputs[1].ToArray());
-      return PluginProcess(vstOutput,Inputs[1].ToArray(),Outputs[1].ToArray());
+      if ( Inputs==null || Inputs.BlockSize!=BlockSize )
+        PluginResetBuffers(instrument, effect, BlockSize);
+      
+      PluginPreProcess(instrument,BlockSize,Inputs[0].ToArray(),Inputs[1].ToArray());
+      
+      return PluginProcess(effect,Inputs[1].ToArray(),Outputs[1].ToArray());
     }
     
     
     /// <summary>
+    /// AudioProcess Step 3 / N.
     /// With midi info
     /// </summary>
     /// <param name="plugin"></param>
     /// <param name="blockSize"></param>
-    /// <param name="inputs"></param>
-    /// <param name="outputs"></param>
-    VstAudioBuffer[] PluginPreProcess1(VstPlugin plugin, int blockSize, VstAudioBuffer[] inputs, VstAudioBuffer[] outputs)
+    /// <param name="instrument"></param>
+    /// <param name="effect"></param>
+    VstAudioBuffer[] PluginPreProcess(VstPlugin plugin, int blockSize, VstAudioBuffer[] instrument, VstAudioBuffer[] effect)
     {
+      
+      // This is the new
+      // ---------------
+      
+      // 1. Look up current sample-position
+      // 2. 
+      
+      
+      // This is the old ...
+      // ---------------
       if (HasMidi(plugin.Host.Parent))
         VstMidiEnumerator.SendMidi2Plugin( plugin, plugin.Host.Parent, blockSize );
-      return PluginPreProcess2(plugin,inputs,outputs);
+      
+      return ProcessReplacing(plugin,instrument,effect);
     }
+    
     /// <summary>
-    /// plugin.PluginCommandStub.ProcessReplacing(inputs, outputs);
+    /// AudioProcess Step 3.1 / N.
     /// </summary>
-    /// <param name="plugin"></param>
-    /// <param name="inputs"></param>
-    /// <param name="outputs"></param>
-    VstAudioBuffer[] PluginPreProcess2(VstPlugin plugin, VstAudioBuffer[] inputs, VstAudioBuffer[] outputs)
+    /// <param name="plugin">Plugin Context</param>
+    /// <param name="inputs">VstAudioBuffer</param>
+    /// <param name="outputs">VstAudioBuffer</param>
+    /// <seealso cref="Jacobi.Vst.Core.IVstPluginCommandsBase.ProcessReplacing(VstAudioBuffer[],VstAudioBuffer[])"/>
+    VstAudioBuffer[] ProcessReplacing(IVstPluginContext plugin, VstAudioBuffer[] inputs, VstAudioBuffer[] outputs)
     {
       plugin.PluginCommandStub.StartProcess();
       plugin.PluginCommandStub.ProcessReplacing(inputs, outputs);
       plugin.PluginCommandStub.StopProcess();
       return outputs;
     }
+    
     /// <summary>
-    /// Ignore nulll entries.
-    /// Convert output to 2 channel if necessary.
+    /// Step 4 of N (N = 4)
+    /// <para>
+    /// If plugin is null, ignore audio-process and return empty inputs/outputs,
+    /// otherwise calling on the plugin's ProcessReplacing (<see cref="PluginProcessReplacing"/>).
+    /// </para>
+    /// <para>Convert mono input to 2-channel.</para>
     /// </summary>
+    /// <returns>Audio data after processing.</returns>
     /// <param name="plugin"></param>
     /// <param name="inputs"></param>
     /// <param name="outputs">VstAudioBuffer[2]</param>
-    VstAudioBuffer[] PluginProcess(VstPlugin plugin, VstAudioBuffer[] inputs, VstAudioBuffer[] outputs)
+    /// <seealso cref="PluginProcessReplacing"/>
+    VstAudioBuffer[] PluginProcess(
+      IVstPluginContext plugin,
+      VstAudioBuffer[] inputs,
+      VstAudioBuffer[] outputs)
     {
-      VstAudioBuffer[] newinputs = inputs.Length == 1 ? new VstAudioBuffer[] {
-        inputs[0],
-        inputs[0]
-      } : inputs;
-      return plugin == null ? newinputs : PluginPreProcess2(plugin, newinputs, outputs);
+      VstAudioBuffer[] newinputs = inputs.Length == 1 ?
+        new VstAudioBuffer[] { inputs[0], inputs[0] } :
+        inputs;
+      
+      return plugin == null ? newinputs : ProcessReplacing(plugin, newinputs, outputs);
     }
     
-    #endregion
   }
 }

@@ -6,9 +6,28 @@ using Mui;
 using Mui.Widgets;
 namespace mui_smf
 {
+  /// <summary>
+  /// Adds a button-event which loads a midi file.
+  /// </summary>
 	public class AppService_MidiFile : MuiAppService<MuiForm>
 	{
-    readonly OpenFileDialog MidiFileDialog = new OpenFileDialog() { Filter="Midi Fliles|*.mid;*.midi" };
+    readonly OpenFileDialog MidiFileDialog = new OpenFileDialog() {
+	    Filter="Midi Fliles|*.mid;*.midi"
+	  };
+	  
+	  public class MidiListInfo
+	  {
+	    public int channels;
+	    public int totalEvents;
+	  }
+	  MidiListInfo MidiInfo { get; set; }
+	  
+	  public void GetMidiReaderInfo()
+	  {
+	    MidiInfo = new MidiListInfo(){
+	     channels = Client.MidiReader.MidiDataList.Count,
+	    };
+	  }
     
     public override void Register()
     {
@@ -28,6 +47,7 @@ namespace mui_smf
       Client.Text = string.Format("SMF-UI - [{0}]",file.Name);
       //MidiEnumerator mi;
     }
+    
     void BtnLoadMidi_ParentClick(object sender, MouseEventArgs e)
     {
       if (e.Button==MouseButtons.Left)

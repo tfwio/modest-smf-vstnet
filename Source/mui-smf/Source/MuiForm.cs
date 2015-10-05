@@ -1,9 +1,5 @@
-﻿/* oio * 8/3/2015 * Time: 6:39 AM */
-
-using System;
+﻿using System;
 using System.Drawing;
-using System.Drawing.Text;
-using System.IO;
 using System.Windows.Forms;
 using Mui;
 using Mui.Widgets;
@@ -25,6 +21,8 @@ namespace mui_smf
     {
       DoubleBuffered = true;
       InitializeComponent();
+      this.AppTimer.Interval = 300;
+      
       InitializeWidgets(new AppService_MidiFile());
       
       OnResize(null); // forces initial rendering
