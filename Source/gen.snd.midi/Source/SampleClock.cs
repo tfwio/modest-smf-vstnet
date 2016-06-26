@@ -38,10 +38,10 @@ namespace gen.snd
     } double samples;
     
     /// <inheritdoc/>
-    public int Samples32 { get { return Samples.ToInt32(); } }
+    public int Samples32 { get { return Convert.ToInt32(samples); } }
     
     /// <inheritdoc/>
-    public int Samples32Floor { get { return Samples.Floor().ToInt32(); } }
+    public int Samples32Floor { get { return Convert.ToInt32(Math.Floor(samples)); } }
 
     // =========================================
     // IMidiClock

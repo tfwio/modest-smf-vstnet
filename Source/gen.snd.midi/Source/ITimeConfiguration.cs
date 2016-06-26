@@ -42,36 +42,11 @@ namespace gen.snd
 		
 		MidiKeySignature KeySignature { get;set; }
 		
-//		bool IsSingleZeroChannel { get;set; }
+		bool IsSingleZeroChannel { get;set; }
 		
-		/// <summary>
-		/// <para>Why isn't this documented?</para>
-		/// (Could it be that) This is the start point of our audio-process when we
-		/// begin and thruought playback, in bars.
-		/// When playback ends (<see cref="BarLength"/>), then we begin here again.
-		/// </summary>
-		/// <remarks>
-		/// <para>
-		/// Once upon a time, I imiplemented a NumericUpDown control which changed this value.
-		/// It was later removed since it was never properly implemented.
-		/// </para>
-		/// <para>
-		/// It appears that we're missing something equivelant to 'NextPhase'.<br />
-		/// NextPhase would be relevant when the end position falls out of alignment with
-		/// our buffer's size, where we need to start at 0 (or BarStart) inside the
-		/// specific buffer-interval.
-		/// </para>
-		/// </remarks>
 		double BarStart { get;set; }
 		
-		/// <summary>
-		/// This appears to be un-set (or 0), as it is not referenced. 
-		/// </summary>
-		/// <remarks>
-		/// It appears that this exposes an error.
-		/// </remarks>
 		double BarStartPulses { get;set; }
-		
 		/// <summary>
 		/// This is used in <see cref="Loop"/>.<see cref="Loop.Length"/>.
 		/// ...As well as a particular instance within NAudioVST.One(Loop).

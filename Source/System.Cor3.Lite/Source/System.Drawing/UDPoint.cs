@@ -42,12 +42,13 @@ namespace System.Drawing
 		static public DoublePoint One { get { return new DoublePoint(1D,1D,UnitType.Pixel); } }
 
 		DblUnit _X = "0px", _Y = "0px";
+		
 		[XmlAttribute] public DblUnit X { get { return _X; } set { _X = value; } }
 		[XmlAttribute] public DblUnit Y { get { return _Y; } set { _Y = value; } }
 	
 		#region Properties
 		[XmlIgnore] public DblUnit Bigger { get { return (X >= Y)? X: Y; } }
-		[XmlIgnore] public bool IsLand { get { return X >= Y; } }
+		[XmlIgnore] public bool    IsLand { get { return X >= Y; } }
 		/// <summary>zerod?</summary>
 		[XmlIgnore] public DblUnit Slope { get  { return Math.Sqrt(Math.Pow(X,2)+Math.Pow(Y,2)); }  }
 		#endregion

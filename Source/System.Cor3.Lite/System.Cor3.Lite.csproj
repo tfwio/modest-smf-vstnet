@@ -8,9 +8,9 @@
     <OutputType>Library</OutputType>
     <RootNamespace>System.Cor3.Lite</RootNamespace>
     <AssemblyName>System.Cor3.Lite</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <NoWin32Manifest>False</NoWin32Manifest>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
@@ -47,6 +47,9 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -61,7 +64,13 @@
   <ItemGroup>
     <!--D:\DEV\WIN\CS_ROOT\Projects\gen.snd.common\source\cor3.core\System.Drawing\CORNERS.cs-->
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Drawing\Circle.cs" />
+    <Compile Include="Source\Drawing\Draw.cs" />
     <Compile Include="Source\Drawing\GraphicsPens.cs" />
+    <Compile Include="Source\Drawing\IApiDraw.cs" />
+    <Compile Include="Source\Drawing\LineObj.cs" />
+    <Compile Include="Source\Drawing\PointExtension.cs" />
+    <Compile Include="Source\Drawing\Vertex.cs" />
     <Compile Include="Source\Extensions\DllExtension.cs" />
     <Compile Include="Source\Extensions\FileInfoExtension.cs" />
     <Compile Include="Source\Extensions\ListHelper.cs" />

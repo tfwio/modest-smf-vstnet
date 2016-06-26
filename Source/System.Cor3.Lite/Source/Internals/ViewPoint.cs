@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 
 namespace System.Internals
@@ -524,8 +525,8 @@ namespace System.Internals
 		{
 			List<TView> types = new List<TView>();
 			foreach (Assembly mrAssembly in containedAssembly)
-				foreach (Type t in mrAssembly.GetTypes())
-					if (t.BaseType == typeof(TView))
+			  foreach (Type t in mrAssembly.GetTypes()
+			           .Where(_=>_.BaseType == typeof(TView)))
 						types.Add(Activator.CreateInstance(t) as TView);
 			return types;
 		}

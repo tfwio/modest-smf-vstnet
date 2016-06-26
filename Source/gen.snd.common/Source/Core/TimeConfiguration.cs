@@ -41,8 +41,7 @@ namespace gen.snd
 	    Tempo               = 120,
 	    TimeSignature       = new MidiTimeSignature(4,4,24,4),
 	    KeySignature        = new MidiKeySignature(KeySignatureType.C,true),
-      // IsSingleZeroChannel = false
-	    BarStart            = 0,
+	    IsSingleZeroChannel = false
 	  };
 		
 		public void FromMidi(IMidiParser parser)
@@ -63,20 +62,25 @@ namespace gen.snd
 		/// </summary>
 		public int Division  { get;set; }
 		public double Tempo { get;set; }
-//		public bool IsSingleZeroChannel { get;set; }
+		public bool IsSingleZeroChannel { get;set; }
 		
 		public MidiKeySignature KeySignature { get;set; }
 		public MidiTimeSignature TimeSignature { get;set; }
 		
-		/// <inheritdoc/>
-    public double BarStart { get; set; }
+		double barStart;
+		
+		public double BarStart {
+			get { return barStart; }
+			set { barStart = value; }
+		}
+		
+		double barLength=4;
 		
 		public double BarLength {
 			get { return barLength; }
 			set { barLength = value; }
-		} double barLength=4;
+		}
 		
-		/// <inheritdoc/>
 		public double BarStartPulses {
 			get { return barStartPulsesPerQuarter; }
 			set { barStartPulsesPerQuarter = value; }

@@ -7,6 +7,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gen.snd.vstsmfui", "..\Source\gen.snd.vstsmfui\gen.snd.vstsmfui.csproj", "{F8A9D892-7F27-4501-8DDF-4970674477DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{11F6B009-F1F5-4D78-A06F-6E13A39522EC}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gen.snd.common", "..\source\gen.snd.common\gen.snd.common.csproj", "{669C9CD9-8B80-4D6D-B5D7-A39B1224A50E}"
 EndProject

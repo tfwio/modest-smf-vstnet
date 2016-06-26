@@ -85,15 +85,24 @@ namespace modest100.Forms
     {
       numPpq.Value = Convert.ToDecimal(VstContainer.VstPlayer.Settings.Division);
     }
-    void Event_PlayerPpq2UpDown(object sender, EventArgs e) { Action_PlayerPpq2UpDown(); }
-    
+    void Event_PlayerPpq2UpDown(object sender, EventArgs e)
+    {
+      Action_PlayerPpq2UpDown();
+    }
     #endregion
     #region Action_Player_Tempo2UpDown controls
-    
-    void Action_Player_Tempo2UpDown() { numTempo.Value = Convert.ToDecimal(VstContainer.VstPlayer.Settings.Tempo); }
-    void Action_Player_UpDown2Tempo() { VstContainer.VstPlayer.Settings.Tempo = Convert.ToDouble(numTempo.Value); }
-    void Event_PlayerUpDown2Tempo(object sender, EventArgs e) { Action_Player_UpDown2Tempo(); }
-    
+    void Action_Player_Tempo2UpDown()
+    {
+      numTempo.Value = Convert.ToDecimal(VstContainer.VstPlayer.Settings.Tempo);
+    }
+    void Action_Player_UpDown2Tempo()
+    {
+      VstContainer.VstPlayer.Settings.Tempo = Convert.ToDouble(numTempo.Value);
+    }
+    void Event_PlayerUpDown2Tempo(object sender, EventArgs e)
+    {
+      Action_Player_UpDown2Tempo();
+    }
     #endregion
 		
     void Event_BufferCycle_to_Label2(object sender, NAudioVSTCycleEventArgs e)
@@ -138,16 +147,17 @@ namespace modest100.Forms
     public event EventHandler ClearMidiTrack;
     protected virtual void OnClearMidiTrack()
     {
-      if (ClearMidiTrack != null) ClearMidiTrack(this, EventArgs.Empty);
+      if (ClearMidiTrack != null)
+        ClearMidiTrack(this, EventArgs.Empty);
     }
 		
     public event EventHandler GotMidiFile;
     protected virtual void OnGotMidiFile()
     {
-      numPpq.Value = VstContainer.VstPlayer.Settings.Division;
-      numTempo.Value = Convert.ToDecimal(VstContainer.VstPlayer.Settings.Tempo);
-      
-      if (GotMidiFile != null) GotMidiFile(this, EventArgs.Empty);
+      this.numPpq.Value = VstContainer.VstPlayer.Settings.Division;
+      this.numTempo.Value = Convert.ToDecimal(VstContainer.VstPlayer.Settings.Tempo);
+      if (GotMidiFile != null)
+        GotMidiFile(this, EventArgs.Empty);
     }
 		
     #endregion
@@ -155,9 +165,7 @@ namespace modest100.Forms
     #region MIDI TRACK changed
 		
     int trackLen { get { return this.midiFile.SmfFileHandle[midiFile.SelectedTrackNumber].track.Length; } }
-    
     int cycles = 0, cycle = 12;
-    
     void ShowProgress(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse)
     {
       try {
@@ -166,7 +174,6 @@ namespace modest100.Forms
       } catch {
       }
     }
-    
     void Event_ListBoxContextMenuItem(object sender, EventArgs args)
     {
       cms.Items.Clear();
@@ -174,8 +181,7 @@ namespace modest100.Forms
       ToolStripMenuItem e = new ToolStripMenuItem("Effects");
       cms.Items.Add(g);
       cms.Items.Add(e);
-      foreach (VstPlugin plugin in VstMidiEnumerator.GetInstruments(this))
-      {
+      foreach (VstPlugin plugin in VstMidiEnumerator.GetInstruments(this)) {
         ToolStripMenuItem item = new ToolStripMenuItem(plugin.Title, null, Event_AddChannelMapping);
         if (vstContainer.PluginManager.MasterPluginInstrument == plugin)
           item.CheckState = CheckState.Indeterminate;
@@ -183,8 +189,7 @@ namespace modest100.Forms
 //				for (int i=0; i<plugin.PluginCommandStub.GetNumberOfMidiInputChannels(); i++) item.DropDownItems.Add(i.ToString());
         g.DropDownItems.Add(item);
       }
-      foreach (VstPlugin plugin in VstMidiEnumerator.GetEffects(this))
-      {
+      foreach (VstPlugin plugin in VstMidiEnumerator.GetEffects(this)) {
         ToolStripMenuItem item = new ToolStripMenuItem(plugin.Title, null, Event_AddChannelMapping);
         if (vstContainer.PluginManager.MasterPluginInstrument == plugin)
           item.CheckState = CheckState.Indeterminate;

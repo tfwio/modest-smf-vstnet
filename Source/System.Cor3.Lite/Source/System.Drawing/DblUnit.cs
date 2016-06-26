@@ -108,6 +108,11 @@ namespace System.Cor3.Drawing
 		}
 		
 		double Multiplier { get { return Multiply(coordinateSpace); } }
+		/// <summary>
+		/// values from ¿W3C CSS?
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
 		double Multiply(UnitType type)
 		{
 			switch (type)
@@ -130,7 +135,6 @@ namespace System.Cor3.Drawing
 		}
 		public void SetValue(double value, UnitType type, UnitType outUnit)
 		{
-//			Global.statB("{0} — {1} — {2}",value,type,outUnit);
 			Debug.Print("{0} — {1} — {2}",value,type,outUnit);
 			OutputUnit = outUnit;
 			SetValue(value,type);

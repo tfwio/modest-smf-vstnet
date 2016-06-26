@@ -266,8 +266,8 @@ namespace modest100.Forms
       get {
         string a = "", b = "";
         try {
-          a = clock.SolveSamples(PlayerSettings.BarStart  * PlayerSettings.Division * PlayerSettings.BarStartPulses, PlayerSettings).MeasureString;
-          b = clock.SolveSamples(PlayerSettings.BarLength * PlayerSettings.Division * PlayerSettings.BarLengthPulses, PlayerSettings).MeasureString;
+          a = clock.SolveSamples(PlayerSettings.BarStart*PlayerSettings.Division*PlayerSettings.BarStartPulses,PlayerSettings).MeasureString;
+          b = clock.SolveSamples(PlayerSettings.BarLength*PlayerSettings.Division*PlayerSettings.BarLengthPulses,PlayerSettings).MeasureString;
         } catch {}
         FloatPoint p = ClientMouse;
         PianoCalculator calc = PianoCalculator.Create(p,/*Parser.SmfFileHandle.Division*/ Ren.ui_view_settings.NodeWidth*4);

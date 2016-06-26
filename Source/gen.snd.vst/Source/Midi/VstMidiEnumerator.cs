@@ -83,26 +83,26 @@ namespace gen.snd.Vst
     
     #region VST
     
-    [Obsolete("We need something stronger.")]
     static public void SendMidi2Plugin(VstPlugin vstMidiPlugin, IMidiParserUI ui, int blockSize)
     {
       if (vstMidiPlugin==null) return ;
       
-      NVstEvent[] range = GetSampleOffsetBlock(ui, vstMidiPlugin.IgnoreMidiProgramChange,blockSize);
+      var EventR = new List<NVstEvent>(
+        GetSampleOffsetBlock(ui, vstMidiPlugin.IgnoreMidiProgramChange,blockSize)
+       );
+      
+      NVstEvent[] range = EventR.ToArray();
+      EventR.Clear();
+      EventR = null;
       
       if (range!=null && range.Length > 0)
         vstMidiPlugin.PluginCommandStub.ProcessEvents(range);
       
     }
     
-    [Obsolete("We need something stronger.")]
     static NVstEvent[] GetSampleOffsetBlock(IMidiParserUI ui, bool ignoreMidiPgm, int blockSize)
     {
-      return VstEvent_Range(
-        ui, ignoreMidiPgm,
-        start:  ui.VstContainer.VstPlayer.SampleOffset,
-        len: blockSize
-       ).ToArray();
+      return VstEvent_Range(ui, ignoreMidiPgm, ui.VstContainer.VstPlayer.SampleOffset, blockSize).ToArray();
     }
     
     /// <summary>
@@ -115,24 +115,25 @@ namespace gen.snd.Vst
     /// <param name="start"></param>
     /// <param name="len"></param>
     /// <returns>Filtered Events</returns>
-    [Obsolete("We need something stronger.")]
     static public IEnumerable<NVstEvent>
       VstEvent_Range(IMidiParserUI ui, bool ignoreMidiPgm, double start, int len)
     {
       var list = new List<NVstEvent>();
-      var clock = new SampleClock(ui.VstContainer.VstPlayer.Settings);
-      int offset = ui.VstContainer.VstPlayer.SampleOffset.ToInt32();
-      var t = ui.VstContainer.VstPlayer.Settings;
+      SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
       
       foreach (MidiMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
       {
         if (item.MessageBit==0xC0 && ignoreMidiPgm) continue;
-        if (item is MidiChannelMessage) list.Add(item.ToVstMidiEvent(offset,t,clock));
-        else if (item is MidiSysexMessage) list.Add(item.ToVstMidiSysex(offset,t,clock));
+        
+        if (item is MidiChannelMessage)
+          list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
+        
+        else if (item is MidiSysexMessage)
+          list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
         
       }
       
-      clock = null;
+      c = null;
       
       list.Sort(SortAlgo);
       

@@ -35,32 +35,25 @@ using NAudio.Wave;
 namespace gen.snd.Vst
 {
 
-	/* 
-	 * ==============================================================
-	 * timing integrity
-	 * ==============================================================
+	/*
 	 * samples:'768,050', bpm: '120', MBQT: '03:01:01:000', Ticks: '15,360'
 	 * samples:'768,051', bpm: '120', MBQT: '03:01:01:000', Ticks: '15,360'
 	 * samples:'      0',       120                 0   0          '     0'
 	 * samples:'     23', ,,														0 				 '     0'
 	 * samples:'     24', ,,                        0   0          '     1'
 	 * --------------------------------------------------------------
-	 * sample resolution needs to conform to (MSPQN) tick resolution.
-	 * sample-to-tick formula is looking for the end @tick-resolution
+	 * sample resolution needs to conform to tick resolution.
+	 * so a sample-to-tick formula is looking for the end @tick-resolution
 	 * or tempo mapped to a given number of samples.
-	 * --------------------------------------------------------------
+	 * ---
 	 * Currently, we're using a loop-region which calculates in samples the
-	 * end of our buffer loop so we can trim our buffer?
-	 * --------------------------------------------------------------
+	 * end of our buffer loop so we can trim our buffer
 	 */
 	
 	// At the time this file was implemented, it had been cloned from:
 	// 
 	// - microDRUM project
 	//   https://github.com/microDRUM by massimo.bernava@gmail.com
-	//   now: https://github.com/massimobernava
-	//   - However these sources are among a few from that timeframe
-  //     likely cultivated from forum posts migrating in the wild.	
 	// - Modified by perivar@nerseth.com to support processing audio files
 	// - Then customized or perhaps re-written again, here.
 	//   https://github.com/tfwio
@@ -69,36 +62,19 @@ namespace gen.snd.Vst
 	
 	public class VSTStream32 : WaveStream //, IDisposable
 	{
-	  // Eg: 0x00000000
-		const int bytes_per_sample = 4;
-		
-		// =============================
-		// Private Fields and Properties
-		// =============================
-		
-		VstPlugin module_instrument { get { return Parent.Parent.PluginManager.MasterPluginInstrument; } }
-		VstPlugin module_effect     { get { return Parent.Parent.PluginManager.MasterPluginEffect; } }
-		
-		int BlockSize = 0;
-		
-		float[] actualOutput;
-		
-		VstAudioBuffer[] actualBuffer;
-		
-		AudioModule InputManager = null, OutputManager = null;
-		
-		IOModule mod;
-		
-		WaveFormat waveFormat;
-		
-		// ============================
-		// Public Fields and Properties
-		// ============================
-		
 	  /// <summary>
 	  /// Globally 
 	  /// </summary>
     public NAudioVST Parent { get; set; }
+    
+		//public void Dispose()
+		//{
+		//	
+		//}
+		
+		// ============================
+		// Public Fields and Properties
+		// ============================
 		
 		/// <summary>
 		/// NumSamplesToProcess / Parent.Settings.Channels.
@@ -129,10 +105,34 @@ namespace gen.snd.Vst
 			set { volume = value; }
 		} float volume = 1;
 		
+		// =============================
+		// Private Fields and Properties
+		// =============================
+		
+		//IMidiParser MidiParser { get { return Parent.Parent.Parent.MidiParser; } }
+		
+		//VstPluginManager PluginManager { get { return Parent.Parent.PluginManager; } }
+		
+		VstPlugin module_instrument { get { return Parent.Parent.PluginManager.MasterPluginInstrument; } }
+		VstPlugin module_effect { get { return Parent.Parent.PluginManager.MasterPluginEffect; } }
+		
+		int BlockSize = 0;
+		
+		float[] actualOutput;
+		
+		VstAudioBuffer[] actualBuffer;
+		
+		AudioModule InputManager = null, OutputManager = null;
+		
+		IOModule mod;
+		
+		WaveFormat waveFormat;
+		
 		// ==============
 		// Helper Methods
 		// ==============
 		
+    //double nextoffset(int sampleCount) { return parent.SampleOffset+sampleCount; }
 		/// <summary>
 		/// Step 3 / N or ( 2.1 / N )
 		/// </summary>
@@ -144,14 +144,14 @@ namespace gen.snd.Vst
 			double newsamplecount = sampleCount;
 			int actualSamples = newsamplecount.FloorMinimum(0).ToInt32() / nch;
 			
-			Loop o = Parent.One; // stored locally, re-used.
+			Loop o = Parent.One;
 			
 			if ((Parent.SampleOffset+actualSamples) > o.End)
 			{
 				newsamplecount = (o.End - (Parent.SampleOffset)).ToInt32() * nch;
 				actualSamples = newsamplecount.FloorMinimum(0).ToInt32() / nch;
 			}
-			// ?
+			// this might be incorrect
 			if (actualSamples==0)
 			{
 				Parent.SampleOffset = o.Begin;
@@ -239,7 +239,7 @@ namespace gen.snd.Vst
 		/// <param name="offset">always Zero. (see Position)</param>
 		/// <param name="sampleCount">always Length</param>
 		/// <returns></returns>
-		/// <seealso cref="GetNumSamplesWithinLoop(int,int)"/>
+		/// <seealso cref="GetSamplesWithinLoop(int,int)"/>
 		/// <seealso cref="ProcessReplace(int)"/>
 		/// <seealso cref="NAudioVST.OnBufferCycle(int)"/>
 		public int Read(float[] buffer, int offset, int sampleCount)
@@ -272,11 +272,11 @@ namespace gen.snd.Vst
 		{
 			WaveBuffer waveBuffer = new WaveBuffer(buffer);
 			
-			int samplesRequired = count / bytes_per_sample;
+			int samplesRequired = count / 4;
 			
-			int samplesRead = Read(waveBuffer.FloatBuffer, offset / bytes_per_sample, samplesRequired);
+			int samplesRead = Read(waveBuffer.FloatBuffer, offset / 4, samplesRequired);
 			
-			return samplesRead * bytes_per_sample;
+			return samplesRead * 4;
 		}
 		
 	}

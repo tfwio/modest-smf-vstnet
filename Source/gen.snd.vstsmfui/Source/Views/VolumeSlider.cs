@@ -29,12 +29,12 @@ namespace modest100.Forms
             StringFormat format = new StringFormat();
             format.LineAlignment = StringAlignment.Center;
             format.Alignment = StringAlignment.Center;
-//            if (this.BackgroundImage!=null) 
-//            {
+            // if (this.BackgroundImage!=null) 
+            // {
             	pe.Graphics.Clear(this.BackColor);
-//            } else {
-//            }
-            pe.Graphics.DrawRectangle(Pens.Black, 0, 0, this.Width - 1, this.Height - 1);
+			// } else {
+			// }
+			pe.Graphics.DrawRectangle(Pens.Black, 0, 0, this.Width - 1, this.Height - 1);
             float db = 20 * (float)Math.Log10(Volume);
             float percent = 1 - (db / MinDb);
 

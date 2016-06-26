@@ -77,8 +77,8 @@ namespace gen.snd
     /// provided sample position;
     /// Set explicity or indirectly by <see cref="IMidiClock_MBQTPF.Pulses"/>.
     /// </summary>
-    /// <seealso cref="gen.snd.IAudioClock.Samples32"/>
-    /// <seealso cref="gen.snd.IAudioClock.Samples32Floor"/>
+    /// <seealso cref="Samples32"/>
+    /// <seealso cref="Samples32Floor"/>
     /// <remarks>
     /// When setting samples, we immediately use it so solve
     /// <pre>pulses = samples / (60 / Tempo * Rate) * Division;</pre>
@@ -86,13 +86,13 @@ namespace gen.snd
     double Samples { get; set; }
 		
     /// <summary>Convert.ToInt32; Why don't we Floor the samples here.</summary>
-    /// <seealso cref="gen.snd.IAudioClock.Samples"/>
-    /// <seealso cref="gen.snd.IAudioClock.Samples32Floor"/>
+    /// <seealso cref="Samples"/>
+    /// <seealso cref="Samples32Floor"/>
     int Samples32 { get; }
 		
     /// <summary>Floored</summary>
-    /// <seealso cref="gen.snd.IAudioClock.Samples"/>
-    /// <seealso cref="gen.snd.IAudioClock.Samples32"/>
+    /// <seealso cref="Samples"/>
+    /// <seealso cref="Samples32"/>
     int Samples32Floor { get; }
 		
     /// <summary>SecondsPerQuarter * Rate</summary>
@@ -100,7 +100,7 @@ namespace gen.snd
 		
     // TODO: double-check documentation.
     /// <summary>?</summary>
-    /// <seealso cref="gen.snd.IAudioClock.SamplesFromPulses(double,double,int,int)"/>
+    /// <seealso cref="SamplesFromPulses(double,double,int,int)"/>
     double SamplesPerClock { get; }
     
     // 

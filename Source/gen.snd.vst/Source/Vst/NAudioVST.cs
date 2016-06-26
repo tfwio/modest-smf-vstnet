@@ -62,8 +62,8 @@ namespace gen.snd.Vst
 			get
 			{
 				return new Loop(){
-					Begin = clock.SolveSamples(Settings.BarStart  * Settings.Division * Settings.BarStartPulses,  Settings).Samples32,
-					Length= clock.SolveSamples(Settings.BarLength * Settings.Division * Settings.BarLengthPulses, Settings).Samples32
+					Begin = clock.SolveSamples(Settings.BarStart *Settings.Division*Settings.BarStartPulses,Settings).Samples32,
+					Length= clock.SolveSamples(Settings.BarLength*Settings.Division*Settings.BarLengthPulses,Settings).Samples32
 				};
 			}
 		}
@@ -109,7 +109,7 @@ namespace gen.snd.Vst
 			set { volume = value; if (CurrentChannel!=null) CurrentChannel.Volume = volume; }
 		} float volume = 1;
 		
-		/// <summary>...</summary>
+		/// <summary></summary>
 		public INaudioVstContainer Parent { get { return parent; } } INaudioVstContainer parent;
 		
 		/// <inheritdoc/> 
@@ -125,10 +125,11 @@ namespace gen.snd.Vst
 		// ==================
 		
 		/// <summary>
-		/// GET;  When referenced, <see cref="SampleTime" /> is re-calculated using settings from <see cref="Settings" />.
+		/// GET;  When referenced, <see cref="SampleTime" /> is re-calculated using settings from
+		/// <see cref="Settings" /> stored in <see cref="Config" />.
 		/// </summary>
 		public string MeasureString {
-			get { return SampleTime.SolvePPQ( SampleOffset, Settings.Rate, Settings.Tempo, Settings.Division, true ).MeasureString; }
+			get { return SampleTime.SolvePPQ( SampleOffset,Settings.Rate,Settings.Tempo,Settings.Division,true ).MeasureString; }
 		}
 		
 		//

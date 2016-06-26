@@ -19,7 +19,6 @@ namespace mui_smf
     
     public WidgetLabel Label_MouseInfo { get; set; }
     public WidgetLabel Label_CaretInfo { get; set; }
-    public WidgetLabel Label_MidiFileInfo { get; set; }
     
     MuiService_MbtCaret CaretManager { get; set; }
 
@@ -31,19 +30,12 @@ namespace mui_smf
     public override void DoLayout()
     {
       base.DoLayout();
-      LeftToRight((i) =>
-                  (Widgets[i] is WidgetButton || Widgets[i] is WidgetLabel) &&
-                  (Widgets[i] != Label_MidiFileInfo)
-                 );
+      LeftToRight((i) => Widgets[i] is WidgetButton || Widgets[i] is WidgetLabel );
     }
     public override void Design()
     {
-      
       Widgets = new Widget[] {
-        Label_MouseInfo = new WidgetLabel(Parent) {
-          Bounds = new FloatRect(Bounds.Left,Bounds.Top,200,32),
-          Text="X = ?, Y = ?",
-          Container=this },
+        Label_MouseInfo = new WidgetLabel(Parent) { Bounds = new FloatRect(Bounds.Left,Bounds.Top,200,32), Text="X = ?, Y = ?", Container=this },
         
         Button_MbtAdd = new WidgetButton(Parent) { Bounds = new FloatRect(Bounds.Left,Bounds.Top,60,32), Text="-", Container=this },
         Button_MbtSubtract = new WidgetButton(Parent) { Bounds = new FloatRect(Bounds.Left,Bounds.Top,60,32), Text="+", Container=this },
@@ -52,12 +44,6 @@ namespace mui_smf
         MidiList = new WidgetMidiList(Parent) {
           Bounds = new FloatRect { X = Bounds.X, Y = Bounds.Y, Width = 1, Height = 1 },
           Font = new Font("FreeMono", 10.0f, FontStyle.Regular)
-        },
-        Label_MidiFileInfo = new WidgetLabel(Parent) {
-          Text="?",
-          Bounds = new FloatRect(X,0,300,48),
-          //DrawBorder = true,
-          Container=this
         }
       };
       
@@ -67,16 +53,16 @@ namespace mui_smf
         new MuiService_Wheeler(),
       };
     }
-    
+    public override void Initialize(IMui app, Widget client)
+    {
+      base.Initialize(app,client);
+    }
+
     public override void Parent_Resize(object sender, EventArgs e)
     {
       Bounds.Width  = Parent.ClientRectangle.Width -  Bounds.Left - ApplyPaddingRight;
       Bounds.Height = Parent.ClientRectangle.Height - Bounds.Top  - ApplyPaddingBottom - ApplyPaddingBottom;
-      
       base.Parent_Resize(sender, e);
-      if (Label_MidiFileInfo!=null)
-        Label_MidiFileInfo.Bounds.Y = Bounds.Bottom - Label_MidiFileInfo.Height;
-      
     }
   }
 }
