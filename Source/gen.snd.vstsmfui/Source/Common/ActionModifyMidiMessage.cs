@@ -8,8 +8,8 @@
  */
 using System;
 using System.Linq;
-using gen.snd.Midi;
 using modest100.Midi;
+using on.smfio;
 
 namespace modest100.Forms
 {
@@ -20,7 +20,7 @@ namespace modest100.Forms
 		{
 			return parser.MidiDataList[track].FindIndex(
 				m =>
-				m.DeltaTime == oldDelta &&
+				m.Pulse == oldDelta &&
 				m.Message == oldMessage &&
 				m.Data==oldData
 			);
@@ -29,17 +29,17 @@ namespace modest100.Forms
 		{
 			return parser.MidiDataList[track].FindIndex(
 				m =>
-				m.DeltaTime == newDelta &&
+				m.Pulse == newDelta &&
 				m.Message == newMessage &&
 				m.Data==newData
 			);
 		}
 		
-		public void Modify(MidiMessage input, IMidiParser parser, ulong delta, int msg, params byte[] data)
+		public void Modify(MIDIMessage input, IMidiParser parser, long delta, int msg, params byte[] data)
 		{
 			this.track = track;
 			
-			this.oldDelta = input.DeltaTime;
+			this.oldDelta = input.Pulse;
 			this.oldMessage = input.Message;
 			this.oldData = input.Data;
 			//
@@ -60,13 +60,13 @@ namespace modest100.Forms
 		
 		void SetNewData(IMidiParser parser, int index)
 		{
-			parser.MidiDataList[track][index].DeltaTime = newDelta;
+			parser.MidiDataList[track][index].Pulse = newDelta;
 			parser.MidiDataList[track][index].Message = newMessage;
 			parser.MidiDataList[track][index].Data = newData;
 		}
 		void SetOldData(IMidiParser parser, int index)
 		{
-			parser.MidiDataList[track][index].DeltaTime = oldDelta;
+			parser.MidiDataList[track][index].Pulse = oldDelta;
 			parser.MidiDataList[track][index].Message = oldMessage;
 			parser.MidiDataList[track][index].Data = oldData;
 		}

@@ -4,6 +4,7 @@ using gen.snd;
 using gen.snd.Vst;
 using gen.snd.Vst.Module;
 using Jacobi.Vst.Core;
+using on.smfio;
 
 namespace modest100.Forms
 {

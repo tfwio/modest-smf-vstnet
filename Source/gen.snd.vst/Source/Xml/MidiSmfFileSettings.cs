@@ -21,6 +21,7 @@ using gen.snd.Vst;
 using gen.snd.Vst.Module;
 using gen.snd.Vst.Xml;
 using Jacobi.Vst.Core;
+using on.smfio.util;
 
 namespace gen.snd.Vst.Xml
 {
@@ -48,7 +49,7 @@ namespace gen.snd.Vst.Xml
 		#endregion
 		
 		#region ELM 'Bar'
-		[XmlElement] public Loop Bar { get;set; }
+    [XmlElement] public Loop Bar { get;set; }
 		#endregion
 
 		// not used yet

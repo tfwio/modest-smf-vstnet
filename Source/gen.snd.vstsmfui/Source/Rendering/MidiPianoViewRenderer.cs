@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using gen.snd.Midi;
+using on.smfio;
 namespace modest100.Forms
 {
 	class MidiPianoViewRenderer
@@ -286,7 +287,7 @@ namespace modest100.Forms
 					string fmt = "{0:000} {1,-2}{2}";
 					if (IsEbony_ClientPadded(i, off, 12))
 						position.X += TextXOffsetE;
-					string strvalue = string.Format(fmt, value, MidiReader.SmfStringFormatter.GetKeySharp(value), MidiReader.SmfStringFormatter.GetOctave(value));
+					string strvalue = string.Format(fmt, value, SmfString.GetKeySharp(value), SmfString.GetOctave(value));
 					g.DrawString(strvalue, NoteFont, b, position);
 				}
 		}

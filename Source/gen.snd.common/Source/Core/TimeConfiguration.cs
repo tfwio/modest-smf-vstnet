@@ -21,8 +21,9 @@
 #endregion
 
 using System;
-using gen.snd.Midi;
-using gen.snd.Midi.Common;
+using on.smfio;
+using on.smfio.Common;
+using on.smfio.util;
 
 namespace gen.snd
 {
@@ -39,8 +40,8 @@ namespace gen.snd
 	    // MIDI
 	    Division            = 480,
 	    Tempo               = 120,
-	    TimeSignature       = new MidiTimeSignature(4,4,24,4),
-	    KeySignature        = new MidiKeySignature(KeySignatureType.C,true),
+	    TimeSignature       = new MidiTimeSignature(4, 4, 24, 4),
+      KeySignature        = new MidiKeySignature(KeySignatureType.C,true),
 	    IsSingleZeroChannel = false
 	  };
 		
@@ -49,7 +50,7 @@ namespace gen.snd
 			this.TimeSignature = parser.TimeSignature;
 			this.KeySignature = parser.KeySignature;
 			this.Division = parser.SmfFileHandle.Division;
-			this.Tempo = parser.MidiTimeInfo.Tempo;
+			this.Tempo = parser.TempoMap.Top.Tempo; // FIXME check Tempo.
 		}
 		
 		public int Channels { get;set; }
@@ -60,7 +61,7 @@ namespace gen.snd
 		/// Each MIDI file has within it a Division setting which stores
 		/// the number of ticks per quarter note (AKA: TPQN, TPQ, pulses per quarter or PPQ).
 		/// </summary>
-		public int Division  { get;set; }
+		public short Division  { get;set; }
 		public double Tempo { get;set; }
 		public bool IsSingleZeroChannel { get;set; }
 		

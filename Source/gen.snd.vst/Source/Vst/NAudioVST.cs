@@ -30,6 +30,8 @@ using gen.snd.Vst.Module;
 using Jacobi.Vst.Core;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
+using on.smfio;
+using on.smfio.util;
 
 namespace gen.snd.Vst
 {
@@ -62,8 +64,8 @@ namespace gen.snd.Vst
 			get
 			{
 				return new Loop(){
-					Begin = clock.SolveSamples(Settings.BarStart *Settings.Division*Settings.BarStartPulses,Settings).Samples32,
-					Length= clock.SolveSamples(Settings.BarLength*Settings.Division*Settings.BarLengthPulses,Settings).Samples32
+			    Begin = clock.SolveSamples((long)(Settings.BarStart *Settings.Division*Settings.BarStartPulses) ,Settings).Samples32,
+					Length= clock.SolveSamples((long)(Settings.BarLength*Settings.Division*Settings.BarLengthPulses),Settings).Samples32
 				};
 			}
 		}
@@ -81,8 +83,8 @@ namespace gen.snd.Vst
 		/// This is a reference point for timing configuration used in VstHostCommandStub.GetTimeInfo(…).
 		/// </summary>
 		/// <seealso cref="IBufferInfo"/>
-		public SampleClock SampleTime {
-			get { return sampleTime.SolvePPQ(SampleOffset,Settings); }
+    public SampleClock SampleTime {
+		  get { return sampleTime.SolvePPQ((long)SampleOffset,Settings); }
 			private set { sampleTime = value; }
 		} SampleClock sampleTime = new SampleClock();
 		
@@ -129,7 +131,7 @@ namespace gen.snd.Vst
 		/// <see cref="Settings" /> stored in <see cref="Config" />.
 		/// </summary>
 		public string MeasureString {
-			get { return SampleTime.SolvePPQ( SampleOffset,Settings.Rate,Settings.Tempo,Settings.Division,true ).MeasureString; }
+			get { return SampleTime.SolvePPQ( (long)SampleOffset, Settings.Rate,Settings.Tempo,Settings.Division,true ).MeasureString; }
 		}
 		
 		//
@@ -386,14 +388,14 @@ namespace gen.snd.Vst
 		}
 		
 		// 
-		// MIDI VstEvent, MidiMessage
+		// MIDI VstEvent, MIDIMessage
 		// ==========================
 		
 		//readonly object locker = new object();
 		
 		//IMidiParser Parser { get { return Parent.Parent.MidiParser; } }
 		
-		//bool IsContained(MidiMessage msg, IClock c, double min, double max)
+		//bool IsContained(MIDIMessage msg, IClock c, double min, double max)
 		//{
 		//	Loop b = One;
 		//	double samplePos = c.SolveSamples(msg.DeltaTime).Samples32;

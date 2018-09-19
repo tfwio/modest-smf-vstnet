@@ -63,7 +63,7 @@ namespace gen.snd.Vst.Xml
 				if (string.IsNullOrEmpty(value[0].Value))
 					ProgramDump = new byte[0];
 				else ProgramDump = Convert.FromBase64String(value[0].Value);
-				//				MessageBox.Show(gen.snd.Midi.MidiReader.SmfStringFormatter.byteToString(ProgramDump));
+				//				MessageBox.Show(gen.snd.Midi.MidiReader.SmfString.byteToString(ProgramDump));
 			}
 		}
 		/// <summary>

@@ -11,6 +11,8 @@ using gen.snd;
 using gen.snd.Forms;
 using gen.snd.Midi;
 using gen.snd.Vst;
+using on.smfio;
+using on.smfio.util;
 using Needs = modest100.Internals.RenderStateType;
 namespace modest100.Forms
 {
@@ -78,14 +80,14 @@ namespace modest100.Forms
 
     List<int> ChanelNumbers = new List<int>();
 
-    bool SameChanelComparer(MidiNote a, MidiNote b) { return a.Ch == b.Ch; }
+    bool SameChanelComparer(MidiNote a, MidiNote b) { return a.Channel == b.Channel; }
 
     /// <summary></summary>
-    public List<MidiMessage> SetOfNotes
+    public List<MIDIMessage> SetOfNotes
     {
       get { return setOfNotes; }
       set { setOfNotes = value; }
-    } List<MidiMessage> setOfNotes = new List<MidiMessage>();
+    } List<MIDIMessage> setOfNotes = new List<MIDIMessage>();
     
     bool HasEventsToRender {
       get { return !(this.UserInterface.MidiParser==null && this.UserInterface.MidiParser.Notes.Count > 0); }
@@ -100,9 +102,9 @@ namespace modest100.Forms
       Player.BarSegment = NoteSegment;
       
       try {
-        SetOfNotes = new List<MidiMessage>(
+        SetOfNotes = new List<MIDIMessage>(
           Parser.MidiDataList[ Parser.SelectedTrackNumber ]
-          .Where( xnote => Convert.ToDouble( xnote.DeltaTime ) < Player.BarSegment.Pulse )
+          .Where( xnote => Convert.ToDouble( xnote.Pulse ) < Player.BarSegment.Pulse )
          );
       }
       catch
@@ -114,7 +116,7 @@ namespace modest100.Forms
         
         if (Parser!=null)
         {
-          foreach ( MidiMessage n in Parser.MidiDataList[ Parser.SelectedTrackNumber ].Where(nn=> nn is MidiNote) )
+          foreach ( MIDIMessage n in Parser.MidiDataList[ Parser.SelectedTrackNumber ].Where(nn=> nn is MidiNote) )
           {
             ChanelNumbers.Add(n.ChannelBit);
           }
@@ -140,7 +142,7 @@ namespace modest100.Forms
     Image BackgroundImg = null;
     Binding OffsetBinding;
     
-    DictionaryList<int,MidiMessage> notes;
+    DictionaryList<int,MIDIMessage> notes;
     
     NAudioVST Player { get { return UserInterface.VstContainer.VstPlayer; } }
     ITimeConfiguration PlayerSettings { get { return Player.Settings; } }
@@ -150,16 +152,16 @@ namespace modest100.Forms
     
     #region strings
     
-    string clockstr { get { return clock.SolvePPQ(Player.SampleOffset,PlayerSettings).MeasureString; } }
+    string clockstr { get { return clock.SolvePPQ((long)Player.SampleOffset,PlayerSettings).MeasureString; } }
     string MeasureString
     {
       get
       {
-        clock.SolvePPQ( Player.SampleOffset, PlayerSettings );
+        clock.SolvePPQ( (long)Player.SampleOffset, PlayerSettings );
         return string.Format(
           "MBQT: {0}, Pulses: {1:N0}, C: {2}, mouse: {3}, loc: {4}x{5}, siz: {6}x{7}",
           clock.MeasureString,
-          Math.Floor(clock.Pulses),
+          clock.Pulse,
           Parser.SelectedTrackNumber,IsMouseDown ? "•":" ",
           MousePoint.X, MousePoint.Y,
           MouseTrail.X, MouseTrail.Y
@@ -248,7 +250,7 @@ namespace modest100.Forms
     /// </summary>
     public MBT OffsetX {
       get { return offsetX; } set { offsetX = value; Invalidate(Needs.Background); }
-    } MBT offsetX = 0;
+    } MBT offsetX = new MBT(0, 480);
 
     #endregion
     
@@ -266,12 +268,12 @@ namespace modest100.Forms
       get {
         string a = "", b = "";
         try {
-          a = clock.SolveSamples(PlayerSettings.BarStart*PlayerSettings.Division*PlayerSettings.BarStartPulses,PlayerSettings).MeasureString;
-          b = clock.SolveSamples(PlayerSettings.BarLength*PlayerSettings.Division*PlayerSettings.BarLengthPulses,PlayerSettings).MeasureString;
+          a = clock.SolveSamples(Convert.ToInt64(PlayerSettings.BarStart*PlayerSettings.Division*PlayerSettings.BarStartPulses),PlayerSettings).MeasureString;
+          b = clock.SolveSamples(Convert.ToInt64(PlayerSettings.BarLength*PlayerSettings.Division*PlayerSettings.BarLengthPulses),PlayerSettings).MeasureString;
         } catch {}
         FloatPoint p = ClientMouse;
         PianoCalculator calc = PianoCalculator.Create(p,/*Parser.SmfFileHandle.Division*/ Ren.ui_view_settings.NodeWidth*4);
-        return string.Format( "{0} {1:N0}:{2:N0} {3:N}", calc.ToString(), a, b, clock.Pulses );
+        return string.Format( "{0} {1:N0}:{2:N0} {3:N}", calc.ToString(), a, b, clock.Pulse );
       }
     }
     //string.Format( "{0:00#.000}x{1:000}", HoverPoint.X / 4, HoverPoint.Y )
@@ -358,10 +360,10 @@ namespace modest100.Forms
     /// our view.
     void UpdateView()
     {
-      foreach (MidiMessage n in SetOfNotes)
+      foreach (MIDIMessage n in SetOfNotes)
       {
-        timing.SolveSamples(Convert.ToDouble(n.DeltaTime),Player.Settings);
-        if (!(n is MidiMessage)) continue;
+        timing.SolveSamples(n.Pulse, Player.Settings);
+        if (!(n is MIDIMessage)) continue;
         // s, n, o, l, off
 //				listNotes.AddItem(
 //					ListView.DefaultBackColor,
@@ -569,8 +571,8 @@ namespace modest100.Forms
     {
       base.OnMouseWheel(e);
       if (HasControlKey) {
-        this.OffsetX = (e.Delta > 0) ? this.offsetX + 1 : this.offsetX - 1;
-        if (this.offsetX <= 0) this.offsetX = 0;
+        OffsetX.Pulse = (e.Delta > 0) ? offsetX.Pulse + 1 : offsetX.Pulse - 1;
+        if (offsetX.Pulse <= 0) this.offsetX.Pulse = 0;
       } else {
         
         this.OffsetY = (e.Delta > 0) ? this.offsetY + 1 : this.offsetY - 1;

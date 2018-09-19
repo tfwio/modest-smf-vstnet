@@ -5,3 +5,4 @@ portaudiosharp\*
 *.suo
 /Source/ren_mbqt_layout/*.user
 packages
+/Source/smfio

@@ -27,6 +27,7 @@ using System.IO;
 using gen.snd.Vst.Module;
 using Jacobi.Vst.Core;
 using Jacobi.Vst.Core.Host;
+using on.smfio;
 
 namespace gen.snd.Vst
 {
@@ -204,7 +205,7 @@ namespace gen.snd.Vst
       filterFlags |= VstTimeInfoFlags.ClockValid;
       if (filterFlags.HasFlag(VstTimeInfoFlags.ClockValid)) {
         // should we floor this?
-        int cp = MasterClock.SolvePPQ(Parent.SampleOffset, Parent.Settings).ClocksAtPosition.ToInt32();
+        int cp = MasterClock.SolvePPQ((long)Parent.SampleOffset, Parent.Settings).ClocksAtPosition.ToInt32();
         
         vstTimeInfo.SamplesToNearestClock = MasterClock.SolveSamples(cp * 24, Parent.Settings).Samples32Floor;
       }
@@ -221,12 +222,12 @@ namespace gen.snd.Vst
       // PpqPositionValid
       filterFlags |= VstTimeInfoFlags.PpqPositionValid;
       if (filterFlags.HasFlag(VstTimeInfoFlags.PpqPositionValid)) {
-        vstTimeInfo.PpqPosition	= MasterClock.SolvePPQ(vstTimeInfo.SamplePosition, Parent.Settings).Frame;
+        vstTimeInfo.PpqPosition	= MasterClock.SolvePPQ((long)vstTimeInfo.SamplePosition, Parent.Settings).Frame;
       }
       // BarStartPositionValid
       filterFlags |= VstTimeInfoFlags.BarStartPositionValid;
       if (filterFlags.HasFlag(VstTimeInfoFlags.BarStartPositionValid)) {
-        vstTimeInfo.BarStartPosition = MasterClock.SolvePPQ(vstTimeInfo.SamplePosition, Parent.Settings).Pulses; // * st.SamplesPerQuarter
+        vstTimeInfo.BarStartPosition = MasterClock.SolvePPQ((long)vstTimeInfo.SamplePosition, Parent.Settings).Pulse; // * st.SamplesPerQuarter
       }
       // CyclePositionValid
       filterFlags |= VstTimeInfoFlags.CyclePositionValid;
