@@ -24,7 +24,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-using gen.snd.Midi;
+using on.smfio;
 
 namespace gen.snd.Forms
 {

@@ -27,6 +27,8 @@ using System.Linq;
 using gen.snd.Midi;
 using gen.snd.Vst;
 using gen.snd.Vst.Module;
+using on.smfio;
+using on.smfio.util;
 
 
 namespace gen.snd.Vst
@@ -37,10 +39,10 @@ namespace gen.snd.Vst
   
   static public class VstMidiEnumerator
   {
-    class MidiChannelComparer : IEqualityComparer<MidiMessage>
+    class MidiChannelComparer : IEqualityComparer<MIDIMessage>
     {
-      public bool Equals(MidiMessage x, MidiMessage y) { return x.ChannelBit == y.ChannelBit; }
-      public int GetHashCode(MidiMessage obj) { return base.GetHashCode(); }
+      public bool Equals(MIDIMessage x, MIDIMessage y) { return x.ChannelBit == y.ChannelBit; }
+      public int GetHashCode(MIDIMessage obj) { return base.GetHashCode(); }
     } readonly static MidiChannelComparer ChannelComparer = new MidiChannelComparer();
 
     static public IEnumerable<VstPlugin> GetInstruments(IMidiParserUI ui)
@@ -76,7 +78,7 @@ namespace gen.snd.Vst
         yield return new KeyValuePair<int,string>(i,trackname);
       }
     }
-    static public IEnumerable<MidiMessage> MidiTrackDistinctChannels(this IMidiParser parser, int trackid)
+    static public IEnumerable<MIDIMessage> MidiTrackDistinctChannels(this IMidiParser parser, int trackid)
     {
       return parser.MidiDataList[trackid].Distinct(ChannelComparer);
     }
@@ -121,14 +123,14 @@ namespace gen.snd.Vst
       var list = new List<NVstEvent>();
       SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
       
-      foreach (MidiMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
+      foreach (MIDIMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
       {
         if (item.MessageBit==0xC0 && ignoreMidiPgm) continue;
         
-        if (item is MidiChannelMessage)
+        if (item is ChannelMessage)
           list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
         
-        else if (item is MidiSysexMessage)
+        else if (item is SysExMessage)
           list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
         
       }
@@ -146,14 +148,14 @@ namespace gen.snd.Vst
     /// <param name="Parser"></param>
     /// <param name="loop"></param>
     /// <returns></returns>
-    static IEnumerable<MidiMessage> MidiMessage_Range(IMidiParserUI Parser, Loop loop)
+    static IEnumerable<MIDIMessage> MidiMessage_Range(IMidiParserUI Parser, Loop loop)
     {
       SampleClock c = new SampleClock(Parser.VstContainer.VstPlayer.Settings);
 
       for (int trackId = 0; trackId < Parser.MidiParser.SmfFileHandle.NumberOfTracks; trackId++)
       {
         var elements = Parser.MidiParser.MidiDataList[trackId].Where( msg0 => msg0.IsContained( c, loop ) );
-        foreach ( MidiMessage item in elements ) yield return item;
+        foreach ( MIDIMessage item in elements ) yield return item;
       }
 
       c = null;
@@ -182,10 +184,10 @@ namespace gen.snd.Vst
       var list = new List<NVstEvent>();
       SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
       
-      foreach (MidiMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
+      foreach (MIDIMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
       {
-        if (item is MidiChannelMessage) list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
-        else if (item is MidiSysexMessage) list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
+        if (item is ChannelMessage) list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
+        else if (item is SysExMessage) list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
       }
       c = null;
       

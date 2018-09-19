@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\Modules\ColorResources.cs" />
     <Compile Include="Source\Modules\MidiEventControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -204,10 +205,6 @@
       <Project>{669C9CD9-8B80-4D6D-B5D7-A39B1224A50E}</Project>
       <Name>gen.snd.common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\gen.snd.midi\gen.snd.midi.csproj">
-      <Project>{96A731DE-D50C-47D8-93FC-DC030D8E3C2E}</Project>
-      <Name>gen.snd.midi</Name>
-    </ProjectReference>
     <ProjectReference Include="..\gen.snd.vst\gen.snd.vst.csproj">
       <Project>{3AE94169-B621-4352-9661-E5B293083C14}</Project>
       <Name>gen.snd.vst</Name>
@@ -215,6 +212,10 @@
     <ProjectReference Include="..\SharedResources\SharedResources.csproj">
       <Project>{AE81E8C4-19F9-4E6B-90A8-1F73BEDC8124}</Project>
       <Name>SharedResources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\smfio\.src\smfio-n3.csproj">
+      <Project>{fe891435-340c-40fb-9d4f-691efdd24d89}</Project>
+      <Name>smfio</Name>
     </ProjectReference>
     <ProjectReference Include="..\System.Cor3.Lite\System.Cor3.Lite.csproj">
       <Project>{E88AC1AE-B545-4A2C-B136-3E42DC75EF7F}</Project>

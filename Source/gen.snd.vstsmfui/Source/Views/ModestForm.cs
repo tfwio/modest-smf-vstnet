@@ -22,6 +22,8 @@ using gen.snd.Vst.Module;
 using gen.snd.Vst.Xml;
 using modest100.Internals;
 using NAudio.Wave;
+using on.smfio;
+using on.smfio.util;
 
 // Gram Hancock.com: legend of spinx , arc of the covenent, quest for civilization, underworld?
 // lost kingdoms of the ice age
@@ -73,7 +75,7 @@ namespace modest100.Forms
     #region Action_PlayerUpDown2Ppq
     void Action_PlayerUpDown2Ppq()
     {
-      VstContainer.VstPlayer.Settings.Division = Convert.ToInt32(numPpq.Value);
+      VstContainer.VstPlayer.Settings.Division = Convert.ToInt16(numPpq.Value);
     }
     void Event_PlayerUpDown2Ppq(object sender, EventArgs e)
     {
@@ -107,7 +109,7 @@ namespace modest100.Forms
 		
     void Event_BufferCycle_to_Label2(object sender, NAudioVSTCycleEventArgs e)
     {
-      var s2 = vstContainer.VstPlayer.SampleTime.Clone<SampleClock>();
+      var s2 = vstContainer.VstPlayer.SampleTime.Copy();
       label2.Text = string.Format(
         Strings.Format_LabelTimeInfo_Main,
         s2.Tempo,
@@ -118,7 +120,7 @@ namespace modest100.Forms
         s2.Frame,
         insname,
         efxname,
-        s2.Pulses
+        s2.Pulse
       );
     }
     /// <summary>
@@ -166,10 +168,10 @@ namespace modest100.Forms
 		
     int trackLen { get { return this.midiFile.SmfFileHandle[midiFile.SelectedTrackNumber].track.Length; } }
     int cycles = 0, cycle = 12;
-    void ShowProgress(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse)
+    void ShowProgress(MidiMsgType msgType, int nTrackIndex, int nTrackOffset, int msg32, byte msg8, long pulse, int rse, bool isrse)
     {
       try {
-        this.toolStripProgressBar1.Value = (int)(((double)offset / trackLen) * 100f);
+        this.toolStripProgressBar1.Value = (int)(((double)nTrackOffset / trackLen) * 100f);
         cycles = (cycles++ % cycle);
       } catch {
       }
@@ -229,8 +231,8 @@ namespace modest100.Forms
         tn.Tag = track.Key;
         listBoxContextMenuStrip.Items.Add(tn);
 				
-        foreach (MidiMessage i in midiFile.MidiTrackDistinctChannels(track.Key))
-          if (i is MidiChannelMessage)
+        foreach (MIDIMessage i in midiFile.MidiTrackDistinctChannels(track.Key))
+          if (i is ChannelMessage)
             channels.Add(i.ChannelBit);
         
         foreach (int i in channels) {
@@ -283,7 +285,7 @@ namespace modest100.Forms
       }
       Text = string.Format(Strings.Dialog_Title_1, Path.GetFileNameWithoutExtension(filename));
 			
-      midiFile = new MidiReader(filename);
+      midiFile = new NoteParser(filename);
       midiFile.SelectedTrackNumber = trackNo;
 			
       midiFile.ClearView -= Event_MidiClearMemory;
@@ -316,7 +318,7 @@ namespace modest100.Forms
 			
       Text = string.Format(Strings.Dialog_Title_1, Path.GetFileNameWithoutExtension(filename));
 			
-      midiFile = new MidiReader(filename);
+      midiFile = new NoteParser(filename);
       midiFile.SelectedTrackNumber = trackNo;
 			
       midiFile.ClearView -= Event_MidiClearMemory;
@@ -448,10 +450,10 @@ namespace modest100.Forms
     }
     NAudioVstContainer vstContainer;
     OpenFileDialog MidiFileDialog = new OpenFileDialog();
-    public IMidiParser MidiParser {
+    public INoteParser MidiParser {
       get { return midiFile; }
     }
-    MidiReader midiFile;
+    NoteParser midiFile;
 
     #endregion
 		
@@ -846,12 +848,12 @@ namespace modest100.Forms
     // ------------------
     #region BPM Calculator Dialog
 
-    BpmCalculatorForm bcf = new BpmCalculatorForm();
+    //BpmCalculatorForm bcf = new BpmCalculatorForm();
     void CalculatorToolStripMenuItemClick(object sender, EventArgs e)
     {
-      if (bcf == null)
-        bcf = new BpmCalculatorForm();
-      bcf.ShowDialog(this);
+      // if (bcf == null)
+      //   bcf = new BpmCalculatorForm();
+      // bcf.ShowDialog(this);
     }
 		
     #endregion

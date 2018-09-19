@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 using gen.snd;
 using gen.snd.Forms;
-using gen.snd.Midi;
+using on.smfio;
 
 namespace modest100.Forms
 {
@@ -142,31 +142,33 @@ namespace modest100.Forms
       // filter them.
       foreach (MidiNote n in UserInterface.MidiParser.Notes)
       {
+        // FIXME: TEMPO REFERENCE!
         timing.SolveSamples(
-          Convert.ToDouble(n.Start),
+          n.Pulse,
           samplerate,
-          this.UserInterface.MidiParser.MidiTimeInfo.Tempo,
-          MidiReader.FileDivision,
+          UserInterface.MidiParser.TempoMap.Top.Tempo,
+          UserInterface.MidiParser.Division,
           true);
+        
         if (!(n is MidiNote)) continue;
         // s, n, o, l, off
         listNotes.AddItem(
           // Paint
           ListView.DefaultBackColor,
           // MBQT
-          n.GetMBT(MidiReader.FileDivision),
+          n.GetMBTString(UserInterface.MidiParser.Division),
           // SAMPLE TIME
           timing.TimeString,
           // MIDI CHANNEL
-          n.Ch.HasValue ? n.Ch.ToString() : "?",
+          n.Channel.HasValue ? n.CharChannel.ToString() : "?",
           // NOTE KEY
           n.KeyStr,
           // NOTE ON VELOCITY
-          n.V1.ToString(),
+          n.noteOnVelocity.ToString(),
           // NOTE LENGTH
-          n.GetMbtLen2(MidiReader.FileDivision),
+          n.GetMbtLen2(UserInterface.MidiParser.Division),
           // NOTE OFF VELOCITY
-          n.V2.ToString()
+          n.noteOffVelocity.ToString()
          );
       }
       this.listNotes.Visible = true;
@@ -186,7 +188,7 @@ namespace modest100.Forms
       base.OnLoad(e);
     }
 //	#endregion
-    void GotMidiEventD(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse)
+    void GotMidiEventD(MidiMsgType t, int track, int offset, int imsg, byte bmsg, long ppq, int rse, bool isrse)
     {
       if (t== MidiMsgType.NoteOn||t== MidiMsgType.NoteOff)
       {

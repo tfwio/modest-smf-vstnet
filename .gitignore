@@ -1,7 +1,12 @@
+.user
+*.suo
+*.user
+.vs/
 bin
 obj
-.user
-portaudiosharp\*
-*.suo
-/Source/ren_mbqt_layout/*.user
+build
 packages
+portaudiosharp\*
+Solution/.vs/
+Source/smfio
+/Source/gen.snd.vstsmfui/Properties/AssemblyInfo.cs

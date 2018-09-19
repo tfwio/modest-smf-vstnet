@@ -12,8 +12,8 @@ using System.Windows.Forms;
 
 using gen.snd;
 using gen.snd.Forms;
-using gen.snd.Midi;
-using gen.snd.Midi.Common;
+using on.smfio;
+using on.smfio.Common;
 
 // 7285Hz
 namespace modest100.Forms
@@ -146,31 +146,31 @@ namespace modest100.Forms
 		
 		#endregion
 		
-		void GotMidiEventD(MidiMsgType t, int track, int offset, int imsg, byte bmsg, ulong ppq, int rse, bool isrse)
+		void GotMidiEventD(MidiMsgType msgType, int nTrackIndex, int nTrackOffset, int msg32, byte msg8, long pulse, int rse, bool isrse)
 		{
 			timing.SolveSamples(
-				ppq,
+				pulse,
 				UserInterface.VstContainer.VstPlayer.Settings.Rate,
-				UserInterface.MidiParser.MidiTimeInfo.Tempo,
+				UserInterface.MidiParser.TempoMap.Top.Tempo,
 				UserInterface.MidiParser.SmfFileHandle.Division,
 				true
 			);
-			switch (t)
+			switch (msgType)
 			{
 				case MidiMsgType.MetaStr:
-					lve.AddItem( MidiReader.c4, UserInterface.MidiParser.GetMbtString( ppq ), string.Empty, string.Empty, MetaHelpers.MetaNameFF( imsg ), UserInterface.MidiParser.GetMetaString( offset ) );
+					lve.AddItem( ColorResources.c4, UserInterface.MidiParser.GetMbtString( pulse ), string.Empty, string.Empty, MetaHelpers.MetaNameFF( msg32 ), UserInterface.MidiParser.GetMetaString( nTrackOffset ) );
 					break;
 				case MidiMsgType.MetaInf:
-					lve.AddItem( UserInterface.MidiParser.GetEventColor(imsg,MidiReader.cR), UserInterface.MidiParser.GetMbtString( ppq ), string.Empty, string.Empty, MetaHelpers.MetaNameFF( imsg ), UserInterface.MidiParser.GetMetaSTR( offset ) );
+					lve.AddItem( ColorResources.GetEventColor(msg32,ColorResources.cR, rse), UserInterface.MidiParser.GetMbtString( pulse ), string.Empty, string.Empty, MetaHelpers.MetaNameFF( msg32 ), UserInterface.MidiParser.GetMetaSTR( nTrackOffset ) );
 					break;
 				case MidiMsgType.SysCommon:
 				case MidiMsgType.System:
-					lve.AddItem( UserInterface.MidiParser.GetEventColor(imsg,MidiReader.cR), UserInterface.MidiParser.GetMbtString( ppq ), string.Empty, string.Empty, MetaHelpers.MetaNameFF( imsg ), UserInterface.MidiParser.GetMetaSTR( offset ) );
+					lve.AddItem( ColorResources.GetEventColor(msg32,ColorResources.cR, rse), UserInterface.MidiParser.GetMbtString( pulse ), string.Empty, string.Empty, MetaHelpers.MetaNameFF( msg32 ), UserInterface.MidiParser.GetMetaSTR( nTrackOffset ) );
 					break;
 				default:
 //				case MsgType.Channel:
-					if (isrse) lve.AddItem( UserInterface.MidiParser.GetRseEventColor( UserInterface.MidiParser.Colors["225"] ), UserInterface.MidiParser.GetMbtString( ppq ), timing.TimeString, bmsg==0xF0?"":(rse & 0x0F).ToString(),UserInterface.MidiParser.GetRseEventString( offset ), UserInterface.MidiParser.chRseV( offset ) );
-					else       lve.AddItem( UserInterface.MidiParser.GetEventColor   ( UserInterface.MidiParser.Colors["225"] ), UserInterface.MidiParser.GetMbtString( ppq ), timing.TimeString, bmsg==0xF0?"":(rse & 0x0F).ToString(),UserInterface.MidiParser.GetEventString   ( offset ), UserInterface.MidiParser.chV   ( offset ) );
+					if (isrse) lve.AddItem( ColorResources.GetRseEventColor( ColorResources.Colors["225"], rse ), UserInterface.MidiParser.GetMbtString( pulse ), timing.TimeString, msg8==0xF0?"":(rse & 0x0F).ToString(),UserInterface.MidiParser.GetRseEventString( nTrackOffset ), UserInterface.MidiParser.chRseV( nTrackOffset ) );
+					else       lve.AddItem( ColorResources.GetEventColor   ( ColorResources.Colors["225"], rse ), UserInterface.MidiParser.GetMbtString( pulse ), timing.TimeString, msg8==0xF0?"":(rse & 0x0F).ToString(),UserInterface.MidiParser.GetEventString   ( nTrackOffset ), UserInterface.MidiParser.chV   ( nTrackOffset ) );
 //				if (t== MsgType.NoteOn||t== MsgType.NoteOff) UserInterface.MidiParser.CheckNote(t,ppq,Convert.ToByte((rse) & 0x0F),offset,bmsg,isrse);
 					break;
 			}

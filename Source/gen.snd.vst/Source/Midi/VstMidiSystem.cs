@@ -23,22 +23,23 @@
 using System;
 using System.Linq;
 
-using gen.snd.Midi;
+using on.smfio;
+using on.smfio.util;
 
 namespace gen.snd.Midi
 {
 	static public class VstMidiSystem
 	{
-		static public Jacobi.Vst.Core.VstMidiEvent ToVstMidiEvent(this MidiMessage item, int offset, ITimeConfiguration config, SampleClock c)
+		static public Jacobi.Vst.Core.VstMidiEvent ToVstMidiEvent(this MIDIMessage item, int offset, ITimeConfiguration config, SampleClock c)
 		{
 	   // byte b0 = (config.IsSingleZeroChannel) ? (byte)item.MessageBit : item.Data[0];
-			int samples = c.SolveSamples(item.DeltaTime).Samples32Floor - offset;
+			int samples = c.SolveSamples(item.Pulse).Samples32Floor - offset;
 			return new Jacobi.Vst.Core.VstMidiEvent(samples, 0, 0, new byte[4]{ item.Data[0], item.Data[1], item.Data[2], 0 }, 0 , 0 );
 		}
-		static public Jacobi.Vst.Core.VstMidiSysExEvent ToVstMidiSysex(this MidiMessage item, int offset, ITimeConfiguration config, SampleClock c)
+		static public Jacobi.Vst.Core.VstMidiSysExEvent ToVstMidiSysex(this MIDIMessage item, int offset, ITimeConfiguration config, SampleClock c)
 		{
-			int samples = c.SolveSamples(item.DeltaTime).Samples32Floor-offset;
-			return new Jacobi.Vst.Core.VstMidiSysExEvent(samples,(item as MidiSysexMessage).SystemData);
+			int samples = c.SolveSamples(item.Pulse).Samples32Floor-offset;
+			return new Jacobi.Vst.Core.VstMidiSysExEvent(samples,(item as on.smfio.SysExMessage).SystemData);
 		}
 	}
 }

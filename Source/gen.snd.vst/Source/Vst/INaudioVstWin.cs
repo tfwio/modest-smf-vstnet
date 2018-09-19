@@ -21,7 +21,7 @@
 #endregion
 
 using System;
-using gen.snd.Midi;
+using on.smfio;
 
 namespace gen.snd.Vst
 {
@@ -31,7 +31,7 @@ namespace gen.snd.Vst
 	/// </summary>
 	public interface INaudioVstWin : System.Windows.Forms.IWin32Window
 	{
-		IMidiParser MidiParser { get; }
+		INoteParser MidiParser { get; }
 		INaudioVstContainer VstContainer { get; }
 	}
 }

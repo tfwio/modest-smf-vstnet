@@ -31,6 +31,8 @@ using Jacobi.Vst.Core;
 using Jacobi.Vst.Core.Host;
 using Jacobi.Vst.Interop.Host;
 using NAudio.Wave;
+using on.smfio;
+using on.smfio.util;
 
 namespace gen.snd.Midi
 {
@@ -44,10 +46,10 @@ namespace gen.snd.Midi
 	{
 		double wedge, multiply, division;
 		
-		public LoopPoint LoopRegion {
+		public Loop LoopRegion {
 			get { return loopRegion; }
 			set { loopRegion = value;/* Notify("BarPosition");*/ }
-		} LoopPoint loopRegion;
+		} Loop loopRegion;
 		
 		/// <summary>
 		/// Contains a read only piano info 
@@ -69,9 +71,9 @@ namespace gen.snd.Midi
 		/// <summary></summary>
 		public int    Key { get;set; }
 		/// <summary></summary>
-		public string KeySharp { get { return MidiReader.SmfStringFormatter.GetKeySharp(Key); } }
+		public string KeySharp { get { return SmfString.GetKeySharp(Key); } }
 		/// <summary></summary>
-		public int    KeyOctave { get { return MidiReader.SmfStringFormatter.GetOctave(Key); } }
+		public int    KeyOctave { get { return SmfString.GetOctave(Key); } }
 		/// <summary>
 		/// Key domain; provides the top key in piano-view.
 		/// Upper &gt; Lower.

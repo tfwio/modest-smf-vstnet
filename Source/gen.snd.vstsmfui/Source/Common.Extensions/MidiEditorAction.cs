@@ -28,7 +28,7 @@ namespace modest100.Midi
 			get { return track; }
 		} internal int track;
 		
-		internal ulong oldDelta,newDelta;
+		internal long oldDelta,newDelta;
 		internal int oldMessage,newMessage;
 		internal byte[] oldData, newData;
 		

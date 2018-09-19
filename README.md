@@ -1,70 +1,73 @@
-# modest-smf-vstnet
+modest-smf-vstnet
+=================
 
-GITHUB
+MIDI-parser + VstNet + NAudio  
+A 'modest' Windows.Forms app testing sending MIDI data to a single VST v2.4 instrument and effect.
 
-MIDI-parser+VstNet+NAudio; A 'modest' Windows.Forms app testing sending MIDI (our midi parser) data to a single VST v2.4 instrument and effect (migrated out of the old gen.snd project-space)
+Idea: test the MIDI parser (now 'smfio') using Jacobi's VstNet binaries (particularly `Jacobi.Vst.Core` and `Jacobi.Vst.Interop` libraries) using NAudio for audio-output.  
 
+https://github.com/tfwio/modest-smf-vstnet
 
-# Implementation Notes
+OBVIOUS QUIRKS
+--------------
 
-I've written this document in order to sync one's mentality to the source-code in this project which was written rather quickly.  The project was written to test my little MIDI parser (MidiReader) and also to see first-hand what limitations might exist within utilization of Jacobi's VstNet binaries (particularly `Jacobi.Vst.Core` and `Jacobi.Vst.Interop` libraries).
+- Win32/x86 VST are supported.
+- No editing, no piano-view.. we just load up a midi file and play it via the
+  VST chain selected (or active).
+- Audio Configuration Panel needs to be configured each time the app is launched.  
+  *vst-plugins may be loaded with erroneous configuration settings by default.*
+- MIDI->SetTempo is not yet processed
+- Most VST Plugins seem to have no problem loading, however a 'plugin-loader'
+  does not seem possible.  Each Plugin should be loaded manually via the UI
+  or by editing the XML configuration file next to the program.  
+  Attempts at writing a Plugin-Loader have thus far failed.
+- NAudio implementation here (customized: v1.7.3) is pretty old.
 
-The single-most obvious (to me) issues that I have with the software as it stands:
+COMPILING
+---------------
 
-- audio configuration panel needs to be configured after launching the application.
-- Aside from the above bullet, all vst-plugins are loaded with erronious configuration settings by default.
-    - we might be able to correct this issue by re-loading all the plugins when the audio-configuration changes.
-    - For now, it appearsh that re-loading the 'active' instrument and effect corrects the problem, but this obviously not suitable as a base-library for elaborating upon.
-    - The solution to the particular issue noted here would most-likely be to re-write the `PluginManager` where needed.
+requirements:
 
-¡**YET EVEN MORESO OBVIOUS**!
+- python3 for PREBUILD step(s)
+- DotNet Framework v4.0 (e.g. Visual Studio Express)
+- GIT
 
-It had become quite evident to me that there are going to be issues loading vst-plugins.
+clone this repo and enter into that directory
+```
+git clone https://github.com/tfwio/modest-smf-vstnet
+pushd modest-smf-vstnet
+```
+clone smfio from the `./Source` sub-directory.
+```
+pushd Source
+git clone https://github.com/tfwio/modest-smf-vstnet
+popd
+```
 
-For this we need a plugin-loader.  Writing a plugin-tester has not been fun, but I'm working on it.
-
-# Class Hierarchy
+CLASS HIERARCHY
+---------------
 
 This is a quick overview of the implementation's class-hierarchy.
 
+SIGNIFICANT CLASSES: NAudioVST, VstStream32, IOModule
+
 - ModestForm
-    - VstContainer typeof(NAudioVstContainer)
-        - VstPlayer (NAudioVST)
-            - VstHostCommandStub (HostCommandStub)---The HostCommandStub class represents the part of the host that a plugin can call
-        - PluginManager (VstPluginManager)
-            - VstPlugin Collection via configuration settings file.
-            - GeneratorModules (List<VstPlugin>)
-            - EffectModules (List<VstPlugin>)
-            - ActivePlugin (VstPlugin) --- as selected in the application's main UI.
-            - MasterPluginInstrument --- only one instrument is supported mapped to the following effect.
-            - MasterPluginEffects
+  - VstContainer typeof(NAudioVstContainer)
+    - VstPlayer (NAudioVST)
+      - VstHostCommandStub (HostCommandStub); *part of the host that plugin calls on*
+    - PluginManager (VstPluginManager)
+      - VstPlugin Collection via configuration settings file.
+      - GeneratorModules (List<VstPlugin>)
+      - EffectModules (List<VstPlugin>)
+      - ActivePlugin (VstPlugin) — as selected in the application's main UI.
+      - MasterPluginInstrument — only one instrument is supported mapped to the following effect.
+      - MasterPluginEffects
 
-**OTHER SIGNIFICANT BITS**
+MIDI PROCESSING
 
-- NAudioVST
-- VstStream32
-- IOModule
+- source/gen.snd.vst/Midi/VstMidiEnumerator.cs
 
-## During Playback
-
-What's worth pointing out: we're missing the ability to loop a particular bar running the clock.  Conversely, there are a few issues causing this, but thats why we're writing documentation and source-code.  There are actually two major issues that we are intent upon resolving, and a few more things that can use some attention such as providing a much more adequate audio-processing library implementation (NAudio is fine, just---not my first implementation as written here).  The biggest issue I had with the audio-implementation has been fixed, however I would like to see more audio-driver support---the big issue of (prior) consern caused a unavoidable crash every time the application was closed and has since been fixed.
-
-### Timing Issues
-
-1.   No (pre-process) buffering happens during our `VstHost.AudioProcess()`
-2.   Tempo changes are not calculated into the MIDI injection calculated during the AudioProcess.
-    -   Playback (timing) is dependant upon calculations of the Sample-Position.
-
-**THINK DOUBLE-BUFFERING** where we have a particular amount in a pre-buffer in MIDI resolute time.
-
-
-### MIDI Processing
-
-As pointed out, we are missing calculations for **Tempo-Changes**.
-
-Our MIDI parser is dependant upon a few key classes.
-
-When the parser is parsing our data, it appends data to a main VstEvent dictionary via a specific delegate From within the MIDI Parser.  An Event is triggered upon the occurance of each Midi Message, entailing a little bit of information about each message.  We have defined methods which take care of parsing, however it would.
+When the parser is parsing our data, it appends data to a main VstEvent dictionary via a specific delegate From within the MIDI Parser.  An Event is triggered upon the occurrence of each Midi Message, entailing a little bit of information about each message.  We have defined methods which take care of parsing, however it would.
 
 - (**TimeConfiguration**) ModestForm.VstContainer.VstPlayer.Settings
 - **SampleClock**
@@ -76,7 +79,7 @@ When the parser is parsing our data, it appends data to a main VstEvent dictiona
     - (public) MidiReader.**ParseAll** and (private) **Parse** is going to assign a default parser which will throw all our track data into our `DictList<int,MidiMessage>`.
     - (private) MidiReader.**PARSER_MIDIDataList** is the name of our default parser as defined within the confines of our reader class.
 
-### Play Is Clicked
+PLAY IS CLICKED
 
 - **ModestForm**.**Play**-Click
     - **NAudioVstContainer**.PlayerPlay
@@ -86,15 +89,3 @@ When the parser is parsing our data, it appends data to a main VstEvent dictiona
             - Volume is set from the NAudioVst.**Volume** setting.
             - (IWavePlayer) NAudioVst.XAudio.Play is called.
             - (bool) NAudioVst.**isRunning** is set to true.
-
-
-Now from here, we're going to have to take a look at the audio implementation in NAudio.
-
-More-so realistically, we need to be looking at **VstStream32** and **VstMidiEnumerator**.
-
-
-
-
-
-
-

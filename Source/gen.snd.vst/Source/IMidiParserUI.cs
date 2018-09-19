@@ -23,17 +23,17 @@
 using System;
 using System.Drawing;
 using gen.snd.Forms;
-using gen.snd.Midi;
 using gen.snd.Vst;
 using gen.snd.Vst.Module;
 using gen.snd.Vst.Xml;
+using on.smfio;
 
 namespace gen.snd
 {
 	public interface IMidiParserUI : INaudioVstWin
 	{
 		/// <summary></summary>
-		IMidiParser MidiParser { get; }
+		INoteParser MidiParser { get; }
 		/// <summary></summary>
 		void Action_MidiFileOpen();
 		/// <summary></summary>

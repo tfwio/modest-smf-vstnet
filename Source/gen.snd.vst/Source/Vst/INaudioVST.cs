@@ -76,7 +76,7 @@ namespace gen.snd.Vst
 		/// </remarks>
 		/// <seealso cref="TimeConfiguration"/>
 		/// <seealso cref="TimeConfiguration.Instance"/>- TimeConfiguration.Instance
-		ITimeConfiguration Settings { get; }
+		on.smfio.util.ITimeConfiguration Settings { get; }
 		/// <summary>
 		/// This process is called each buffer-process to update a TIMER!
 		/// </summary>

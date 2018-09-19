@@ -9,8 +9,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq.Expressions;
 
-using gen.snd.Midi.Common;
-using gen.snd.Midi.Structures;
 using CliEvent = System.EventArgs;
 using CliHandler = System.EventHandler;
 

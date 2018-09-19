@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using on.smfio;
 
 namespace gen.snd
 {

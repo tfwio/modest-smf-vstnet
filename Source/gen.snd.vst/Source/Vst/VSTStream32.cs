@@ -31,6 +31,7 @@ using Jacobi.Vst.Core;
 using Jacobi.Vst.Core.Host;
 using Jacobi.Vst.Interop.Host;
 using NAudio.Wave;
+using on.smfio.util;
 
 namespace gen.snd.Vst
 {
@@ -144,7 +145,7 @@ namespace gen.snd.Vst
 			double newsamplecount = sampleCount;
 			int actualSamples = newsamplecount.FloorMinimum(0).ToInt32() / nch;
 			
-			Loop o = Parent.One;
+      Loop o = Parent.One;
 			
 			if ((Parent.SampleOffset+actualSamples) > o.End)
 			{

@@ -14,7 +14,7 @@ using System.IO;
 using Jacobi.Vst.Core;
 using Jacobi.Vst.Core.Host;
 using Jacobi.Vst.Core.Plugin;
-using Bitset = gen.snd.Midi.MidiReader.SmfStringFormatter;
+//using Bitset = MidiReader.SmfString;
 using IPluginCommander = Jacobi.Vst.Core.Host.IVstPluginCommandStub;
 
 namespace gen.snd.Vst.Module

@@ -12,7 +12,7 @@ using System.Diagnostics;
 
 using Jacobi.Vst.Core.Host;
 using Jacobi.Vst.Core.Plugin;
-using Bitset = gen.snd.Midi.MidiReader.SmfStringFormatter;
+using Bitset = on.smfio.SmfString;
 using IPluginCommander = Jacobi.Vst.Core.Host.IVstPluginCommandStub;
 
 namespace gen.snd.Vst.Module
