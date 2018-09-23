@@ -45,7 +45,7 @@
     <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DocumentationFile>bin\x86\Release\DspAudio.Vst.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Platform)\$(Configuration)\gen.snd.vst.xml</DocumentationFile>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
@@ -53,12 +53,12 @@
     <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
-    <DocumentationFile>bin\x86\Release\DspAudio.Vst.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Platform)\$(Configuration)\gen.snd.vst.xml</DocumentationFile>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <BaseAddress>4194304</BaseAddress>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <FileAlignment>4096</FileAlignment>
@@ -170,8 +170,8 @@
       <Name>SharedResources</Name>
     </ProjectReference>
     <ProjectReference Include="..\smfio\.src\smfio-n3.csproj">
-      <Project>{fe891435-340c-40fb-9d4f-691efdd24d89}</Project>
-      <Name>smfio</Name>
+      <Project>{5a70b240-14b9-4a2f-8c5b-497a67012a72}</Project>
+      <Name>smfio-n3</Name>
     </ProjectReference>
     <ProjectReference Include="..\System.Cor3.Lite\System.Cor3.Lite.csproj">
       <Project>{E88AC1AE-B545-4A2C-B136-3E42DC75EF7F}</Project>

@@ -24,7 +24,6 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <SourceAnalysisOverrideSettingsFile>C:\Users\oio\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
-    <DocumentationFile>bin\$(Platform)\$(Configuration)\gen.snd.common.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -209,10 +208,7 @@
     <Compile Include="Source\System.Sound\IOHelper.cs" />
     <Compile Include="Source\Wave\Int32WaveChannelBase.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Source\Forms %28controls%29" />
-    <Folder Include="Source\Demo.Forms" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="..\..\Win32-DLL\DrumSynth2Wave\ds2wav.dll">
       <Link>ds2wav.dll</Link>
@@ -256,8 +252,8 @@
       <Name>SharedResources</Name>
     </ProjectReference>
     <ProjectReference Include="..\smfio\.src\smfio-n3.csproj">
-      <Project>{fe891435-340c-40fb-9d4f-691efdd24d89}</Project>
-      <Name>smfio</Name>
+      <Project>{5a70b240-14b9-4a2f-8c5b-497a67012a72}</Project>
+      <Name>smfio-n3</Name>
     </ProjectReference>
     <ProjectReference Include="..\System.Cor3.Lite\System.Cor3.Lite.csproj">
       <Project>{E88AC1AE-B545-4A2C-B136-3E42DC75EF7F}</Project>
@@ -271,7 +267,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'Win32' ">
     <BaseAddress>4194304</BaseAddress>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <FileAlignment>4096</FileAlignment>

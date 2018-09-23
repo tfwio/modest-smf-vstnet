@@ -1,12 +1,26 @@
+
+[github/naudio/NAudio]: https://github.com/naudio/NAudio
+[github.com/obiwanjacobi/vst.net]: https://github.com/obiwanjacobi/vst.net
+[github.com/tfwio/smfio]: https://github.com/tfwio/smfio
+
 modest-smf-vstnet
 =================
+https://github.com/tfwio/modest-smf-vstnet
 
-MIDI-parser + VstNet + NAudio  
 A 'modest' Windows.Forms app testing sending MIDI data to a single VST v2.4 instrument and effect.
 
-Idea: test the MIDI parser (now 'smfio') using Jacobi's VstNet binaries (particularly `Jacobi.Vst.Core` and `Jacobi.Vst.Interop` libraries) using NAudio for audio-output.  
+smfio + vstnet + naudio
 
-https://github.com/tfwio/modest-smf-vstnet
+TARGETS: Win32, .NET Framework v4.0
+
+NUGET PACKAGE REFS:
+
+[github/naudio/NAudio]            v2.7.3  *[custom build; will be updated]*  
+[github.com/obiwanjacobi/vst.net] Jacobi.Vst.Core and Jacobi.Vst.Interop  
+
+EMBEDDED:
+
+[github.com/tfwio/smfio]          Standard MIDI Format Parser
 
 OBVIOUS QUIRKS
 --------------
@@ -29,63 +43,76 @@ COMPILING
 requirements:
 
 - python3 for PREBUILD step(s)
-- DotNet Framework v4.0 (e.g. Visual Studio Express)
+- DotNet Framework v4.0 (e.g. Visual Studio Community 2015/17)
 - GIT
+
+> Some of the dependency `*.csproj` projects *may* Target .Net Framework v3.5.
 
 clone this repo and enter into that directory
 ```
 git clone https://github.com/tfwio/modest-smf-vstnet
 pushd modest-smf-vstnet
 ```
-clone smfio from the `./Source` sub-directory.
-```
-pushd Source
-git clone https://github.com/tfwio/modest-smf-vstnet
+Then before executing the main build-scripts (explained below), you'll need to call the bootstrap script which does a few things...
+
+### THE BOOTSTRAP SCRIPT
+
+> In order for the script to work:
+> - **GIT** should be on the System Environment PATH.
+> - **Python3** (python.exe) should be directed to a working python3.
+>
+> *Same goes for the embedded smfio project which will be cloned by this script.*
+
+The bootstrap script does a number of things...
+
+1. Checks if a directory named `./Solution/packages` exists.  
+   If not, then `./.nuget/nuget.exe` is executed on the
+   `Source/gen.snd.vst/packages.config` file and packages
+   should then be found in the `./Solution/packages` directory.
+2. Checks if `./Source/smfio` was cloned.  
+   **IF `./Source/smfio` NOT FOUND**, then it will clone the
+   repository and checkout the revision (SHA1) as stored in
+   `./version-smfio`.  
+   **IF `./Source/smfio` IS FOUND OR…** after its cloned (as
+   mentioned above) it will continue to write the current SHA1
+   (revision id) to `./version-smfio`.
+3. Finally, `./Source/gen.snd.vstsmfui/Properties/AssemblyInfo.cs`
+   is created using existing version information gathered from
+   the GIT repository.
+
+The basic task of the bootstrap script is to tell us what version
+of SMFIO to use (git clone/checkout).
+
+`asm-nfo.bat` calls the bootstrap script.
+```bat
+#! cmd.exe /c
+@echo off
+pushd %~dp0
+"%LOCALAPPDATA%\Programs\Python\Python36\python.exe" "bootstrap"
 popd
 ```
+Then it would be safe to call on either of the build scripts: 
+`Build-cli40-Win32-Release.cmd` or `Build-cli40-Win32-Debug.cmd`.
 
-CLASS HIERARCHY
----------------
+`Build-cli40-Win32-Debug.cmd`
+```bat
+#! cmd.exe /c
+@echo off
 
-This is a quick overview of the implementation's class-hierarchy.
+SET PROJECT=Solution\\modest-smf-vstnet.sln
+SET TARGET=/t:gen_snd_vstsmfui:Rebuild
+SET CONF=Debug
+SET PLAT=Win32
 
-SIGNIFICANT CLASSES: NAudioVST, VstStream32, IOModule
+REM set msbuild_path=C:\Program Files (x86)\msbuild\14.0\bin
+set msbuild_path=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin
+set PATH=%PATH%;%msbuild_path%
+msbuild "%PROJECT%" "%TARGET%" "/p:Platform=%PLAT%;Configuration=%CONF%" /m
+```
 
-- ModestForm
-  - VstContainer typeof(NAudioVstContainer)
-    - VstPlayer (NAudioVST)
-      - VstHostCommandStub (HostCommandStub); *part of the host that plugin calls on*
-    - PluginManager (VstPluginManager)
-      - VstPlugin Collection via configuration settings file.
-      - GeneratorModules (List<VstPlugin>)
-      - EffectModules (List<VstPlugin>)
-      - ActivePlugin (VstPlugin) — as selected in the application's main UI.
-      - MasterPluginInstrument — only one instrument is supported mapped to the following effect.
-      - MasterPluginEffects
+You may or not wish to omit `:Rebuild` from the Target
+in the command to speed up compilation.
 
-MIDI PROCESSING
-
-- source/gen.snd.vst/Midi/VstMidiEnumerator.cs
-
-When the parser is parsing our data, it appends data to a main VstEvent dictionary via a specific delegate From within the MIDI Parser.  An Event is triggered upon the occurrence of each Midi Message, entailing a little bit of information about each message.  We have defined methods which take care of parsing, however it would.
-
-- (**TimeConfiguration**) ModestForm.VstContainer.VstPlayer.Settings
-- **SampleClock**
-- **VstMidiEnumerator**
-- **MidiMessageType** (Enum) Used in the MidiParser's (event found) delegate.
-    - Undefined, MetaInf, MetaStr, System, SysCommon, Channel, Cc, NoteOn, NoteOff
-- **MidiReader** 
-    - (public) MidiReader.**Read** is the reader's starting-point.
-    - (public) MidiReader.**ParseAll** and (private) **Parse** is going to assign a default parser which will throw all our track data into our `DictList<int,MidiMessage>`.
-    - (private) MidiReader.**PARSER_MIDIDataList** is the name of our default parser as defined within the confines of our reader class.
-
-PLAY IS CLICKED
-
-- **ModestForm**.**Play**-Click
-    - **NAudioVstContainer**.PlayerPlay
-        - destroy, prepare, maximize volume
-        - (NAudioVst) --- **VstPlayer.Play**()
-            - Plugin Instrument and Effect(s) are turned On().
-            - Volume is set from the NAudioVst.**Volume** setting.
-            - (IWavePlayer) NAudioVst.XAudio.Play is called.
-            - (bool) NAudioVst.**isRunning** is set to true.
+There is also a `.vscode/tasks.json` build definition
+which calls the DEBUG build script by default for use from
+Visual Studio Code.
