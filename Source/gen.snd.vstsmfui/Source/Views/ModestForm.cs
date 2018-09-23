@@ -149,8 +149,7 @@ namespace modest100.Forms
     public event EventHandler ClearMidiTrack;
     protected virtual void OnClearMidiTrack()
     {
-      if (ClearMidiTrack != null)
-        ClearMidiTrack(this, EventArgs.Empty);
+      ClearMidiTrack?.Invoke(this, EventArgs.Empty);
     }
 		
     public event EventHandler GotMidiFile;
@@ -158,8 +157,7 @@ namespace modest100.Forms
     {
       this.numPpq.Value = VstContainer.VstPlayer.Settings.Division;
       this.numTempo.Value = Convert.ToDecimal(VstContainer.VstPlayer.Settings.Tempo);
-      if (GotMidiFile != null)
-        GotMidiFile(this, EventArgs.Empty);
+      GotMidiFile?.Invoke(this, EventArgs.Empty);
     }
 		
     #endregion
@@ -227,28 +225,20 @@ namespace modest100.Forms
       foreach (KeyValuePair<int,string> track in midiFile.GetMidiTrackNameDictionary())
       {
         channels.Clear();
-        ToolStripMenuItem tn = new ToolStripMenuItem(track.Value);
-        tn.Tag = track.Key;
+
+        ToolStripMenuItem tn = new ToolStripMenuItem(track.Value) { Tag=track.Key };
         listBoxContextMenuStrip.Items.Add(tn);
 				
         foreach (MIDIMessage i in midiFile.MidiTrackDistinctChannels(track.Key))
           if (i is ChannelMessage)
             channels.Add(i.ChannelBit);
         
-        foreach (int i in channels) {
-          tn.DropDownItems.Add(i.ToString(), null, Event_ListBoxContextMenuItem)
-						.Tag = new KeyValuePair<int,int>(track.Key, i);
-          
-        }
-        if (channels.Count > 0)
-          tn.DropDownItems.Insert(0, new ToolStripSeparator());
-        if (channels.Count > 0)
-					// all channels node
- {					// only added to tracks that have channels
-          ToolStripItem another = new ToolStripMenuItem("All Channels", null, Event_ListBoxContextMenuItem);
-          another.Tag = new KeyValuePair<int,int>(track.Key, -1);
-          tn.DropDownItems.Insert(0, another);
-        }
+        foreach (int i in channels)
+          tn.DropDownItems.Add(new ToolStripMenuItem(i.ToString(), null, Event_ListBoxContextMenuItem) { Tag = new KeyValuePair<int, int>(track.Key, i) });
+
+        if (channels.Count > 0) tn.DropDownItems.Insert(0, new ToolStripSeparator());
+        // all channels node // only added to tracks that have channels
+        if (channels.Count > 0) tn.DropDownItems.Insert(0, new ToolStripMenuItem("All Channels", null, Event_ListBoxContextMenuItem) { Tag = new KeyValuePair<int, int>(track.Key, -1) });
       }
       channels.Clear();
       channels = null;
@@ -285,8 +275,7 @@ namespace modest100.Forms
       }
       Text = string.Format(Strings.Dialog_Title_1, Path.GetFileNameWithoutExtension(filename));
 			
-      midiFile = new NoteParser(filename);
-      midiFile.SelectedTrackNumber = trackNo;
+      midiFile = new NoteParser(filename) { SelectedTrackNumber = trackNo };
 			
       midiFile.ClearView -= Event_MidiClearMemory;
       midiFile.FileLoaded -= Event_MidiFileLoaded;
@@ -318,8 +307,7 @@ namespace modest100.Forms
 			
       Text = string.Format(Strings.Dialog_Title_1, Path.GetFileNameWithoutExtension(filename));
 			
-      midiFile = new NoteParser(filename);
-      midiFile.SelectedTrackNumber = trackNo;
+      midiFile = new NoteParser(filename) { SelectedTrackNumber = trackNo };
 			
       midiFile.ClearView -= Event_MidiClearMemory;
       midiFile.FileLoaded -= Event_MidiFileLoaded;
@@ -378,9 +366,7 @@ namespace modest100.Forms
     void TracksToToolStripMenu()
     {
       foreach (KeyValuePair<int,string> track in midiFile.GetMidiTrackNameDictionary()) {
-        var tn = new ToolStripMenuItem(track.Value, null, Event_MidiChangeTrack_MenuItemSelected);
-        tn.Tag = track.Key;
-        btn_pick_track.DropDownItems.Add(tn);
+        btn_pick_track.DropDownItems.Add(new ToolStripMenuItem(track.Value, null, Event_MidiChangeTrack_MenuItemSelected) { Tag = track.Key });
       }
     }
     void TracksToListBox()
@@ -476,8 +462,7 @@ namespace modest100.Forms
     }
     void Event_PluginViewInfo(object sender, EventArgs e)
     {
-      PluginForm dlg = new PluginForm();
-      dlg.PluginContext = PluginManager.ActivePlugin;
+      PluginForm dlg = new PluginForm() { PluginContext = PluginManager.ActivePlugin };
       dlg.ShowDialog(this);
     }
     void Event_PluginRemoveSelected(object sender, EventArgs e)
@@ -557,7 +542,14 @@ namespace modest100.Forms
     }
     void ComboBoxDirectSoundSelectedIndexChanged(object sender, EventArgs e)
     {
-      VstContainer.VstPlayer.DriverId = (comboBoxDirectSound.SelectedItem as DirectSoundDeviceInfo).Guid;
+      try
+      {
+        VstContainer.VstPlayer.DriverId = (comboBoxDirectSound.SelectedItem as DirectSoundDeviceInfo).Guid;
+      }
+      catch
+      {
+        // just ignore it // we need to set this once the app is loaded anyways.
+      }
     }
     #endregion
     #region AUDIO Playback
@@ -680,10 +672,16 @@ namespace modest100.Forms
     static void SaveRuntime(IMidiParserUI modest, Loop loop, float volume)
     {
 			
-      MidiSmfFile newfile = new MidiSmfFile();
-      newfile.Settings = new MidiSmfFileSettings();
-      newfile.Settings.ConfigurationFile = modest.VstContainer.PluginManager.CurrentConfigurationFile;
-			
+      MidiSmfFile newfile = new MidiSmfFile() {
+        Settings = new MidiSmfFileSettings() {
+          ConfigurationFile = modest.VstContainer.PluginManager.CurrentConfigurationFile,
+          Modules = new List<VstModule>(),
+          AutoParams = new List<AutomationParam>(),
+          Generators = new List<VstModule>(),
+          Bar = loop
+        }
+      };
+
       if (modest.MidiParser != null) {
         newfile.Settings.SelectedMidiTrack = modest.MidiParser.SelectedTrackNumber;
         newfile.Settings.MidiFileName = modest.MidiParser.MidiFileName;
@@ -692,52 +690,37 @@ namespace modest100.Forms
       newfile.Settings.MasterVolume = volume;
 			
       // Modules
-      // ---------------------------------------------------
-      newfile.Settings.Generators = new List<VstModule>();
-			
       if (modest.VstContainer.PluginManager.MasterPluginInstrument != null) {
         newfile.Settings.Generators.Add(
           new VstModule(modest.VstContainer.PluginManager.MasterPluginInstrument)
         );
       }
       // Generators
-      // ---------------------------------------------------
-      newfile.Settings.Modules = new List<VstModule>();
-			
       if (modest.VstContainer.PluginManager.MasterPluginEffect != null) {
         newfile.Settings.Modules.Add(
           new VstModule(modest.VstContainer.PluginManager.MasterPluginEffect)
         );
       }
-			
       // OLD MasterPluginInstrument
-      // ---------------------------------------------------
       if (modest.VstContainer.PluginManager.MasterPluginInstrument != null) {
-        newfile.Settings.Plugin = new Plugin(
-          modest.VstContainer
-					.PluginManager.MasterPluginInstrument
-        );
-        newfile.Settings.Plugin.Path =
-					modest.VstContainer
-					.PluginManager.MasterPluginInstrument.PluginPath;
+        newfile.Settings.Plugin = new Plugin(modest.VstContainer.PluginManager.MasterPluginInstrument) {
+          Path = modest.VstContainer.PluginManager.MasterPluginInstrument.PluginPath
+        };
       }
 			
       // 
-      // Bar
-      // ---------------------------------------------------
-      newfile.Settings.Bar = loop;
       // Automation
       // ---------------------------------------------------
       PulseValue bar = new PulseValue(modest.MidiParser.SmfFileHandle.Division * 4 * 4, DeltaType.Ticks);
       PulseValue measure = new PulseValue(bar.Value * 4, DeltaType.Ticks);
 			
-      newfile.Settings.AutoParams = new List<AutomationParam>();
       // one measure = 2:1:0
       // = 4bars = 4quarters*4 = (4*div)*4
       // incrementing per quarter note
       //    = 4 * 4 * 4 * value
       // or = value / 4 / 4 / 4
       // value is 0 - 1 (zero inclusive 64
+      // FIXME: IS THIS SOME TEST?
       double m = 0.015625;
       int counter = 0;
       for (
@@ -751,17 +734,13 @@ namespace modest100.Forms
       }
 			
       // (string) ActiveInstrument
-      // ---------------------------------------------------
-      if (modest.VstContainer.PluginManager.MasterPluginInstrument != null)
-        newfile.Settings.ActiveInstrument = modest
-					.VstContainer
-					.PluginManager.MasterPluginInstrument.Title;
+      if (modest.VstContainer.PluginManager.MasterPluginInstrument != null) newfile.Settings.ActiveInstrument = modest.VstContainer.PluginManager.MasterPluginInstrument.Title;
+      
       // (string) ActiveEffect
-      // ---------------------------------------------------
-      if (modest.VstContainer.PluginManager.MasterPluginEffect != null)
-        newfile.Settings.ActiveEffect = modest.VstContainer
-					.PluginManager.MasterPluginEffect.Title;
+      if (modest.VstContainer.PluginManager.MasterPluginEffect != null) newfile.Settings.ActiveEffect = modest.VstContainer.PluginManager.MasterPluginEffect.Title;
+
       newfile.Save(newfile);
+
       // maybe we should have checked for errors.
       modest.VstContainer.RuntimeSettings = newfile;
     }
@@ -800,10 +779,11 @@ namespace modest100.Forms
       MidiChannelSet Inputs, Outputs;
       static ChannelAssigner Assigner(int midifileindex, VstPlugin module, MidiChannelSet inputs, MidiChannelSet outputs)
       {
-        ChannelAssigner assigner = new ModestForm.ChannelAssigner();
-        assigner.Inputs = inputs;
-        assigner.Outputs = outputs;
-        return assigner;
+        return new ModestForm.ChannelAssigner()
+        {
+          Inputs = inputs,
+          Outputs = outputs
+        };
       }
     }
 		
@@ -941,8 +921,10 @@ namespace modest100.Forms
         control.SetUI(this);
         control.BringToFront();
         control.ResumeLayout(true);
-        ToolStripItem item = new ToolStripMenuItem(view.Title, null, ShowElement);
-        item.Tag = control;
+        ToolStripItem item = new ToolStripMenuItem(view.Title, null, ShowElement)
+        {
+          Tag = control
+        };
         viewToolStripMenuItem.DropDownItems.Add(item);
       }
       btn_pick_track.Image = Icons.midi_in;

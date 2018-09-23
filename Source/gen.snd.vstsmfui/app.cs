@@ -31,20 +31,8 @@ namespace modest100
 			Application.SetCompatibleTextRenderingDefault(false);
 			
 			ViewMaster<MasterViewContainer,MidiControlBase> Viewer = new ViewMaster<MasterViewContainer,MidiControlBase>(Assembly.GetExecutingAssembly());
-			
-//			ViewCollection = ViewPoint.EnumerateViewTypes<MasterViewContainer>(System.Reflection.Assembly.GetExecutingAssembly());
-//			List<string> views = new List<string>();
-//			foreach (IViewPoint view in ViewCollection) views.Add(view.Title);
-			
-			// MessageBox.Show(string.Join("\n",views.ToArray()));
 			Application.Run( new ModestForm(Viewer.ViewCollection) );
 			Application.Exit();
-//			Application.Run( new ModestForm(ViewCollection) );
-//			try { Application.Run( container.GetExportedValue<ModestForm>() ); }
-//			catch (Exception ex) {
-//				if ( MessageBox.Show(string.Format("{0}\n---------\n{1}",ex.Message,ex.StackTrace), "OK to Exit, Cancel to throw Exception.", MessageBoxButtons.OKCancel,MessageBoxIcon.Error) == DialogResult.OK ) throw ex;
-//				else return;
-//			}
 		}
 	}
 }

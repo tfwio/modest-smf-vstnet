@@ -51,6 +51,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
     <DocumentationFile>bin\$(Platform)\$(Configuration)\gen.snd.vst.xml</DocumentationFile>
     <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
     <DocumentationFile>bin\$(Platform)\$(Configuration)\gen.snd.vst.xml</DocumentationFile>

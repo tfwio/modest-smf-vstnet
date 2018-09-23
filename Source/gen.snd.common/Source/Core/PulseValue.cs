@@ -15,12 +15,12 @@ namespace gen.snd
 		
 		const string typenames = "dbl,double|Decebels,dB|tick,t|pulses,p|quarters,q|ms|smp|s";
 		
-		static string alltypes { get { return string.Join("|",typenames.Split(',')); } }
+		static string AllTypes { get { return string.Join("|",typenames.Split(',')); } }
 		
 		static readonly Regex RegexParser = new Regex(
-			@"(?<unit>([0-9.]+))\s*(?<type>({typenames}))".Replace("{typenames}",alltypes),
-			RegexOptions.CultureInvariant|
-			RegexOptions.IgnoreCase);
+			@"(?<unit>([0-9.]+))\s*(?<type>({typenames}))".Replace("{typenames}",AllTypes),
+			RegexOptions.CultureInvariant |
+      RegexOptions.IgnoreCase);
 		
 		readonly static DeltaType DefaultAutomationType = DeltaType.Ticks;
 		
