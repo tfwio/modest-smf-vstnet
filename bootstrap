@@ -220,14 +220,6 @@ The SHA1/Commnt of smfio is placed into the following file:
   ./.version-smfio
 ''')
 
-  # modest (Standard MIDI Format) + VST v2.4 technology
-  title = "smfio"
-  subtitle = "modest: SMF + VST v2.4"
-  author = "tfwio"
-  homepage = "https://github.com/tfwio"
-  webname = "github.com/tfwio"
-  copy   = "Copyright © 2005–2012 {}".format(webname)
-  version = show_version(start_path)
 
   tags = showref(start_path)
   print()
@@ -245,6 +237,15 @@ The SHA1/Commnt of smfio is placed into the following file:
   T0 = dic_tree(start_path, tags[0].branch)
   T1 = dic_tree(start_path, tags[1].branch)
   
+  # modest (Standard MIDI Format) + VST v2.4 technology
+  title = "modest"
+  subtitle = "modest: smfio + vst.net (VST v2.4) + naudio"
+  author = "tfwio"
+  homepage = "https://github.com/tfwio"
+  webname = "github.com/tfwio"
+  copy   = "Copyright © 2005–2012 {}".format(webname)
+  
+  version = show_version(start_path)
   inf = dict8({
     'ver': T0.version,
     'rc': int(T0.count)-int(T1.count),
