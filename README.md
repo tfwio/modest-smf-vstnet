@@ -65,19 +65,21 @@ Then before executing the main build-scripts (explained below), you'll need to c
 
 The bootstrap script does a number of things...
 
-1. Checks if a directory named `./Solution/packages` exists.  
-   If not, then `./.nuget/nuget.exe` is executed on the
-   `Source/gen.snd.vst/packages.config` file and packages
-   should then be found in the `./Solution/packages` directory.
+1. Checks if Jacobi.Vst and NAudio nuget packages are installed.  
+  **IF `./Solution/packages` NOT FOUND**, then
+  `./.nuget/nuget.exe` will install the needed packages via
+  `Source/gen.snd.vst/packages.config`.
+
 2. Checks if `./Source/smfio` was cloned.  
-   **IF `./Source/smfio` NOT FOUND**, then it will clone the
+   **IF** `./Source/smfio` **NOT FOUND**, then it will clone the
    repository and checkout the revision (SHA1) as stored in
    `./version-smfio`.  
-   **IF `./Source/smfio` IS FOUND OR…** after its cloned (as
+   **IF** `./Source/smfio` **IS FOUND OR…** after its cloned (as
    mentioned above) it will continue to write the current SHA1
    (revision id) to `./version-smfio`.
-3. Finally, `./Source/gen.snd.vstsmfui/Properties/AssemblyInfo.cs`
-   is created using existing version information gathered from
+
+3. **FINALLY, CREATE**: `./Source/gen.snd.vstsmfui/Properties/AssemblyInfo.cs`  
+   AssemblyInfo.cs is created using information gathered from
    the GIT repository.
 
 The basic task of the bootstrap script is to tell us what version
@@ -116,3 +118,13 @@ in the command to speed up compilation.
 There is also a `.vscode/tasks.json` build definition
 which calls the DEBUG build script by default for use from
 Visual Studio Code.
+
+DEBUGGING
+---------
+
+I'd attempting a debugging session to learn the app fails to launch,
+due to problems loading one of the the J.Vst.(Core|Interop).DLLs.
+
+To debug from VS-IDE, "Run Without Debugger" and once its launched,
+under the Debug-Menu, select "Attach" and select "modest" from the
+list of prospects.
