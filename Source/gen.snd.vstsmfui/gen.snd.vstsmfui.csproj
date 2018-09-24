@@ -95,6 +95,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <!-- 
+    <Compile Include="Source\Configurator.cs" />
+    <Compile Include="Source\Configurator.Designer.cs">
+      <SubType>Form</SubType>
+      <DependentUpon>Configurator</DependentUpon>
+    </Compile>
+    <Compile Include="Source\Configurator.resx">
+      <DependentUpon>Configurator</DependentUpon>
+    </Compile>
+    <Compile Include="Source\AudioDevice.cs" />
+     -->
     <Compile Include="Source\Modules\ColorResources.cs" />
     <Compile Include="Source\Modules\MidiEventControl.cs">
       <SubType>UserControl</SubType>
@@ -150,7 +161,7 @@
     <Compile Include="Source\Common.Extensions\RpnMessager.cs" />
     <Compile Include="Source\Models\setting32.cs" />
     <Compile Include="Source\Rendering\SliderRenderer.cs" />
-    <Compile Include="Source\Modules\MidiPianoContainer.cs" />
+    <!-- <Compile Include="Source\Modules\MidiPianoContainer.cs" /> -->
     <Compile Include="Source\Modules\PluginModule.cs">
       <SubType>UserControl</SubType>
     </Compile>
