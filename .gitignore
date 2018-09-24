@@ -9,4 +9,5 @@ packages
 portaudiosharp\*
 Solution/.vs/
 Source/smfio
-/Source/gen.snd.vstsmfui/Properties/AssemblyInfo.cs
+Source/gen.snd.vstsmfui/Properties/AssemblyInfo.cs
+Source/gen.snd.vstsmfui/Source/AudioDevice2.cs

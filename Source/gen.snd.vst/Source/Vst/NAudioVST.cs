@@ -204,7 +204,7 @@ namespace gen.snd.Vst
 		/// The default driver used by the VST Host.
 		/// </summary>
 		public NAudioVST.Driver AudioDriver {
-			get { return audioDriver; } set { audioDriver = value; }
+			get { return audioDriver; } private set { audioDriver = value; }
 		} Driver audioDriver = Driver.DirectSound;
 		
 		/// <summary>
@@ -212,27 +212,27 @@ namespace gen.snd.Vst
 		/// </summary>
 		public IWavePlayer XAudio {
 			get { return xAudio; }
+			private set { xAudio = value; }
 		} IWavePlayer xAudio;
 		
 		/// <summary>
 		/// This method is called by the main Audio Device Initialization method: Prepare(…).
 		/// </summary>
 		void DriverInit()
-		{
-			if (audioDriver==Driver.Wasapi) xAudio = new WasapiOut(AudioClientShareMode.Shared,Settings.Latency);
-			else if (audioDriver==Driver.Wave) xAudio = new WaveOut();
-			else if (audioDriver==Driver.DirectSound)
-			{
-				if (DriverId!=Guid.Empty) xAudio = new DirectSoundOut(DriverId, Settings.Latency);
-				else xAudio = new DirectSoundOut(Settings.Latency);
-			}
-			else if (audioDriver==Driver.ASIO) xAudio = new AsioOut(1);
+    {
+      if (AudioDriver == Driver.Wasapi) XAudio = new WasapiOut(AudioClientShareMode.Shared, Settings.Latency);
+      else if (AudioDriver == Driver.Wave) XAudio = new WaveOut();
+      else if (AudioDriver == Driver.DirectSound)
+      {
+        if (DriverId != Guid.Empty) XAudio = new DirectSoundOut(DriverId, Settings.Latency);
+        else XAudio = new DirectSoundOut(Settings.Latency);
+      }
+      else if (AudioDriver == Driver.ASIO) XAudio = new AsioOut(1);
 
-      if (CurrentChannel!=null) { CurrentChannel.Dispose(); CurrentChannel = null; }
+      if (CurrentChannel != null) { CurrentChannel.Dispose(); CurrentChannel = null; }
 
-
-			xAudio.PlaybackStopped -= Event_PlaybackStopped;
-			xAudio.PlaybackStopped += Event_PlaybackStopped;
+      XAudio.PlaybackStopped -= Event_PlaybackStopped;
+      XAudio.PlaybackStopped += Event_PlaybackStopped;
 		}
 		
 		/// <summary>
@@ -241,11 +241,9 @@ namespace gen.snd.Vst
 		public void Prepare(/*params IVstPluginContext[] context*/)
 		{
 			DriverInit();
-			CurrentChannel = new VSTStream32();
+			CurrentChannel = new VSTStream32(){Parent=this, Volume = volume };
 			CurrentChannel.SetWaveFormat( Settings.Rate, Settings.Channels );
-			CurrentChannel.Parent = this;
-			xAudio.Init(CurrentChannel);
-			CurrentChannel.Volume = volume;
+      XAudio.Init(CurrentChannel);
 			if (PlaybackStarted != null) PlaybackStarted(this,EventArgs.Empty);
 		}
 		
@@ -339,14 +337,12 @@ namespace gen.snd.Vst
 		public void Play(double SampleStartPosition)
 		{
 			this.SampleOffset = SampleStartPosition;
-			if (instrument !=null)
-			{
-				instrument.On();
-			}
-			if (effect !=null) {
-				effect.On();
-			}
-			this.CurrentChannel.Volume = Volume;
+			
+			if (instrument !=null) instrument.On();
+			if (effect !=null) effect.On();
+
+			CurrentChannel.Volume = Volume;
+
 			XAudio.Play();
 			isRunning = true;
 		}
@@ -356,6 +352,7 @@ namespace gen.snd.Vst
 			// turn off effects/instruments
 			if (effect !=null) effect.Off();
 			if (instrument !=null) instrument.Off();
+			
 			// event handler respondes and shuts down memory.
 			XAudio.Stop();
 		}
@@ -380,10 +377,10 @@ namespace gen.snd.Vst
 		void Event_PlaybackStopped(object sender, StoppedEventArgs e)
 		{
 			isRunning = isPaused = false;
-			if (xAudio==null) { ResetBufferToZero(); return; }
+			if (XAudio ==null) { ResetBufferToZero(); return; }
 			
 			XAudio.Dispose();
-			xAudio = null;
+      XAudio = null;
 			ResetBufferToZero();
 		}
 		
