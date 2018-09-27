@@ -66,7 +66,7 @@ Then before executing the main build-scripts (explained below), you'll need to c
 The bootstrap script does a number of things...
 
 1. Checks if Jacobi.Vst and NAudio nuget packages are installed.  
-  **IF `./Solution/packages` NOT FOUND**, then
+  **IF** `./Solution/packages` **NOT FOUND**, then
   `./.nuget/nuget.exe` will install the needed packages via
   `Source/gen.snd.vst/packages.config`.
 

@@ -23,8 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Serialization;
 
 using gen.snd.Vst.Forms;
 using Jacobi.Vst.Core;

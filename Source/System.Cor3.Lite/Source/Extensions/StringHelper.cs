@@ -46,7 +46,7 @@ namespace System
 		static public string ToHexString(this byte[] inb)
       {
         if (inb==null) return string.Empty;
-        string bish = "",tmp="";
+        string bish = "";
         foreach (byte c in inb) { bish += c.ToString("X2").PadLeft(2,'0')+" "; }
         return bish.TrimEnd();
       }

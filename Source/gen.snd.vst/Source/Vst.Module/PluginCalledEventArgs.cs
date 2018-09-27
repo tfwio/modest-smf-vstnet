@@ -21,17 +21,6 @@
 #endregion
 
 using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-
-using gen.snd.IffForm;
-using gen.snd.Midi;
-using Jacobi.Vst.Core;
-using Jacobi.Vst.Core.Host;
-using Jacobi.Vst.Interop.Host;
-using NAudio.CoreAudioApi;
-using NAudio.Wave;
 
 namespace gen.snd.Vst.Module
 {

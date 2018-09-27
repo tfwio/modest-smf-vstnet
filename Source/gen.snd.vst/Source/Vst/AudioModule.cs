@@ -30,17 +30,18 @@ using Jacobi.Vst.Interop.Host;
 namespace gen.snd.Vst
 {
 	public class AudioModule : IDisposable
-	{
-		float rate;
+  {
+    /// <summary>
+    /// 0 for input, 1 for output
+    /// </summary>
+    public VstAudioBufferManager this[int BufferIndex]
+    {
+      get { return (BufferIndex == 0) ? Inputs : Outputs; }
+    }
+		
+		float Fs;
 		
 		public int BlockSize;
-		
-		/// <summary>
-		/// 0 for input, 1 for output
-		/// </summary>
-		public VstAudioBufferManager this[int BufferIndex] {
-			get { return (BufferIndex==0) ? Inputs : Outputs ; }
-		}
 		
 		public VstAudioBufferManager Inputs, Outputs;
 		
@@ -48,38 +49,27 @@ namespace gen.snd.Vst
 		
 		public int OutputsCount { get;set; }
 		
-		/// <summary>
-		/// assign input and output buffers to parameters
-		/// </summary>
-		/// <param name="ins"></param>
-		/// <param name="outs"></param>
-		public void SetBuffers(ref VstAudioBuffer[] ins, ref VstAudioBuffer[] outs)
-		{
-			ins =  Inputs.ToArray();
-			outs = Outputs.ToArray();
-		}
-		
 		void InitializeBufferManagers(VstPlugin plugin, int blockSize)
 		{
-			this.InputsCount =  plugin.PluginInfo.AudioInputCount;
-			this.OutputsCount =  plugin.PluginInfo.AudioOutputCount;
-			this.BlockSize = blockSize;
+			InputsCount =  plugin.PluginInfo.AudioInputCount;
+			OutputsCount =  plugin.PluginInfo.AudioOutputCount;
+			BlockSize = blockSize;
 			//
-			this.Inputs  = new VstAudioBufferManager(InputsCount, blockSize);
-			if (OutputsCount > 0) this.Outputs = new VstAudioBufferManager(OutputsCount, blockSize);
+			Inputs  = new VstAudioBufferManager(InputsCount, blockSize);
+			if (OutputsCount > 0) Outputs = new VstAudioBufferManager(OutputsCount, blockSize);
 			PluginProcessPrepare(plugin,blockSize);
 		}
 		
 		void PluginProcessPrepare(VstPlugin plugin, int blockSize)
 		{
 			plugin.PluginCommandStub.SetBlockSize(blockSize);
-			plugin.PluginCommandStub.SetSampleRate(rate);
+			plugin.PluginCommandStub.SetSampleRate(Fs);
 			plugin.PluginCommandStub.SetProcessPrecision(VstProcessPrecision.Process32);
 		}
 		
 		public AudioModule ( VstPlugin plugin, int blockSize, float rate )
 		{
-			this.rate = rate;
+			Fs = rate;
 			InitializeBufferManagers(plugin,blockSize);
 		}
 		

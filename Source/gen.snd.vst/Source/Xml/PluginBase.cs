@@ -7,17 +7,9 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
-using gen.snd;
-using gen.snd.Vst;
-using gen.snd.Vst.Module;
 
 namespace gen.snd.Vst.Xml
 {

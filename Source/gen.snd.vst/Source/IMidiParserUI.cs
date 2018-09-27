@@ -21,8 +21,6 @@
 #endregion
 
 using System;
-using System.Drawing;
-using gen.snd.Forms;
 using gen.snd.Vst;
 using gen.snd.Vst.Module;
 using gen.snd.Vst.Xml;

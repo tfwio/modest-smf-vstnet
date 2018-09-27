@@ -39,7 +39,7 @@ namespace gen.snd.Vst
 	/// <summary>
 	/// This is the old VST Host Core.  The core (which contains this class)
 	/// has moved over to NAudioVstContainer.  In this class are the various
-	/// Sound-Driver related configuration settings (See <see cref="NAudioVST.Config"/>)
+	/// Sound-Driver related configuration settings (See <see cref="NAudioVST.Settings"/>)
 	/// in addition to the various time-settings implemented in the HostCommandStub.
 	/// </summary>
 	public class NAudioVST : INaudioVST
@@ -246,16 +246,6 @@ namespace gen.snd.Vst
       XAudio.Init(CurrentChannel);
 			if (PlaybackStarted != null) PlaybackStarted(this,EventArgs.Empty);
 		}
-		
-		// Check sample position against loop region position in samples
-		//public double FilterOffset(double value)
-		//{
-		//	o = One;
-		//	if (value <= o.Begin) SampleOffset = o.Begin;
-		//	else if (value > o.End) SampleOffset = o.Begin;
-		//	else SampleOffset = value;
-		//	return SampleOffset ;
-		//}
 		
 		//
 		// EventHandler BufferCycle

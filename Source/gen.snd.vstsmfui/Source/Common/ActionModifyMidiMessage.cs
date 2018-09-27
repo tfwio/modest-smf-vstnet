@@ -37,7 +37,7 @@ namespace modest100.Forms
 		
 		public void Modify(MIDIMessage input, IMidiParser parser, long delta, int msg, params byte[] data)
 		{
-			this.track = track;
+			//this.track = track;
 			
 			this.oldDelta = input.Pulse;
 			this.oldMessage = input.Message;

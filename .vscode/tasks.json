@@ -2,14 +2,15 @@
   // See https://go.microsoft.com/fwlink/?LinkId=733558
   // for the documentation about the tasks.json format
   "version": "2.0.0",
-  "tasks": [{
+  "tasks": [
+    {
       "label": "Build-cli40-Win32-Release",
       "type": "process",
       "command": "cmd.exe",
       "args": [
         "/c",
         "${workspaceFolder}/Build-cli40-Win32-Release.cmd"
-      ],
+      ]
     },
     {
       "label": "Build-cli40-Win32-Debug",
@@ -23,6 +24,16 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "Run cli40 Win32 Debug",
+      "type": "process",
+      "command": "cmd.exe",
+      "args": [
+        "/c",
+        "${workspaceFolder}/build/Win32-Debug/modest.exe"
+      ],
+      "problemMatcher": []
     }
   ]
 }

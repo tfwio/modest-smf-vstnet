@@ -140,7 +140,6 @@
     <Compile Include="Source\Vst.Module\VstCCPgm.cs" />
     <Compile Include="Source\Vst.Module\VstPlugin.cs" />
     <Compile Include="Source\Vst.Module\VstPluginManager.cs" />
-    <Compile Include="Source\Vst\AudioProcess.cs" />
     <Compile Include="Source\Vst\HostCommandStub.cs" />
     <Compile Include="Source\Vst\INaudioVST.cs" />
     <Compile Include="Source\Vst\INaudioVstWin.cs" />

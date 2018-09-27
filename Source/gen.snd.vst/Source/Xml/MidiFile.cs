@@ -8,19 +8,10 @@
  */
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Windows.Forms;
-using System.Xml;
 using System.Xml.Serialization;
 
-using gen.snd;
-using gen.snd.Vst;
-using gen.snd.Vst.Module;
 using gen.snd.Vst.Xml;
-using Jacobi.Vst.Core;
 
 namespace gen.snd.Vst.Xml
 {

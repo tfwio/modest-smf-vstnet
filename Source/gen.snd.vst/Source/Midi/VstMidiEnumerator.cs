@@ -87,10 +87,10 @@ namespace gen.snd.Vst
     
     static public void SendMidi2Plugin(VstPlugin vstMidiPlugin, IMidiParserUI ui, int blockSize)
     {
-      if (vstMidiPlugin==null) return ;
+      if (vstMidiPlugin==null) return;
       
       var EventR = new List<NVstEvent>(
-        GetSampleOffsetBlock(ui, vstMidiPlugin.IgnoreMidiProgramChange,blockSize)
+        GetSampleOffsetBlock(ui, vstMidiPlugin.IgnoreMidiProgramChange, blockSize)
        );
       
       NVstEvent[] range = EventR.ToArray();
@@ -117,8 +117,7 @@ namespace gen.snd.Vst
     /// <param name="start"></param>
     /// <param name="len"></param>
     /// <returns>Filtered Events</returns>
-    static public IEnumerable<NVstEvent>
-      VstEvent_Range(IMidiParserUI ui, bool ignoreMidiPgm, double start, int len)
+    static public IEnumerable<NVstEvent> VstEvent_Range(IMidiParserUI ui, bool ignoreMidiPgm, double start, int len)
     {
       var list = new List<NVstEvent>();
       SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
@@ -167,41 +166,37 @@ namespace gen.snd.Vst
 
     #endregion
     
-    #region Midi Enumerations
-    
-    /// <summary>
-    /// Process messages looking for Channel and Sysex messages.
-    /// look at channel-message parsing for channel message types (or look into this).
-    /// </summary>
-    /// <param name="ui">core</param>
-    /// <param name="start">Begin in samples</param>
-    /// <param name="len">Length from begin in samples</param>
-    /// <returns>Filtered Events</returns>
-    static NVstEvent[] FilterSampleRange(IMidiParserUI ui, double start, int len)
-    {
-      if (HasParserErrors(ui)) return null;
-      
-      var list = new List<NVstEvent>();
-      SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
-      
-      foreach (MIDIMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
-      {
-        if (item is ChannelMessage) list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
-        else if (item is SysExMessage) list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
-      }
-      c = null;
-      
-      list.Sort(SortAlgo);
-      return list.ToArray();
-    }
-    
-    static bool HasParserErrors(IMidiParserUI ui)
-    {
-      if (ui==null) return true;
-      if (ui.MidiParser.MidiDataList.Count==0) return true;
-      return false;
-    }
-    
-    #endregion
+    // /// <summary>
+    // /// Process messages looking for Channel and Sysex messages.
+    // /// look at channel-message parsing for channel message types (or look into this).
+    // /// </summary>
+    // /// <param name="ui">core</param>
+    // /// <param name="start">Begin in samples</param>
+    // /// <param name="len">Length from begin in samples</param>
+    // /// <returns>Filtered Events</returns>
+    // static NVstEvent[] FilterSampleRange(IMidiParserUI ui, double start, int len)
+    // {
+    //   if (HasParserErrors(ui)) return null;
+    //   
+    //   var list = new List<NVstEvent>();
+    //   SampleClock c = new SampleClock(ui.VstContainer.VstPlayer.Settings);
+    //   
+    //   foreach (MIDIMessage item in MidiMessage_Range(ui, new Loop(){Begin=start,Length=len}))
+    //   {
+    //     if (item is ChannelMessage) list.Add(item.ToVstMidiEvent(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
+    //     else if (item is SysExMessage) list.Add(item.ToVstMidiSysex(Convert.ToInt32(ui.VstContainer.VstPlayer.SampleOffset),ui.VstContainer.VstPlayer.Settings,c));
+    //   }
+    //   c = null;
+    //   
+    //   list.Sort(SortAlgo);
+    //   return list.ToArray();
+    // }
+    // 
+    // static bool HasParserErrors(IMidiParserUI ui)
+    // {
+    //   if (ui==null) return true;
+    //   if (ui.MidiParser.MidiDataList.Count==0) return true;
+    //   return false;
+    // }
   }
 }

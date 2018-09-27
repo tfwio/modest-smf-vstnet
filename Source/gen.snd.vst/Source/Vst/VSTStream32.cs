@@ -61,17 +61,12 @@ namespace gen.snd.Vst
 	//
 	// It appears this file is most-likely irrecognisable at this point.
 	
-	public class VSTStream32 : WaveStream //, IDisposable
+	public class VSTStream32 : WaveStream
 	{
-	  /// <summary>
-	  /// Globally 
-	  /// </summary>
-    public NAudioVST Parent { get; set; }
-    
-		//public void Dispose()
-		//{
-		//	
-		//}
+		/// <summary>
+		/// Globally 
+		/// </summary>
+		public NAudioVST Parent { get; set; }
 		
 		// ============================
 		// Public Fields and Properties
@@ -100,7 +95,7 @@ namespace gen.snd.Vst
 			get { return numSamplesToProcess; }
 			set { numSamplesToProcess = value; }
 		} int numSamplesToProcess = 0;
-    
+		
 		public float Volume {
 			get { return volume; }
 			set { volume = value; }
@@ -133,19 +128,18 @@ namespace gen.snd.Vst
 		// Helper Methods
 		// ==============
 		
-    //double nextoffset(int sampleCount) { return parent.SampleOffset+sampleCount; }
+		//double nextoffset(int sampleCount) { return parent.SampleOffset+sampleCount; }
 		/// <summary>
 		/// Step 3 / N or ( 2.1 / N )
 		/// </summary>
 		/// <param name="sampleCount"></param>
 		/// <param name="nch"></param>
-		/// <returns></returns>
 		int GetNumSamplesWithinLoop(int sampleCount, int nch)
 		{
 			double newsamplecount = sampleCount;
 			int actualSamples = newsamplecount.FloorMinimum(0).ToInt32() / nch;
 			
-      Loop o = Parent.One;
+			Loop o = Parent.One;
 			
 			if ((Parent.SampleOffset+actualSamples) > o.End)
 			{
@@ -198,7 +192,7 @@ namespace gen.snd.Vst
 		}
 		/// Step 4 (2.2) of N
 		/// <seealso cref="ProcessToMixer(VstPlugin,VstAudioBuffer[])"/>
-		private float[] ProcessReplace(int blockSize)
+		float[] ProcessReplace(int blockSize)
 		{
 			//lock (this)
 			{
@@ -209,21 +203,22 @@ namespace gen.snd.Vst
 				}
 				try
 				{
-					if (mod==null) mod = IOModule.Create(blockSize,module_instrument,module_effect);
-					
-					mod.Reset(blockSize,module_instrument,module_effect);
-					mod.GeneralProcess(module_instrument,module_effect);
-					
-					actualBuffer = module_effect==null ?
-					  mod.Inputs.Outputs.ToArray() :
-					  mod.Outputs.Outputs.ToArray();
-					
+					if (mod == null) mod = IOModule.Create(blockSize, module_instrument, module_effect);
+
+					mod.Reset(blockSize, module_instrument, module_effect);
+					mod.GeneralProcess(module_instrument, module_effect);
+
+					actualBuffer = module_effect == null ?
+						mod.Inputs.Outputs.ToArray() :
+						mod.Outputs.Outputs.ToArray();
+
 				}
-				catch (Exception ex) {
+				catch (Exception ex)
+				{
 					Parent.Stop();
 					System.Windows.Forms.MessageBox.Show(ex.ToString());
 				}
-				ProcessToMixer(module_effect??module_instrument,actualBuffer);
+				ProcessToMixer(module_effect ?? module_instrument, actualBuffer);
 			}
 			return actualOutput;
 		}
@@ -240,24 +235,23 @@ namespace gen.snd.Vst
 		/// <param name="offset">always Zero. (see Position)</param>
 		/// <param name="sampleCount">always Length</param>
 		/// <returns></returns>
-		/// <seealso cref="GetSamplesWithinLoop(int,int)"/>
 		/// <seealso cref="ProcessReplace(int)"/>
 		/// <seealso cref="NAudioVST.OnBufferCycle(int)"/>
 		public int Read(float[] buffer, int offset, int sampleCount)
 		{
-			NumSamplesToProcess = GetNumSamplesWithinLoop(sampleCount,Parent.Settings.Channels);
-			
+			NumSamplesToProcess = GetNumSamplesWithinLoop(sampleCount, Parent.Settings.Channels);
+
 			// used in ProcessReplace; re-used in OnBufferCycle.
 			int nSmpPCh = NumSamplesPerChannel;
-			
-			float[] tempBuffer = ProcessReplace( nSmpPCh );
-			
+
+			float[] tempBuffer = ProcessReplace(nSmpPCh);
+
 			for (int i = 0; i < NumSamplesToProcess; i++)
-			  
-			  buffer[i + offset] = tempBuffer[i];
-			
-			Parent.OnBufferCycle( nSmpPCh );
-			
+
+				buffer[i + offset] = tempBuffer[i];
+
+			Parent.OnBufferCycle(nSmpPCh);
+
 			return NumSamplesToProcess;
 		}
 
@@ -272,11 +266,11 @@ namespace gen.snd.Vst
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			WaveBuffer waveBuffer = new WaveBuffer(buffer);
-			
+
 			int samplesRequired = count / 4;
-			
+
 			int samplesRead = Read(waveBuffer.FloatBuffer, offset / 4, samplesRequired);
-			
+
 			return samplesRead * 4;
 		}
 		

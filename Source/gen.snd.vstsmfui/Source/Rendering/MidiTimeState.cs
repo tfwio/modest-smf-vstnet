@@ -11,12 +11,12 @@ namespace modest100.Forms
 			pxTpb = pxTpn * 4;
 		}
 
-		/// <summary>
-		/// </summary>
-		/// <param name="nNote">Number of quarters</param>
-		/// <param name="nNotes"></param>
-		/// <param name="nBars"></param>
-		public void InitializeSnappingBoundaries(int pxPerTick, int pxPerNote, int pxPerBar)
+    /// <summary>
+    /// </summary>
+    /// <param name="pxPerTick">Number of quarters</param>
+    /// <param name="pxPerNote"></param>
+    /// <param name="pxPerBar"></param>
+    public void InitializeSnappingBoundaries(int pxPerTick, int pxPerNote, int pxPerBar)
 		{
 			pxTpb = (pxTpn = (pxPpn = pxPerTick) * pxPerNote) * pxPerBar;
 		}

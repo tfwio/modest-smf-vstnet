@@ -37,13 +37,13 @@ namespace gen.snd.Vst
     
     public void Dispose()
     {
-      this.mod0Input = null;
-      this.mod1Input = null;
-      this.mod0Output = null;
-      this.mod1Output = null;
+      mod0Input = null;
+      mod1Input = null;
+      mod0Output = null;
+      mod1Output = null;
       
-      if (Inputs != null) this.Inputs.Dispose();
-      if (Outputs != null) this.Outputs.Dispose();
+      if (Inputs != null) Inputs.Dispose();
+      if (Outputs != null) Outputs.Dispose();
     }
     
     bool HasMidi(IMidiParserUI ui)
@@ -58,13 +58,6 @@ namespace gen.snd.Vst
       var module = new IOModule();
       return module.Reset(blockSize,vstI,vstO);
     }
-    
-    public bool CheckSize(int size)
-    {
-      return size==BlockSize;
-    }
-    
-    
     
     public IOModule Reset(int blockSize, VstPlugin vstI, VstPlugin vstO)
     {
@@ -88,17 +81,15 @@ namespace gen.snd.Vst
       return null;
     }
     
-    
-    
     #region PLUGIN
     
     public VstAudioBuffer[] GeneralProcess(VstPlugin vstInput, VstPlugin vstOutput)
     {
       if (Inputs==null || Inputs.BlockSize!=BlockSize) PluginResetBuffers(vstInput,vstOutput,BlockSize);
+      var x = Inputs as System.Collections.IEnumerable;
       PluginPreProcess1(vstInput,BlockSize,Inputs[0].ToArray(),Inputs[1].ToArray());
       return PluginProcess(vstOutput,Inputs[1].ToArray(),Outputs[1].ToArray());
     }
-    
     
     /// <summary>
     /// With midi info

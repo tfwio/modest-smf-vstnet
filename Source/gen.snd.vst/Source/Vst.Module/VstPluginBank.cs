@@ -7,13 +7,10 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 using Jacobi.Vst.Core;
 using Jacobi.Vst.Core.Host;
-using Jacobi.Vst.Core.Plugin;
 //using Bitset = MidiReader.SmfString;
 using IPluginCommander = Jacobi.Vst.Core.Host.IVstPluginCommandStub;
 

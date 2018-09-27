@@ -8,7 +8,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using Jacobi.Vst.Core.Host;
 using Jacobi.Vst.Core.Plugin;

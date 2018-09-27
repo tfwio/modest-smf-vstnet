@@ -22,11 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
-using Jacobi.Vst.Core;
-using Jacobi.Vst.Core.Host;
 
 namespace gen.snd.Vst.Module
 {
